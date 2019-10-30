@@ -1,5 +1,17 @@
 ## 网络设计
 
+- [网络设计](#%e7%bd%91%e7%bb%9c%e8%ae%be%e8%ae%a1)
+  - [当前目标](#%e5%bd%93%e5%89%8d%e7%9b%ae%e6%a0%87)
+  - [消息收发](#%e6%b6%88%e6%81%af%e6%94%b6%e5%8f%91)
+    - [节点消息端 (Endpoint)](#%e8%8a%82%e7%82%b9%e6%b6%88%e6%81%af%e7%ab%af-endpoint)
+      - [Gossip](#gossip)
+      - [RPC Call](#rpc-call)
+      - [RPC Response](#rpc-response)
+    - [消息序列化](#%e6%b6%88%e6%81%af%e5%ba%8f%e5%88%97%e5%8c%96)
+    - [消息处理](#%e6%b6%88%e6%81%af%e5%a4%84%e7%90%86)
+    - [消息处理逻辑注册](#%e6%b6%88%e6%81%af%e5%a4%84%e7%90%86%e9%80%bb%e8%be%91%e6%b3%a8%e5%86%8c)
+    - [消息的发送](#%e6%b6%88%e6%81%af%e7%9a%84%e5%8f%91%e9%80%81)
+
 ### 当前目标
 
 基于 [tentacle crate](https://github.com/nervosnetwork/p2p) 实现一个简单的可工作的 P2P 网络，主要功能如下：

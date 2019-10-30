@@ -127,7 +127,7 @@ docker run -it --init -p 8000:8000 nervos/muta
 docker run -it --init -p 8000:8000 -v `pwd`/data:/app/devtools/chain/data nervos/muta
 ```
  
-可以访问 [graphiql](http://localhost:8000/graphiql) 页面与链进行交互。
+可以访问 <http://localhost:8000/graphiql> 页面与链进行交互。
 
  
 使用 docker compose 运行多节点：
