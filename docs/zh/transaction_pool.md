@@ -107,4 +107,4 @@ Mempool 收到共识的删除指定 `tx_hashes` 集合的请求时，先清空 `
 
 Mempool 的插入和打包过程如下图所示。
 
-![image](./assets/mempool_process.png)
+![image](./resources/mempool_process.png)
