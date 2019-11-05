@@ -156,4 +156,4 @@ and then delete the `SharedTx`.
 
 The insertion and packaging process of mempool is shown in the figure below.
 
-![image](./resources/mempool_process_en.png)
+![image](./resources/mempool_process.png)
