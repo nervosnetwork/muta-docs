@@ -36,6 +36,21 @@ pub struct CreateAssetPayload {
     pub symbol: String,
     pub supply: u64,
 }
+
+// Example: graphiql send tx 
+mutation create_asset{
+  unsafeSendTransaction(inputRaw: {
+    serviceName:"asset",
+    method:"create_asset",
+    payload:"{\"name\":\"Test Coin\",\"symbol\":\"TC\",\"supply\":100000000}",
+    timeout:"0x172",
+    nonce:"0x9db2d7efe2b61a88827e4836e2775d913a442ed2f9096ca1233e479607c27cf7",
+    chainId:"b6a4d7da21443f5e816e8700eea87610e6d769657d6b8ec73028457bf2ca4036",
+    cyclesPrice:"0x9999",
+    cyclesLimit:"0x9999"
+  }, inputPrivkey: "0x30269d47fcf602b889243722b666881bf953f1213228363d34cf04ddcd51dfd2"
+  )
+}
 ```
 
 2. 查询资产信息
@@ -47,6 +62,19 @@ fn get_asset(&self, ctx: ServiceContext, payload: GetAssetPayload) -> ProtocolRe
 // 查询参数
 pub struct GetAssetPayload {
     pub id: Hash, // 资产 ID
+}
+
+// Example: graphiql send tx 
+query get_asset{
+  queryService(
+  caller: "016cbd9ee47a255a6f68882918dcdd9e14e6bee1"
+  serviceName: "asset"
+  method: "get_asset"
+  payload: "{\"id\": \"5f1364a8e6230f68ccc18bc9d1000cedd522d6d63cef06d0062f832bdbe1a78a\"}"
+  ){
+    ret,
+    isError
+  }
 }
 ```
 
@@ -62,6 +90,21 @@ pub struct TransferPayload {
     pub to:       Address,
     pub value:    u64,
 }
+
+// Example: graphiql send tx 
+mutation transfer{
+  unsafeSendTransaction(inputRaw: {
+    serviceName:"asset",
+    method:"transfer",
+    payload:"{\"asset_id\":\"5f1364a8e6230f68ccc18bc9d1000cedd522d6d63cef06d0062f832bdbe1a78a\",\"to\":\"f8389d774afdad8755ef8e629e5a154fddc6325a\", \"value\":10000}",
+    timeout:"0x289",
+    nonce:"0x9db2d7efe2b61a28827e4836e2775d913a442ed2f9096ca1233e479607c27cf7",
+    chainId:"b6a4d7da21443f5e816e8700eea87610e6d769657d6b8ec73028457bf2ca4036",
+    cyclesPrice:"0x9999",
+    cyclesLimit:"0x9999",
+    }, inputPrivkey: "0x30269d47fcf602b889243722b666881bf953f1213228363d34cf04ddcd51dfd2"
+  )
+}
 ```
 
 4. 查询余额
@@ -73,12 +116,27 @@ fn get_balance(&self, ctx: ServiceContext, payload: GetBalancePayload, ) -> Prot
 // 查询参数
 pub struct GetBalancePayload {
     pub asset_id: Hash,
+    pub user:     Address,
 }
 
 // 返回值
 pub struct GetBalanceResponse {
     pub asset_id: Hash,
+    pub user:     Address,
     pub balance:  u64,
+}
+
+// Example: graphiql send tx 
+query get_balance{
+  queryService(
+  caller: "016cbd9ee47a255a6f68882918dcdd9e14e6bee1"
+  serviceName: "asset"
+  method: "get_balance"
+  payload: "{\"asset_id\": \"5f1364a8e6230f68ccc18bc9d1000cedd522d6d63cef06d0062f832bdbe1a78a\", \"user\": \"016cbd9ee47a255a6f68882918dcdd9e14e6bee1\"}"
+  ){
+    ret,
+    isError
+  }
 }
 ```
 
@@ -93,6 +151,20 @@ pub struct ApprovePayload {
     pub asset_id: Hash,
     pub to:       Address,
     pub value:    u64,
+}
+
+// Example: graphiql send tx 
+  unsafeSendTransaction(inputRaw: {
+    serviceName:"asset",
+    method:"approve",
+    payload:"{\"asset_id\":\"5f1364a8e6230f68ccc18bc9d1000cedd522d6d63cef06d0062f832bdbe1a78a\",\"to\":\"f8389d774afdad8755ef8e629e5a154fddc6325a\", \"value\":10000}",
+    timeout:"0x378",
+    nonce:"0x9db2d7efe2b61a28827e4836e2775d913a442ed2f9096ca1233e479607c27cf7",
+    chainId:"b6a4d7da21443f5e816e8700eea87610e6d769657d6b8ec73028457bf2ca4036",
+    cyclesPrice:"0x9999",
+    cyclesLimit:"0x9999",
+    }, inputPrivkey: "0x30269d47fcf602b889243722b666881bf953f1213228363d34cf04ddcd51dfd2"
+  )
 }
 ```
 
@@ -109,6 +181,21 @@ pub struct TransferFromPayload {
     pub recipient: Address,
     pub value:     u64,
 }
+
+// Example: graphiql send tx 
+mutation transfer_from{
+  unsafeSendTransaction(inputRaw: {
+    serviceName:"asset",
+    method:"transfer_from",
+    payload:"{\"asset_id\":\"5f1364a8e6230f68ccc18bc9d1000cedd522d6d63cef06d0062f832bdbe1a78a\",\"sender\":\"016cbd9ee47a255a6f68882918dcdd9e14e6bee1\", \"recipient\":\"fffffd774afdad8755ef8e629e5a154fddc6325a\", \"value\":5000}",
+    timeout:"0x12c",
+    nonce:"0x9db2d7efe2b61a28827e4836e2775d913a442ed2f9096ca1233e479607c27cf7",
+    chainId:"b6a4d7da21443f5e816e8700eea87610e6d769657d6b8ec73028457bf2ca4036",
+    cyclesPrice:"0x9999",
+    cyclesLimit:"0x9999",
+    }, inputPrivkey: "0x45c56be699dca666191ad3446897e0f480da234da896270202514a0e1a587c3f"
+  )
+}
 ```
 
 7. 查询限额
@@ -120,13 +207,28 @@ fn get_allowance(&self, ctx: ServiceContext, payload: GetAllowancePayload, ) -> 
 // 查询参数
 pub struct GetAllowancePayload {
     pub asset_id: Hash,
+    pub grantor:  Address,
     pub grantee:  Address,
 }
 
 // 返回值
 pub struct GetAllowanceResponse {
     pub asset_id: Hash,
+    pub grantor:  Address,
     pub grantee:  Address,
     pub value:    u64,
+}
+
+// Example: graphiql send tx 
+query get_allowance{
+  queryService(
+  caller: "016cbd9ee47a255a6f68882918dcdd9e14e6bee1"
+  serviceName: "asset"
+  method: "get_allowance"
+  payload: "{\"asset_id\": \"5f1364a8e6230f68ccc18bc9d1000cedd522d6d63cef06d0062f832bdbe1a78a\", \"grantor\": \"016cbd9ee47a255a6f68882918dcdd9e14e6bee1\", \"grantee\": \"f8389d774afdad8755ef8e629e5a154fddc6325a\"}"
+  ){
+    ret,
+    isError
+  }
 }
 ```
