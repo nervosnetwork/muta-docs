@@ -28,7 +28,7 @@ pub struct Asset {
 
 // 发行资产接口
 // 资产 ID 自动生成，确保唯一
-fn create_asset(&mut self, ctx: ServiceContext, payload: CreateAssetPayload, ) -> ProtocolResult<Asset>;
+fn create_asset(&mut self, ctx: ServiceContext, payload: CreateAssetPayload) -> ProtocolResult<Asset>;
 
 // 发行资产参数
 pub struct CreateAssetPayload {
@@ -111,7 +111,7 @@ mutation transfer{
 
 ```rust
 // 查询接口
-fn get_balance(&self, ctx: ServiceContext, payload: GetBalancePayload, ) -> ProtocolResult<GetBalanceResponse> 
+fn get_balance(&self, ctx: ServiceContext, payload: GetBalancePayload) -> ProtocolResult<GetBalanceResponse> 
 
 // 查询参数
 pub struct GetBalancePayload {
@@ -202,7 +202,7 @@ mutation transfer_from{
 
 ```rust
 // 查询接口
-fn get_allowance(&self, ctx: ServiceContext, payload: GetAllowancePayload, ) -> ProtocolResult<GetAllowanceResponse>；
+fn get_allowance(&self, ctx: ServiceContext, payload: GetAllowancePayload) -> ProtocolResult<GetAllowanceResponse>；
 
 // 查询参数
 pub struct GetAllowancePayload {
