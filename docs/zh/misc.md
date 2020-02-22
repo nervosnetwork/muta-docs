@@ -1,4 +1,4 @@
-# Misc
+# 其他
 
 ## 密码学
 
@@ -35,3 +35,32 @@ S(x) = ECDSASIGN(Keccak(RLP(x)), p*r*)
    8. timeout
 2. 序列化消息 -> 哈希：序列化消息通过 Keccak 函数转换哈希值
 3. 哈希 -> 签名：哈希值通过 ECDSA 签名算法生成签名
+
+下面的例子，将使用伪代码描述签名的过程
+
+```typescript
+import { encode as RLPEncode } from 'rlp';
+import createKeccakHash from 'keccak'
+import { sign as ECDSASign } from 'scep256k1';
+
+const tx = [
+  chainId, // '0xb6a4d7da21443f5e816e8700eea87610e6d769657d6b8ec73028457bf2ca4036'
+  cyclesLimit, // '0xffff'
+  cyclesPrice, // '0xffff'
+  nonce, // '0x0000000000000000000000000000000000000000000000000000000000000000'
+  method, // 'a_service_method' 
+  service, // 'a_service_name'
+  payload, // 'a_method_payload'
+  timeout, // '0xffff' // => current_block_height + timeout_gap - 1
+];
+
+const encodedMessage = RLPEncode(tx);
+const hash = createKeccakHash('keccak256')
+							.update(encodedMessage)
+							.digest();
+const signature = ECDSASign(hash, privateKey);
+```
+
+
+
+
