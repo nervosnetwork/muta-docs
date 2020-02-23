@@ -56,8 +56,8 @@ const tx = [
 
 const encodedMessage = RLPEncode(tx);
 const hash = createKeccakHash('keccak256')
-							.update(encodedMessage)
-							.digest();
+		.update(encodedMessage)
+		.digest();
 const signature = ECDSASign(hash, privateKey);
 ```
 
