@@ -4,7 +4,7 @@
 
 ```bash
 # 安装 muta-keypair 工具
-$ cargo install --git https://github.com/nervosnetwork/muta.git --bin muta-keypair
+$ cargo +nightly install --git https://github.com/nervosnetwork/muta.git --bin muta-keypair
 
 $ muta-keypair -h
 muta_keypair 0.1
@@ -59,6 +59,7 @@ $ muta-keypair -n 1 -c 37537a3658476b334a71
 
 一个创世块的示例如下。
 其中重点需要商议的部分是：
+
 - common_ref: 刚刚大家生成公钥时用的 common_ref
 - verifier_list: 初始出块节点，需要填写地址，bls_pub_key 和权重
 - admin: 共同认可的超级管理员地址
@@ -104,7 +105,9 @@ payload = '''
     "propose_ratio": 15,
     "prevote_ratio": 10,
     "precommit_ratio": 10,
-    "brake_ratio": 7
+    "brake_ratio": 7,
+    "tx_num_limit": 20000,
+    "max_tx_size": 1024
 }
 '''
 ```
@@ -124,6 +127,9 @@ data_path = "./data"
 listening_address = "0.0.0.0:8000"
 graphql_uri = "/graphql"
 graphiql_uri = "/graphiql"
+workers = 0 # if 0, uses number of available logical cpu as threads count.
+maxconn = 25000
+max_payload_size = 1048576
 
 [network]
 listening_address = "0.0.0.0:1337"
