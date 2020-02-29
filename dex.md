@@ -111,7 +111,7 @@ Dex Service 包含的功能有：
 
 ## 2. 开发 Asset Service，Dex Service
 
-### 使用脚手架 muta-drone
+### 使用脚手架 muta-drone 对 Service 进行初始化
 
 Service 设计完成后，我们进入开发阶段。我们需要新建一个 rust 工程，同时在工程中引用 Muta Library，好消息是 Muta 框架提供了脚手架 [muta-drone](https://www.npmjs.com/package/muta-drone) 来帮助开发者一键配置工程目录。
 
@@ -252,7 +252,7 @@ pub struct InitGenesisPayload {
 }
 ```
 
-该方法的输入参数 `InitGenesisPayload`, 定义在 muta-tutorial-dex/config/genesis.toml 文件中，该文件包含所有 service 的创世配置信息：
+该方法的输入参数 `InitGenesisPayload`，定义在 muta-tutorial-dex/config/genesis.toml 文件中，该文件包含所有 service 的创世配置信息：
 
 ```toml
 # config/genesis.toml

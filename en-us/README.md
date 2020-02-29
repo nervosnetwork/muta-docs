@@ -2,7 +2,7 @@
   <a href="https://github.com/nervosnetwork/muta">
     <img src="./static/muta-logo1.png" width="270">
   </a>
-  <h3 align="center">Build your own blockchain,today</h3>
+  <h3 align="center">Build your own blockchain, today</h3>
   <p align="center">
     <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-green.svg"></a>
     <a href="https://github.com/nervosnetwork/muta"><img src="https://img.shields.io/badge/Code-Github-brightgreen.svg"></a>
@@ -55,7 +55,7 @@ We provide detailed service development guides and some service examples.
 Muta powers some open source projects.
 
 <p align="left">
-  <a href="https://github.com/nervosnetwork/muta">
+  <a href="https://github.com/HuobiGroup/huobi-chain/">
     <img src="./static/user/s_huobichain.jpg" width="150">
   </a>
 </p>
