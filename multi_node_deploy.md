@@ -4,7 +4,7 @@
 
 ```bash
 # 安装 muta-keypair 工具
-$ cargo install --git https://github.com/nervosnetwork/muta.git --bin muta-keypair
+$ cargo +nightly install --git https://github.com/nervosnetwork/muta.git --bin muta-keypair
 
 $ muta-keypair -h
 muta_keypair 0.1
@@ -40,7 +40,7 @@ $ muta-keypair -n 1
   ]
 }
 
-$ muta-keypair -n 1 -c 37537a3658476b334a71
+$ muta-keypair -n 2 -c 37537a3658476b334a71
 {
   "common_ref": "37537a3658476b334a71",
   "keypairs": [
@@ -50,7 +50,14 @@ $ muta-keypair -n 1 -c 37537a3658476b334a71
       "public_key": "02ff12550ee3a923a0c7cc4fc2bea0670ec3057f8a368fb4d375957cdc26e0bce9",
       "address": "c2c456378a72ec16a50264e36232ab9654a81b62",
       "bls_public_key": "04037457b7c7b88683d2affa5b2a0045bb8816d8f67412490d82fd447cc77b96f04090854a38b39f0d2aedb264a01120350df3bb0acd85abfa8a1462af0512ba14032ffc71099a92ed9cb9d2f4046bafb9438ac97d30890dbf7c5213a81ecd3622"
-    }
+    },
+    {
+      "index": 2,
+      "private_key": "d920025da5817b4fcf83bedd750bd9a39097119cc256dbbe4b8d91bdce806a7f",
+      "public_key": "02f6947ddaaabc226c596fb3b9596fa11cc8774fc38404506856af39a03e5863dc",
+      "address": "fa78b72dba80fa7bf3a9dc7ca7845c56e84eeba3",
+      "bls_public_key": "040a02cbb00c9591fc0bd008edeeca3be1037f3ad542d0fe63b5d6754675a13b7e6882788a3fb50a649d6876d2d0d3d6b911d5368eee96d8868a2b6eb2feb351f9c0ce1b8476f7626a9911fccb8e176b724d0a3414ef951aff323c7878f05b21c1"
+    },
   ]
 }
 ```
@@ -59,9 +66,9 @@ $ muta-keypair -n 1 -c 37537a3658476b334a71
 
 一个创世块的示例如下。
 其中重点需要商议的部分是：
+
 - common_ref: 刚刚大家生成公钥时用的 common_ref
 - verifier_list: 初始出块节点，需要填写地址，bls_pub_key 和权重
-- admin: 共同认可的超级管理员地址
 
 其它创世块信息可以参考配置说明。
 
@@ -88,15 +95,27 @@ name = "metadata"
 payload = '''
 {
     "chain_id": "b6a4d7da21443f5e816e8700eea87610e6d769657d6b8ec73028457bf2ca4036",
-    "common_ref": "703873635a6b51513451",
+    "common_ref": "37537a3658476b334a71",
     "timeout_gap": 20,
     "cycles_limit": 999999999999,
     "cycles_price": 1,
     "interval": 3000,
     "verifier_list": [
         {
-            "bls_pub_key": "04188ef9488c19458a963cc57b567adde7db8f8b6bec392d5cb7b67b0abc1ed6cd966edc451f6ac2ef38079460eb965e890d1f576e4039a20467820237cda753f07a8b8febae1ec052190973a1bcf00690ea8fc0168b3fbbccd1c4e402eda5ef22",
-            "address": "f8389d774afdad8755ef8e629e5a154fddc6325a",
+            "bls_pub_key": "0406367be42b1373981cc1e7a65881b7e17931e11a3af54ce7016317f7fb84bd674f9ee2c95ff9833d197c43ca97363322056ed9acee03142c8923a36a39ce339c56dd215d9e262b3df66b4756e476df9cc796d9cc21b59be9e1b2abe9fcbbf6bd",
+            "address": "7529ec67eccf908a4ec49d119b5a47e45eeaceba",
+            "propose_weight": 1,
+            "vote_weight": 1
+        },
+        {
+            "bls_pub_key": "04037457b7c7b88683d2affa5b2a0045bb8816d8f67412490d82fd447cc77b96f04090854a38b39f0d2aedb264a01120350df3bb0acd85abfa8a1462af0512ba14032ffc71099a92ed9cb9d2f4046bafb9438ac97d30890dbf7c5213a81ecd3622",
+            "address": "c2c456378a72ec16a50264e36232ab9654a81b62",
+            "propose_weight": 1,
+            "vote_weight": 1
+        },
+        {
+            "bls_pub_key": "040a02cbb00c9591fc0bd008edeeca3be1037f3ad542d0fe63b5d6754675a13b7e6882788a3fb50a649d6876d2d0d3d6b911d5368eee96d8868a2b6eb2feb351f9c0ce1b8476f7626a9911fccb8e176b724d0a3414ef951aff323c7878f05b21c1",
+            "address": "fa78b72dba80fa7bf3a9dc7ca7845c56e84eeba3",
             "propose_weight": 1,
             "vote_weight": 1
         }
@@ -104,7 +123,9 @@ payload = '''
     "propose_ratio": 15,
     "prevote_ratio": 10,
     "precommit_ratio": 10,
-    "brake_ratio": 7
+    "brake_ratio": 7,
+    "tx_num_limit": 20000,
+    "max_tx_size": 1024
 }
 '''
 ```
@@ -115,7 +136,7 @@ payload = '''
 
 ```
 # crypto
-privkey = "45c56be699dca666191ad3446897e0f480da234da896270202514a0e1a587c3f"
+privkey = "33e10486adf1b64dbcf9a2c9531ebd78c9c651daf97bd6d2d170b0743f3dd789"
 
 # db config
 data_path = "./data"
@@ -124,13 +145,16 @@ data_path = "./data"
 listening_address = "0.0.0.0:8000"
 graphql_uri = "/graphql"
 graphiql_uri = "/graphiql"
+workers = 0 # if 0, uses number of available logical cpu as threads count.
+maxconn = 25000
+max_payload_size = 1048576
 
 [network]
 listening_address = "0.0.0.0:1337"
 rpc_timeout = 10
 
 [[network.bootstraps]]
-pubkey = "031288a6788678c25952eba8693b2f278f66e2187004b64ac09416d07f83f96d5b"
+pubkey = "02ff12550ee3a923a0c7cc4fc2bea0670ec3057f8a368fb4d375957cdc26e0bce9"
 address = "0.0.0.0:1888"
 
 [mempool]
@@ -161,7 +185,7 @@ listening_address = "0.0.0.0:1337"
 
 # 该配置为起链时连接的节点
 [[network.bootstraps]]
-pubkey = "031288a6788678c25952eba8693b2f278f66e2187004b64ac09416d07f83f96d5b"
+pubkey = "02ff12550ee3a923a0c7cc4fc2bea0670ec3057f8a368fb4d375957cdc26e0bce9"
 address = "44.55.66.77:1337"
 ```
 
