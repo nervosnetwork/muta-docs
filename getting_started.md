@@ -6,10 +6,10 @@
 - [Muta 入门](#muta-%e5%85%a5%e9%97%a8)
   - [安装和运行](#%e5%ae%89%e8%a3%85%e5%92%8c%e8%bf%90%e8%a1%8c)
     - [安装依赖](#%e5%ae%89%e8%a3%85%e4%be%9d%e8%b5%96)
-      - [** MacOS **](#macos)
-      - [** ubuntu **](#ubuntu)
-      - [** centos7 **](#centos7)
-      - [** archlinux **](#archlinux)
+      - [MacOS](#macos)
+      - [ubuntu](#ubuntu)
+      - [centos7](#centos7)
+      - [archlinux](#archlinux)
     - [直接下载预编译的二进制文件](#%e7%9b%b4%e6%8e%a5%e4%b8%8b%e8%bd%bd%e9%a2%84%e7%bc%96%e8%af%91%e7%9a%84%e4%ba%8c%e8%bf%9b%e5%88%b6%e6%96%87%e4%bb%b6)
     - [从源码编译](#%e4%bb%8e%e6%ba%90%e7%a0%81%e7%bc%96%e8%af%91)
       - [获取源码](#%e8%8e%b7%e5%8f%96%e6%ba%90%e7%a0%81)
@@ -30,20 +30,20 @@
 
 <!-- tabs:start -->
 
-#### ** MacOS **
+#### **MacOS**
 
 ```
 $ brew install autoconf libtool
 ```
 
-#### ** ubuntu **
+#### **ubuntu**
 
 ```
 $ apt update
 $ apt install -y git curl openssl cmake pkg-config libssl-dev gcc build-essential clang libclang-dev
 ```
 
-#### ** centos7 **
+#### **centos7**
 
 ```
 $ yum install -y centos-release-scl
@@ -53,7 +53,7 @@ $ yum install -y git make gcc-c++ openssl-devel llvm-toolset-7
 $ scl enable llvm-toolset-7 bash
 ```
 
-#### ** archlinux **
+#### **archlinux**
 
 ```
 $ pacman -Sy --noconfirm git gcc pkgconf clang make
@@ -79,20 +79,16 @@ $ git clone https://github.com/nervosnetwork/muta.git
 
 #### 安装 RUST
 
-参考： <https://www.rust-lang.org/tools/install>
-
-```
-$ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-```
+在 Unix 平台上，执行 `curl https://sh.rustup.rs -sSf | sh`；在 Windows 平台上，下载并运行 [rustup-init.exe](https://static.rust-lang.org/rustup/dist/i686-pc-windows-gnu/rustup-init.exe)。
 
 #### 编译
 
 ```
 $ cd /path/to/muta
-$ make prod
+$ cargo build --release --example muta-chain
 ```
 
-编译完成后的二进制文件在 `target/release/muta`。
+编译完成后的二进制文件在 `target/release/examples/muta-chain`。
 
 ### 运行单节点
 
@@ -101,23 +97,7 @@ $ cd /path/to/muta
 
 # 使用默认配置运行 muta
 # 如果是直接下载的 binary，请自行替换下面的命令为对应的路径
-./target/release/muta
-
-# 查看帮助
-$ ./target/release/muta  -h
-muta v0.2.0
-Muta Dev <muta@nervos.org>
-
-USAGE:
-    muta [OPTIONS]
-
-FLAGS:
-    -h, --help       Prints help information
-    -V, --version    Prints version information
-
-OPTIONS:
-    -c, --config <FILE>     a required file for the configuration [default: ./config/chain.toml]
-    -g, --genesis <FILE>    a required file for the genesis [default: ./config/genesis.toml]
+$ ./target/release/examples/muta-chain
 ```
 
 ## 与链进行交互
@@ -145,32 +125,32 @@ $ muta-cli repl
 > await client.getLatestBlockHeight()
 2081
 > await client.getBlock('0x1')
-{ header:
-   { chainId:
-      'b6a4d7da21443f5e816e8700eea87610e6d769657d6b8ec73028457bf2ca4036',
-     confirmRoot: [],
-     cyclesUsed: [ '0000000000000000' ],
-     height: '0000000000000001',
-     execHeight: '0000000000000000',
-     orderRoot:
-      '56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421',
-     preHash:
-      '87f07b8f60bd6198ba52deacfe9ecf9870198edb60a706a1d0fea1f5df1c6a26',
-     proposer: 'f8389d774afdad8755ef8e629e5a154fddc6325a',
-     receiptRoot: [],
-     stateRoot:
-      'f846a8c0af225b0d3a4ea5c90e2adfbf207b0accd9a1046832f84aa92947d1f1',
-     timestamp: '000000005e3ebfea',
-     validatorVersion: '0000000000000000',
-     proof:
-      { bitmap: '',
-        blockHash:
-         '56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421',
-        height: '0000000000000000',
-        round: '0000000000000000',
-        signature: '' },
-     validators: [ [Object] ] },
-  orderedTxHashes: [] }
+{
+  header: {
+    chainId: 'b6a4d7da21443f5e816e8700eea87610e6d769657d6b8ec73028457bf2ca4036',
+    confirmRoot: [],
+    cyclesUsed: [],
+    height: '0000000000000001',
+    execHeight: '0000000000000000',
+    orderRoot: '56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421',
+    preHash: '12471b0157af0cc1869361160e651cd6670614fea7fc6834d79bb2699555a0a9',
+    proposer: 'f8389d774afdad8755ef8e629e5a154fddc6325a',
+    receiptRoot: [],
+    stateRoot: 'f6ec46b4b663a73a3786c27b75d595f9d8e879964faf340c702d078c4d457875',
+    timestamp: '000000005e5a06f5',
+    validatorVersion: '0000000000000000',
+    proof: {
+      bitmap: '',
+      blockHash: '56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421',
+      height: '0000000000000000',
+      round: '0000000000000000',
+      signature: ''
+    },
+    validators: [ [Object] ]
+  },
+  orderedTxHashes: [],
+  hash: '9c77d286a1b4c77f45c910b73996f1ca66bc55e046917864b7652aa31e686ac2'
+}
 ```
 
 该 REPL 是基于 nodejs 的封装，你可以使用任何符合 nodejs 语法的语句。
@@ -194,32 +174,32 @@ $ muta-cli repl
 2081
 
 > client.getBlock('0x1')
-{ header:
-   { chainId:
-      'b6a4d7da21443f5e816e8700eea87610e6d769657d6b8ec73028457bf2ca4036',
-     confirmRoot: [],
-     cyclesUsed: [ '0000000000000000' ],
-     height: '0000000000000001',
-     execHeight: '0000000000000000',
-     orderRoot:
-      '56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421',
-     preHash:
-      '87f07b8f60bd6198ba52deacfe9ecf9870198edb60a706a1d0fea1f5df1c6a26',
-     proposer: 'f8389d774afdad8755ef8e629e5a154fddc6325a',
-     receiptRoot: [],
-     stateRoot:
-      'f846a8c0af225b0d3a4ea5c90e2adfbf207b0accd9a1046832f84aa92947d1f1',
-     timestamp: '000000005e3eecac',
-     validatorVersion: '0000000000000000',
-     proof:
-      { bitmap: '',
-        blockHash:
-         '56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421',
-        height: '0000000000000000',
-        round: '0000000000000000',
-        signature: '' },
-     validators: [ [Object] ] },
-  orderedTxHashes: [] }
+{
+  header: {
+    chainId: 'b6a4d7da21443f5e816e8700eea87610e6d769657d6b8ec73028457bf2ca4036',
+    confirmRoot: [],
+    cyclesUsed: [],
+    height: '0000000000000001',
+    execHeight: '0000000000000000',
+    orderRoot: '56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421',
+    preHash: '12471b0157af0cc1869361160e651cd6670614fea7fc6834d79bb2699555a0a9',
+    proposer: 'f8389d774afdad8755ef8e629e5a154fddc6325a',
+    receiptRoot: [],
+    stateRoot: 'f6ec46b4b663a73a3786c27b75d595f9d8e879964faf340c702d078c4d457875',
+    timestamp: '000000005e5a06f5',
+    validatorVersion: '0000000000000000',
+    proof: {
+      bitmap: '',
+      blockHash: '56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421',
+      height: '0000000000000000',
+      round: '0000000000000000',
+      signature: ''
+    },
+    validators: [ [Object] ]
+  },
+  orderedTxHashes: [],
+  hash: '9c77d286a1b4c77f45c910b73996f1ca66bc55e046917864b7652aa31e686ac2'
+}
 
 # asset service 操作
 > const account = accounts[0]
@@ -227,20 +207,40 @@ $ muta-cli repl
 > const service = new muta_sdk.AssetService(client, account)
 
 # 发行资产
-> MT = await service.createAsset({name: 'Muta Token', supply: 1000000000, symbol: 'MT'})
-{ name: 'Muta Token',
-  symbol: 'MT',
-  supply: 1000000000,
-  issuer: '9d1d1bb11c44500603971a245f55a23f65148eee',
-  asset_id:
-   'e8c2c6606030bc93da018cec5e6400845489b471527d507357b3316ae884a3f3' }
+> MT = await service.create_asset({name: 'Muta Token', supply: 1000000000, symbol: 'MT'})
+{
+  txHash: '8510b5da8c54fb7d5b3de83b13a65188e55102a830a1653ab6c839f3fe326530',
+  height: '0000000000000026',
+  cyclesUsed: '0000000000005208',
+  events: [
+    {
+      data: '{"id":"fdd1609dfa84a04bc2074d9a8a6a4fab13ada36c2cb9570810f997b44d5b8074","name":"Muta Token","symbol":"MT","supply":1000000000,"issuer":"45f74b60a96160352267f2e4fcdcb92ddea304b1"}',
+      service: 'asset'
+    }
+  ],
+  stateRoot: '51e2ad9e08aea6cd34f2c170c79b5eca46485bfe8d95f39e73dc2c709a7b6209',
+  response: {
+    serviceName: 'asset',
+    method: 'create_asset',
+    ret: {
+      id: 'fdd1609dfa84a04bc2074d9a8a6a4fab13ada36c2cb9570810f997b44d5b8074',
+      name: 'Muta Token',
+      symbol: 'MT',
+      supply: 1000000000,
+      issuer: '45f74b60a96160352267f2e4fcdcb92ddea304b1'
+    },
+    isError: false
+  }
+}
+
+> asset_id = MT.response.ret.id
 
 # 发行者即为发交易的账户地址
 > account.address
 '0x9d1d1bb11c44500603971a245f55a23f65148eee'
 
 # 查询发行者余额
-> await client.queryService({serviceName: 'asset', method: 'get_balance', payload: JSON.stringify({asset_id: MT.asset_id, user: account.address})})
+> await client.queryService({serviceName: 'asset', method: 'get_balance', payload: JSON.stringify({asset_id: asset_id, user: account.address})})
 { isError: false,
   ret:
    '{"asset_id":"e8c2c6606030bc93da018cec5e6400845489b471527d507357b3316ae884a3f3","user":"9d1d1bb11c44500603971a245f55a23f65148eee","balance":1000000000}' }
@@ -248,15 +248,15 @@ $ muta-cli repl
 # 转账
 > const to = accounts[1].address;
 
-> await service.transfer({asset_id: MT.asset_id, to, value: 100});
+> await service.transfer({asset_id: asset_id, to, value: 100});
 
 # 查看转账结果
-> await client.queryService({ serviceName: 'asset', method: 'get_balance', payload: JSON.stringify({asset_id: MT.asset_id, user: account.address})})
+> await client.queryService({ serviceName: 'asset', method: 'get_balance', payload: JSON.stringify({asset_id: asset_id, user: account.address})})
 { isError: false,
   ret:
    '{"asset_id":"e8c2c6606030bc93da018cec5e6400845489b471527d507357b3316ae884a3f3","user":"9d1d1bb11c44500603971a245f55a23f65148eee","balance":999999900}' }
 
-> await client.queryService({ serviceName: 'asset', method: 'get_balance', payload: JSON.stringify({asset_id: MT.asset_id, user: to})})
+> await client.queryService({ serviceName: 'asset', method: 'get_balance', payload: JSON.stringify({asset_id: asset_id, user: to})})
 { isError: false,
   ret:
    '{"asset_id":"e8c2c6606030bc93da018cec5e6400845489b471527d507357b3316ae884a3f3","user":"9b13a4625e63b0c475c4a6f5dabb761d1c315f2b","balance":100}' }
@@ -304,7 +304,7 @@ make docker-build
 2. 运行 docker compose 命令起链
 
 ```bash
-docker compose -f devtools/docker-compose/bft-4-node.yaml up
+docker compose -f devtools/docker/dockercompose/bft-4-node.yaml up
 ```
 
-Docker compose 启动 4 个共识节点，分别暴露 GraphQL 本地端口 8001、8002、8003、8004，节点的详细配置信息可前往 `devtools/docker-compose` 目录查看。
+Docker compose 启动 4 个共识节点，分别暴露 GraphQL 本地端口 8001、8002、8003、8004，节点的详细配置信息可前往 `devtools/docker/dockercompose` 目录查看。
