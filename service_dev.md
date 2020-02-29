@@ -213,9 +213,19 @@ fn init_genesis(&mut self, payload: GenesisPayload) -> ProtocolResult<()> {
 
 ## 资源消耗统计：cycle
 
-调用 Service 的接口方法，会消耗一定数量的 cycles，使用过程宏 `#[cycles(amount)]` 标记接口方法，框架会自动扣除 `amount` 数量的 cycles。
+接口方法中使用 `ServiceContext` 的 `fn sub_cycles` 接口，可以消耗一定数量的 cycles ，接口如下：
 
-目前对 cycle 的计算只支持在接口方法上标记固定的数量，具体数值由开发者自行设定。未来会增加 cycle 消耗多种维度的统计方式。
+```rust
+pub fn sub_cycles(&self, cycles: u64) -> ProtocolResult<()>;
+```
+
+此外，如果接口方法消耗的 cycles 是固定数量，可以使用过程宏 `#[cycles(amount)]` 标记接口方法，框架会自动扣除 `amount` 数量的 cycles 。例如，创建资产方法消耗固定 210_00 数量的 cycles: 
+
+```rust
+#[cycles(210_00)]
+#[write]
+fn create_asset(&mut self, ctx: ServiceContext, payload: CreateAssetPayload) -> ProtocolResult<Asset>;
+```
 
 ## 事件
 
