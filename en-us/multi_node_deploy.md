@@ -69,7 +69,6 @@ $ muta-keypair -n 2 -c 37537a3658476b334a71
 
 - common_ref: 刚刚大家生成公钥时用的 common_ref
 - verifier_list: 初始出块节点，需要填写地址，bls_pub_key 和权重
-- admin: 共同认可的超级管理员地址
 
 其它创世块信息可以参考配置说明。
 
