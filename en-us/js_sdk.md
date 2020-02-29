@@ -8,7 +8,7 @@ JS-SDK 是官方推出的基于 JavaScript 的 SDK。用于与 Muta RPC 进行�
 
 - [Service](./service_overview.md): Muta 提供的各种服务由 Service 暴露
 - [GraphQL](https://graphql.org): Muta 的 RPC 服务由GraphQL 提供，虽然名字带有 QL(Query Language)，但它是拥有 mutation 能力的
-- [TypeScript](https://www.typescriptlang.org/): 一种 JavaScript 的超级，给 JavaScript 加上了类型，并能够编译成 JavaScript。顺带一提，这个 SDK 就是由 TypeScript 编写，因此使用诸如 VSCode 等编辑器会有很强的代码提示功能。文档中，我们也会使用 TypeScript 的 interface 描述数据结构
+- [TypeScript](https://www.typescriptlang.org/): 一种 JavaScript 的超集，给 JavaScript 加上了类型，并能够编译成 JavaScript。顺带一提，这个 SDK 就是由 TypeScript 编写，因此使用诸如 VSCode 等编辑器会有很强的代码提示功能。文档中，我们也会使用 TypeScript 的 interface 描述数据结构
 
 ## Install
 
