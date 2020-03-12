@@ -127,21 +127,21 @@ $ muta-cli repl
 > await client.getBlock('0x1')
 {
   header: {
-    chainId: 'b6a4d7da21443f5e816e8700eea87610e6d769657d6b8ec73028457bf2ca4036',
+    chainId: '0xb6a4d7da21443f5e816e8700eea87610e6d769657d6b8ec73028457bf2ca4036',
     confirmRoot: [],
     cyclesUsed: [],
     height: '0000000000000001',
     execHeight: '0000000000000000',
-    orderRoot: '56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421',
-    preHash: '12471b0157af0cc1869361160e651cd6670614fea7fc6834d79bb2699555a0a9',
-    proposer: 'f8389d774afdad8755ef8e629e5a154fddc6325a',
+    orderRoot: '0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421',
+    preHash: '0x12471b0157af0cc1869361160e651cd6670614fea7fc6834d79bb2699555a0a9',
+    proposer: '0xf8389d774afdad8755ef8e629e5a154fddc6325a',
     receiptRoot: [],
-    stateRoot: 'f6ec46b4b663a73a3786c27b75d595f9d8e879964faf340c702d078c4d457875',
+    stateRoot: '0xf6ec46b4b663a73a3786c27b75d595f9d8e879964faf340c702d078c4d457875',
     timestamp: '000000005e5a06f5',
     validatorVersion: '0000000000000000',
     proof: {
       bitmap: '',
-      blockHash: '56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421',
+      blockHash: '0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421',
       height: '0000000000000000',
       round: '0000000000000000',
       signature: ''
@@ -149,7 +149,7 @@ $ muta-cli repl
     validators: [ [Object] ]
   },
   orderedTxHashes: [],
-  hash: '9c77d286a1b4c77f45c910b73996f1ca66bc55e046917864b7652aa31e686ac2'
+  hash: '0x9c77d286a1b4c77f45c910b73996f1ca66bc55e046917864b7652aa31e686ac2'
 }
 ```
 
@@ -161,7 +161,6 @@ $ muta-cli repl
 - `client`: 对链进行 GraphQL 调用的 client
 - `wallet`: 根据助记词（默认为随机生成）推导出的钱包
 - `accounts`: 根据 wallet 推导出的 20 个账号
-
 
 ## 使用示例
 
@@ -176,21 +175,21 @@ $ muta-cli repl
 > client.getBlock('0x1')
 {
   header: {
-    chainId: 'b6a4d7da21443f5e816e8700eea87610e6d769657d6b8ec73028457bf2ca4036',
+    chainId: '0xb6a4d7da21443f5e816e8700eea87610e6d769657d6b8ec73028457bf2ca4036',
     confirmRoot: [],
     cyclesUsed: [],
     height: '0000000000000001',
     execHeight: '0000000000000000',
-    orderRoot: '56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421',
-    preHash: '12471b0157af0cc1869361160e651cd6670614fea7fc6834d79bb2699555a0a9',
-    proposer: 'f8389d774afdad8755ef8e629e5a154fddc6325a',
+    orderRoot: '0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421',
+    preHash: '0x12471b0157af0cc1869361160e651cd6670614fea7fc6834d79bb2699555a0a9',
+    proposer: '0xf8389d774afdad8755ef8e629e5a154fddc6325a',
     receiptRoot: [],
-    stateRoot: 'f6ec46b4b663a73a3786c27b75d595f9d8e879964faf340c702d078c4d457875',
+    stateRoot: '0xf6ec46b4b663a73a3786c27b75d595f9d8e879964faf340c702d078c4d457875',
     timestamp: '000000005e5a06f5',
     validatorVersion: '0000000000000000',
     proof: {
       bitmap: '',
-      blockHash: '56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421',
+      blockHash: '0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421',
       height: '0000000000000000',
       round: '0000000000000000',
       signature: ''
@@ -198,7 +197,7 @@ $ muta-cli repl
     validators: [ [Object] ]
   },
   orderedTxHashes: [],
-  hash: '9c77d286a1b4c77f45c910b73996f1ca66bc55e046917864b7652aa31e686ac2'
+  hash: '0x9c77d286a1b4c77f45c910b73996f1ca66bc55e046917864b7652aa31e686ac2'
 }
 
 # asset service 操作
@@ -209,25 +208,25 @@ $ muta-cli repl
 # 发行资产
 > MT = await service.create_asset({name: 'Muta Token', supply: 1000000000, symbol: 'MT'})
 {
-  txHash: '8510b5da8c54fb7d5b3de83b13a65188e55102a830a1653ab6c839f3fe326530',
+  txHash: '0x8510b5da8c54fb7d5b3de83b13a65188e55102a830a1653ab6c839f3fe326530',
   height: '0000000000000026',
   cyclesUsed: '0000000000005208',
   events: [
     {
-      data: '{"id":"fdd1609dfa84a04bc2074d9a8a6a4fab13ada36c2cb9570810f997b44d5b8074","name":"Muta Token","symbol":"MT","supply":1000000000,"issuer":"45f74b60a96160352267f2e4fcdcb92ddea304b1"}',
+      data: '{"id":"0xfdd1609dfa84a04bc2074d9a8a6a4fab13ada36c2cb9570810f997b44d5b8074","name":"Muta Token","symbol":"MT","supply":1000000000,"issuer":"0x45f74b60a96160352267f2e4fcdcb92ddea304b1"}',
       service: 'asset'
     }
   ],
-  stateRoot: '51e2ad9e08aea6cd34f2c170c79b5eca46485bfe8d95f39e73dc2c709a7b6209',
+  stateRoot: '0x51e2ad9e08aea6cd34f2c170c79b5eca46485bfe8d95f39e73dc2c709a7b6209',
   response: {
     serviceName: 'asset',
     method: 'create_asset',
     ret: {
-      id: 'fdd1609dfa84a04bc2074d9a8a6a4fab13ada36c2cb9570810f997b44d5b8074',
+      id: '0xfdd1609dfa84a04bc2074d9a8a6a4fab13ada36c2cb9570810f997b44d5b8074',
       name: 'Muta Token',
       symbol: 'MT',
       supply: 1000000000,
-      issuer: '45f74b60a96160352267f2e4fcdcb92ddea304b1'
+      issuer: '0x45f74b60a96160352267f2e4fcdcb92ddea304b1'
     },
     isError: false
   }
@@ -243,7 +242,7 @@ $ muta-cli repl
 > await client.queryService({serviceName: 'asset', method: 'get_balance', payload: JSON.stringify({asset_id: asset_id, user: account.address})})
 { isError: false,
   ret:
-   '{"asset_id":"e8c2c6606030bc93da018cec5e6400845489b471527d507357b3316ae884a3f3","user":"9d1d1bb11c44500603971a245f55a23f65148eee","balance":1000000000}' }
+   '{"asset_id":"0xe8c2c6606030bc93da018cec5e6400845489b471527d507357b3316ae884a3f3","user":"0x9d1d1bb11c44500603971a245f55a23f65148eee","balance":1000000000}' }
 
 # 转账
 > const to = accounts[1].address;
@@ -254,34 +253,34 @@ $ muta-cli repl
 > await client.queryService({ serviceName: 'asset', method: 'get_balance', payload: JSON.stringify({asset_id: asset_id, user: account.address})})
 { isError: false,
   ret:
-   '{"asset_id":"e8c2c6606030bc93da018cec5e6400845489b471527d507357b3316ae884a3f3","user":"9d1d1bb11c44500603971a245f55a23f65148eee","balance":999999900}' }
+   '{"asset_id":"0xe8c2c6606030bc93da018cec5e6400845489b471527d507357b3316ae884a3f3","user":"0x9d1d1bb11c44500603971a245f55a23f65148eee","balance":999999900}' }
 
 > await client.queryService({ serviceName: 'asset', method: 'get_balance', payload: JSON.stringify({asset_id: asset_id, user: to})})
 { isError: false,
   ret:
-   '{"asset_id":"e8c2c6606030bc93da018cec5e6400845489b471527d507357b3316ae884a3f3","user":"9b13a4625e63b0c475c4a6f5dabb761d1c315f2b","balance":100}' }
+   '{"asset_id":"0xe8c2c6606030bc93da018cec5e6400845489b471527d507357b3316ae884a3f3","user":"0x9b13a4625e63b0c475c4a6f5dabb761d1c315f2b","balance":100}' }
 
 # 链上管理
-> admin = muta_sdk.Muta.account.fromPrivateKey('2b672bb959fa7a852d7259b129b65aee9c83b39f427d6f7bded1f58c4c9310c2')
+> admin = muta_sdk.Muta.account.fromPrivateKey('0x2b672bb959fa7a852d7259b129b65aee9c83b39f427d6f7bded1f58c4c9310c2')
 
 > admin.address
-'0xcff1002107105460941f797828f468667aa1a2db'
+'0x0xcff1002107105460941f797828f468667aa1a2db'
 
 > metadata_raw = await client.queryService({serviceName: 'metadata', method: 'get_metadata', payload: ''})
 { isError: false,
   ret:
-   '{"chain_id":"b6a4d7da21443f5e816e8700eea87610e6d769657d6b8ec73028457bf2ca4036","common_ref":"703873635a6b51513451","timeout_gap":20,"cycles_limit":99999999,"cycles_price":1,"interval":999,"verifier_list":[{"address":"f8389d774afdad8755ef8e629e5a154fddc6325a","propose_weight":1,"vote_weight":1}],"propose_ratio":15,"prevote_ratio":10,"precommit_ratio":10}' }
+   '{"chain_id":"0xb6a4d7da21443f5e816e8700eea87610e6d769657d6b8ec73028457bf2ca4036","common_ref":"0x703873635a6b51513451","timeout_gap":20,"cycles_limit":99999999,"cycles_price":1,"interval":999,"verifier_list":[{"address":"0xf8389d774afdad8755ef8e629e5a154fddc6325a","propose_weight":1,"vote_weight":1}],"propose_ratio":15,"prevote_ratio":10,"precommit_ratio":10}' }
 
 > metadata = JSON.parse(metadata_raw.ret)
 { chain_id:
-   'b6a4d7da21443f5e816e8700eea87610e6d769657d6b8ec73028457bf2ca4036',
-  common_ref: '703873635a6b51513451',
+   '0xb6a4d7da21443f5e816e8700eea87610e6d769657d6b8ec73028457bf2ca4036',
+  common_ref: '0x703873635a6b51513451',
   timeout_gap: 20,
   cycles_limit: 99999999,
   cycles_price: 1,
   interval: 999,
   verifier_list:
-   [ { address: 'f8389d774afdad8755ef8e629e5a154fddc6325a',
+   [ { address: '0xf8389d774afdad8755ef8e629e5a154fddc6325a',
        propose_weight: 1,
        vote_weight: 1 } ],
   propose_ratio: 15,

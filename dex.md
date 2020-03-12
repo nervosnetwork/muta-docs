@@ -256,11 +256,11 @@ pub struct InitGenesisPayload {
 name = "asset"
 payload = '''
 {
-    "id": "f56924db538e77bb5951eb5ff0d02b88983c49c45eea30e8ae3e7234b311436c",
+    "id": "0xf56924db538e77bb5951eb5ff0d02b88983c49c45eea30e8ae3e7234b311436c",
     "name": "Muta Tutorial Token",
     "symbol": "MTT",
     "supply": 1000000000,
-    "issuer": "f8389d774afdad8755ef8e629e5a154fddc6325a"
+    "issuer": "0xf8389d774afdad8755ef8e629e5a154fddc6325a"
 }
 '''
 ```
