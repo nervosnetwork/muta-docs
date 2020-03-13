@@ -11,7 +11,7 @@
 ```rust
 pub struct Metadata {
     pub chain_id:        Hash,
-    pub common_ref:      String, // BLS 签名算法的公共参数
+    pub common_ref:      Hex, // BLS 签名算法的公共参数
     pub timeout_gap:     u64, // (交易有效期 - 当前区块高度)的最大值
     pub cycles_limit:    u64, // 区块全部交易消耗的 cycles 上限
     pub cycles_price:    u64, // 节点设置的交易打包进区块的最小 cycles_price
@@ -24,7 +24,7 @@ pub struct Metadata {
 }
 
 pub struct ValidatorExtend {
-    pub bls_pub_key: String,
+    pub bls_pub_key:    Hex,
     pub address:        Address,
     pub propose_weight: u32, //出块权重
     pub vote_weight:    u32, // 投票权重
