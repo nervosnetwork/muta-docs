@@ -240,52 +240,71 @@ $ muta-cli repl
 
 # 查询发行者余额
 > await client.queryService({serviceName: 'asset', method: 'get_balance', payload: JSON.stringify({asset_id: asset_id, user: account.address})})
-{ isError: false,
-  ret:
-   '{"asset_id":"0xe8c2c6606030bc93da018cec5e6400845489b471527d507357b3316ae884a3f3","user":"0x9d1d1bb11c44500603971a245f55a23f65148eee","balance":1000000000}' }
+{ 
+  isError: false,
+  ret: '{"asset_id":"0xe8c2c6606030bc93da018cec5e6400845489b471527d507357b3316ae884a3f3","user":"0x9d1d1bb11c44500603971a245f55a23f65148eee","balance":1000000000}' 
+}
 
 # 转账
 > const to = accounts[1].address;
 
 > await service.transfer({asset_id: asset_id, to, value: 100});
+{
+  txHash: '0xfb595feb517dc5d5f8fb23b75f382e67b76fae028d1fd0d72030a20985ac5586',
+  height: '0x000000000000010d',
+  cyclesUsed: '0x0000000000005208',
+  events: [
+    {
+      data: '{"asset_id":"0x5d83b24f012f1e5c1619dc3224de580989f3f518797fdf2845448a85aa06fecd","from":"0xbc4a5e33118de98ffddb6bc192d91a18dafbef22","to":"0x75c64d4b7373e28fbf4e13a81f5c7b309c2f35d6","value":100}',
+      service: 'asset'
+    }
+  ],
+  stateRoot: '0x83ac204808f0aa3b93d4061b8e27ca75c2e71791fd716378e162c0fb97f1fc1b',
+  response: { serviceName: 'asset', method: 'transfer', ret: '', isError: false }
+}
 
 # 查看转账结果
 > await client.queryService({ serviceName: 'asset', method: 'get_balance', payload: JSON.stringify({asset_id: asset_id, user: account.address})})
-{ isError: false,
-  ret:
-   '{"asset_id":"0xe8c2c6606030bc93da018cec5e6400845489b471527d507357b3316ae884a3f3","user":"0x9d1d1bb11c44500603971a245f55a23f65148eee","balance":999999900}' }
+{ 
+  isError: false,
+  ret: '{"asset_id":"0xe8c2c6606030bc93da018cec5e6400845489b471527d507357b3316ae884a3f3","user":"0x9d1d1bb11c44500603971a245f55a23f65148eee","balance":999999900}' 
+}
 
 > await client.queryService({ serviceName: 'asset', method: 'get_balance', payload: JSON.stringify({asset_id: asset_id, user: to})})
-{ isError: false,
-  ret:
-   '{"asset_id":"0xe8c2c6606030bc93da018cec5e6400845489b471527d507357b3316ae884a3f3","user":"0x9b13a4625e63b0c475c4a6f5dabb761d1c315f2b","balance":100}' }
+{ 
+  isError: false,
+  ret: '{"asset_id":"0xe8c2c6606030bc93da018cec5e6400845489b471527d507357b3316ae884a3f3","user":"0x9b13a4625e63b0c475c4a6f5dabb761d1c315f2b","balance":100}' 
+}
 
 # 链上管理
 > admin = muta_sdk.Muta.account.fromPrivateKey('0x2b672bb959fa7a852d7259b129b65aee9c83b39f427d6f7bded1f58c4c9310c2')
 
 > admin.address
-'0x0xcff1002107105460941f797828f468667aa1a2db'
+'0xcff1002107105460941f797828f468667aa1a2db'
 
 > metadata_raw = await client.queryService({serviceName: 'metadata', method: 'get_metadata', payload: ''})
-{ isError: false,
-  ret:
-   '{"chain_id":"0xb6a4d7da21443f5e816e8700eea87610e6d769657d6b8ec73028457bf2ca4036","common_ref":"0x703873635a6b51513451","timeout_gap":20,"cycles_limit":99999999,"cycles_price":1,"interval":999,"verifier_list":[{"address":"0xf8389d774afdad8755ef8e629e5a154fddc6325a","propose_weight":1,"vote_weight":1}],"propose_ratio":15,"prevote_ratio":10,"precommit_ratio":10}' }
-
-> metadata = JSON.parse(metadata_raw.ret)
-{ chain_id:
-   '0xb6a4d7da21443f5e816e8700eea87610e6d769657d6b8ec73028457bf2ca4036',
+{
+  chain_id: '0xb6a4d7da21443f5e816e8700eea87610e6d769657d6b8ec73028457bf2ca4036',
   common_ref: '0x703873635a6b51513451',
   timeout_gap: 20,
-  cycles_limit: 99999999,
+  cycles_limit: 1000000,
   cycles_price: 1,
-  interval: 999,
-  verifier_list:
-   [ { address: '0xf8389d774afdad8755ef8e629e5a154fddc6325a',
-       propose_weight: 1,
-       vote_weight: 1 } ],
+  interval: 3000,
+  verifier_list: [
+    {
+      bls_pub_key: '0x04188ef9488c19458a963cc57b567adde7db8f8b6bec392d5cb7b67b0abc1ed6cd966edc451f6ac2ef38079460eb965e890d1f576e4039a20467820237cda753f07a8b8febae1ec052190973a1bcf00690ea8fc0168b3fbbccd1c4e402eda5ef22',
+      address: '0xf8389d774afdad8755ef8e629e5a154fddc6325a',
+      propose_weight: 1,
+      vote_weight: 1
+    }
+  ],
   propose_ratio: 15,
   prevote_ratio: 10,
-  precommit_ratio: 10 }
+  precommit_ratio: 10,
+  brake_ratio: 7,
+  tx_num_limit: 20000,
+  max_tx_size: 1024
+}
 ```
 
 ## 使用 docker 本地部署多节点链
