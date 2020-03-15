@@ -1,6 +1,6 @@
 # 配置说明
 
-默认的创世块和配置样例在 `config` 文件夹中，此处对其中的一些字段进行说明。
+默认的创世块和配置样例在 `devtools/chain/` 文件夹中，此处对其中的一些字段进行说明。
 
 ## 创世块
 
@@ -8,17 +8,17 @@
 
 ```toml
 timestamp = 0
-prevhash = "44915be5b6c20b0678cf05fcddbbaa832e25d7e6ac538784cd5c24de00d47472"
+prevhash = "0x44915be5b6c20b0678cf05fcddbbaa832e25d7e6ac538784cd5c24de00d47472"
 
 [[services]]
 name = "asset"
 payload = '''
 {
-    "id": "f56924db538e77bb5951eb5ff0d02b88983c49c45eea30e8ae3e7234b311436c",
+    "id": "0xf56924db538e77bb5951eb5ff0d02b88983c49c45eea30e8ae3e7234b311436c",
     "name": "MutaToken",
     "symbol": "MT",
     "supply": 320000011,
-    "issuer": "f8389d774afdad8755ef8e629e5a154fddc6325a"
+    "issuer": "0xf8389d774afdad8755ef8e629e5a154fddc6325a"
 }
 '''
 
@@ -26,34 +26,16 @@ payload = '''
 name = "metadata"
 payload = '''
 {
-    "chain_id": "b6a4d7da21443f5e816e8700eea87610e6d769657d6b8ec73028457bf2ca4036",
-    "common_ref": "7446645045376b553041",
+    "chain_id": "0xb6a4d7da21443f5e816e8700eea87610e6d769657d6b8ec73028457bf2ca4036",
+    "common_ref": "0x703873635a6b51513451",
     "timeout_gap": 20,
-    "cycles_limit": 999999999999,
+    "cycles_limit": 1000000,
     "cycles_price": 1,
     "interval": 3000,
     "verifier_list": [
         {
-            "bls_pub_key": "040386a8ac1cce6fd90c31effa628bc8513cbd625c752ca76ade6ff37b97edbdfb97d94caeddd261d9e2fd6b5456aecc100ea730ddee3c94f040a54152ded330a4e409f39bfbc34b286536790fef8bbaf734431679ba6a8d5d6994e557e82306df",
-            "address": "12d8baf8c4efb32a7983efac2d8535fe57deb756",
-            "propose_weight": 1,
-            "vote_weight": 1
-        },
-        {
-            "bls_pub_key": "040e7b00b59d37d4d735041ea1b69a55cd7fd80e920b5d70d85d051af6b847c3aec5b412b128f85ad8b4c6bac0561105a80fa8dd5f60cd42c3a2da0fd0b946fa3d761b1d21c569e0958b847da22dec14a132121027006df8c5d4ccf7caf8535f70",
-            "address": "a55e1261a73116c755291140e427caa0cbb5309e",
-            "propose_weight": 1,
-            "vote_weight": 1
-        },
-        {
-            "bls_pub_key": "0413584a15f1dec552bb12233bf73a886ed49a3f56c68eda080743577005417635c9ac72a528a961a0e14a2df3a50a5c660641f446f629788486d7935d4ad4918035ce884a98bbaaa4c96307a2428729cba694329a693ce60c02e13b039c6a8978",
-            "address": "78ef0eff2fb9f569d86d75d22b69ea8407f6f092",
-            "propose_weight": 1,
-            "vote_weight": 1
-        },
-        {
-            "bls_pub_key": "041611b7da94a7fb7a8ff1c802bbf61da689f8d6f974d99466adeb1f47bcaff70470b6f279763abeb0cec5565abcfcb4ce13e79b8c310f0d1b26605b61ac2c04e0efcedbae18e763a86adb7a0e8ed0fcb1dc11fded12583972403815a7aa3dc300",
-            "address": "103252cad4e0380fe57a0c73f549f1ee2c9ea8e8",
+            "bls_pub_key": "0x04188ef9488c19458a963cc57b567adde7db8f8b6bec392d5cb7b67b0abc1ed6cd966edc451f6ac2ef38079460eb965e890d1f576e4039a20467820237cda753f07a8b8febae1ec052190973a1bcf00690ea8fc0168b3fbbccd1c4e402eda5ef22",
+            "address": "0xf8389d774afdad8755ef8e629e5a154fddc6325a",
             "propose_weight": 1,
             "vote_weight": 1
         }
@@ -102,39 +84,48 @@ payload = '''
 
 ## 链的运行配置
 
-`chain.toml`:
+`config.toml`:
 
 ```toml
-data_path = "./devtools/chain/data/1"
-privkey = "592d6f62cd5c3464d4956ea585ec7007bcf5217eb89cc50bf14eea95f3b09706"
+# crypto
+privkey = "0x45c56be699dca666191ad3446897e0f480da234da896270202514a0e1a587c3f"
+
+# db config
+data_path = "./devtools/chain/data"
+
+[graphql]
+listening_address = "0.0.0.0:8000"
+graphql_uri = "/graphql"
+graphiql_uri = "/graphiql"
+workers = 0 # if 0, uses number of available logical cpu as threads count.
+maxconn = 25000
+max_payload_size = 1048576
 
 [network]
 listening_address = "0.0.0.0:1337"
 rpc_timeout = 10
 
-[graphql]
-graphiql_uri = "/graphiql"
-listening_address = "0.0.0.0:8000"
-graphql_uri = "/graphql"
-workers = 0 # if 0, uses number of available logical cpu as threads count.
-maxconn = 25000
-max_payload_size = 1048576
+[[network.bootstraps]]
+pubkey = "0x031288a6788678c25952eba8693b2f278f66e2187004b64ac09416d07f83f96d5b"
+address = "0.0.0.0:1888"
+
+[mempool]
+pool_size = 20000
+broadcast_txs_size = 200
+broadcast_txs_interval = 200
 
 [executor]
 light = false
 
-[mempool]
-broadcast_txs_size = 200
-broadcast_txs_interval = 200
-pool_size = 200000
-
 [logger]
-metrics = false
-log_path = "./devtools/chain/logs/1"
-log_to_console = true
 filter = "info"
-log_to_file = true
+log_to_console = true
 console_show_file_and_line = false
+log_path = "logs/"
+log_to_file = true
+metrics = true
+# you can specify log level for modules with config below
+# modules_level = { "overlord::state::process" = "debug", core_consensus = "error" }
 ```
 
 - `privkey`: 节点私钥，节点的唯一标识，在作为 bootstraps 节点时，需要给出地址和该私钥对应的公钥让其他节点连接；如果是出块节点，该私钥对应的地址需要在 consensus verifier_list 中
@@ -171,8 +162,8 @@ console_show_file_and_line = false
 
 ```bash
 $ tail logs/muta.log -n 1
-{"time":"2020-02-12T17:11:04.187149+08:00","message":"update_after_exec cache: height 2, exec height 0, prev_hash 039d2f399864dba72c5b0f26ec989cba9bdcb9fca23ce48c8bc8c4398cb2ad0b,latest_state_root de37f62c1121e283ad52fe5b3e260c899f03d42da29fdfe08e82655185d9b772 state root [de37f62c1121e283ad52fe5b3e260c899f03d42da29fdfe08e82655185d9b772], receipt root [], confirm root [], cycle used []","module_path":"core_consensus::status","file":"/Users/huwenchao/.cargo/git/checkouts/muta-cad92efdb84944c1/34d052a/core/consensus/src/status.rs","line":114,"level":"INFO","target":"core_consensus::status","thread":"main","thread_id":4576796096,"mdc":{}}
+{"time":"2020-02-12T17:11:04.187149+08:00","message":"update_after_exec cache: height 2, exec height 0, prev_hash 0x039d2f399864dba72c5b0f26ec989cba9bdcb9fca23ce48c8bc8c4398cb2ad0b,latest_state_root 0xde37f62c1121e283ad52fe5b3e260c899f03d42da29fdfe08e82655185d9b772 state root [0xde37f62c1121e283ad52fe5b3e260c899f03d42da29fdfe08e82655185d9b772], receipt root [], confirm root [], cycle used []","module_path":"core_consensus::status","file":"/Users/huwenchao/.cargo/git/checkouts/muta-cad92efdb84944c1/34d052a/core/consensus/src/status.rs","line":114,"level":"INFO","target":"core_consensus::status","thread":"main","thread_id":4576796096,"mdc":{}}
 
 $ tail logs/metrics.log -n 1
-{"time":"2020-02-12T17:11:04.187240+08:00","message":"{\"timestamp\":1581498664187,\"event_name\":\"update_exec_info\",\"event_type\":\"custom\",\"tag\":{\"confirm_root\":\"56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421\",\"exec_height\":1,\"receipt_root\":\"56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421\",\"state_root\":\"de37f62c1121e283ad52fe5b3e260c899f03d42da29fdfe08e82655185d9b772\"},\"metadata\":{\"address\":\"f8389d774afdad8755ef8e629e5a154fddc6325a\",\"v\":\"0.3.0\"}}","module_path":"core_consensus::trace","file":"/Users/huwenchao/.cargo/git/checkouts/muta-cad92efdb84944c1/34d052a/core/consensus/src/trace.rs","line":24,"level":"TRACE","target":"metrics","thread":"main","thread_id":4576796096,"mdc":{}}
+{"time":"2020-02-12T17:11:04.187240+08:00","message":"{\"timestamp\":1581498664187,\"event_name\":\"update_exec_info\",\"event_type\":\"custom\",\"tag\":{\"confirm_root\":\"0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421\",\"exec_height\":1,\"receipt_root\":\"0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421\",\"state_root\":\"0xde37f62c1121e283ad52fe5b3e260c899f03d42da29fdfe08e82655185d9b772\"},\"metadata\":{\"address\":\"0xf8389d774afdad8755ef8e629e5a154fddc6325a\",\"v\":\"0.3.0\"}}","module_path":"core_consensus::trace","file":"/Users/huwenchao/.cargo/git/checkouts/muta-cad92efdb84944c1/34d052a/core/consensus/src/trace.rs","line":24,"level":"TRACE","target":"metrics","thread":"main","thread_id":4576796096,"mdc":{}}
 ```
