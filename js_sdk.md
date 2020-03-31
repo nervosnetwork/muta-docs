@@ -6,7 +6,7 @@ JS-SDK 是官方推出的基于 JavaScript 的 SDK。用于与 Muta RPC 进行�
 
 为了使我们不会迷惑，在开始之前需要了解一些基本的概念。当然，如果已经很熟悉 Muta ，那么请直接跳过这个部分吧。
 
-- [Service](./service_overview.md): Muta 提供的各种服务由 Service 暴露
+- [Service](./built_in_service.md): Muta 提供的各种服务由 Service 暴露
 - [GraphQL](https://graphql.org): Muta 的 RPC 服务由GraphQL 提供，虽然名字带有 QL(Query Language)，但它是拥有 mutation 能力的
 - [TypeScript](https://www.typescriptlang.org/): 一种 JavaScript 的超集，给 JavaScript 加上了类型，并能够编译成 JavaScript。顺带一提，这个 SDK 就是由 TypeScript 编写，因此使用诸如 VSCode 等编辑器会有很强的代码提示功能。文档中，我们也会使用 TypeScript 的 interface 描述数据结构
 
@@ -28,7 +28,7 @@ $ npm install muta-sdk@alpha
 
 ## Examples
 
-接下来的例子中，我们将通过 5 个步骤，实现在链上创建一种属于我们的[资产(Asset)](./asset_service.md)，并转账给另一个账户。
+接下来的例子中，我们将通过 5 个步骤，实现在链上创建一种属于我们的[资产(Asset)](./built_in_service.md)，并转账给另一个账户。
 
 - Step 1：构建一个 Muta 对象，用以和链开始交互
 - Step 2：创建分层确定性 HD 钱包，来管理你的账户
@@ -122,7 +122,7 @@ const account = hdWallet.deriveAccount(2); // 我们派生accountIndex=2 的账�
 当然，如果你有自己私钥，也可以通过指定私钥创建 Account：
 
 ```js
-const account = Account.fromPrivateKey(
+const account = Muta.accountFromPrivateKey(
     '0x1000000000000000000000000000000000000000000000000000000000000000',
   );
 ```
@@ -208,7 +208,7 @@ const latestBlockHeight = await client.getLatestBlockHeight();
 
 接下来我们更进一步，我们从节点 Query 一些数据，还记得么 Query 和 Mutation 的差别么?
 
-Muta 拥有若干 service，例如 [metadata](./metadata_service.md) 服务会提供一些关于链的基础信息；[asset](./asset_service.md) 资产服务可以提供创建用户自定义 token 的功能(User defined tokens)。
+Muta 拥有若干 service，例如 [metadata](./built_in_service.md) 服务会提供一些关于链的基础信息；[asset](./built_in_service.md) 资产服务可以提供创建用户自定义 token 的功能(User defined tokens)。
 服务之间通常居然有依赖关系，可以互相调用，构建出更高级的业务逻辑。如果你是要和内置服务交互，那么请参考我们的内置服务的 GraphQL API 接口手册，如果你是要和用户自定义服务交互，那么可以在 GitHub issue 下留下大侠的足迹。
 
 为了进一步学习，我们现在向 AssetService 来发起 Query 请求，访问数据。在发起任何 Query 之前，我们都必须知道请求接口交互的数据格式是什么。
@@ -305,7 +305,7 @@ export interface Balance {
 那么我们通过 Client 的工具方法 composeTransaction 来构建一个这样的交易对象：
 
 ```typescript
-    const tx = await client.composeTransaction<CreateAssetParam>({
+    const tx = await client.composeTransaction({
         method: 'create_asset',
         payload: { name: 'MY_COIN', symbol: 'SC', supply: 10000000 },
         serviceName: 'asset',
@@ -331,8 +331,7 @@ export interface Balance {
 当区块链认为一笔交易比成功的提交了，他会返回一张 Receipt 交易凭证，给出了交易的诸多信息，以及交易执行后的返回，我们可以通过getReceipt 来获得凭证：
 
 ```typescript
-    const receipt: Receipt = await this.client.getReceipt(utils.toHex(txHash));
-
+    const receipt = await client.getReceipt(txHash);
 ```
 
 Receipt 凭证的数据类型如下:
@@ -409,7 +408,7 @@ export interface Asset {
   // 
   const asset = assetReceipt.response.ret;
   
-  const assetId = assetReceipt.asset_id;
+  const assetId = asset.id;
 ```
 
 查询一下某个用户的余额：

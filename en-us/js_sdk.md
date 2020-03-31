@@ -6,7 +6,7 @@ JS-SDK 是官方推出的基于 JavaScript 的 SDK。用于与 Muta RPC 进行�
 
 为了使我们不会迷惑，在开始之前需要了解一些基本的概念。当然，如果已经很熟悉 Muta ，那么请直接跳过这个部分吧。
 
-- [Service](./service_overview.md): Muta 提供的各种服务由 Service 暴露
+- [Service](./built_in_service.md): Muta 提供的各种服务由 Service 暴露
 - [GraphQL](https://graphql.org): Muta 的 RPC 服务由GraphQL 提供，虽然名字带有 QL(Query Language)，但它是拥有 mutation 能力的
 - [TypeScript](https://www.typescriptlang.org/): 一种 JavaScript 的超集，给 JavaScript 加上了类型，并能够编译成 JavaScript。顺带一提，这个 SDK 就是由 TypeScript 编写，因此使用诸如 VSCode 等编辑器会有很强的代码提示功能。文档中，我们也会使用 TypeScript 的 interface 描述数据结构
 
@@ -19,7 +19,7 @@ $ npm install muta-sdk@alpha
 ## Modules in SDK
 
 1. Client：屏蔽了 GraphQL 的细节，更方便地和链的 GraphQL API 交互。
-2. Account：进行 Muta 的账户管理，一个账户包含了这个账户的私钥,公钥以及地址。
+2. Account：进行 Muta 的账户管理，一个账户包含了这个账户的私钥，公钥以及地址。
 3. Wallet：Muta 的钱包功能，可以管理多个Account。
 4. Service：提供对于 Muta 内置 Service 的直接通信，类似与对以太坊智能合约进行合约级别的 API 通信。
 5. utils: 包括了签名、地址转换、序列化、编解码等一系列工具方法
@@ -28,7 +28,7 @@ $ npm install muta-sdk@alpha
 
 ## Examples
 
-接下来的例子中，我们将通过 5 个步骤，实现在链上创建一种属于我们的[资产(Asset)](./asset_service.md)，并转账给另一个账户。
+接下来的例子中，我们将通过 5 个步骤，实现在链上创建一种属于我们的[资产(Asset)](./built_in_service.md)，并转账给另一个账户。
 
 - Step 1：构建一个 Muta 对象，用以和链开始交互
 - Step 2：创建分层确定性 HD 钱包，来管理你的账户
@@ -42,7 +42,7 @@ $ npm install muta-sdk@alpha
 const muta = new Muta({
     /**
      * 通常是在genesis.toml里包含有默认的chain_id
-     * 在这个例子中我们假设0xb6a4d7da21443f5e816e8700eea87610e6d769657d6b8ec73028457bf2ca4036是你要访问的链的ChainId
+     * 在这个例子中我们假设 0xb6a4d7da21443f5e816e8700eea87610e6d769657d6b8ec73028457bf2ca4036是你要访问的链的ChainId
      */
     chainId:
       '0xb6a4d7da21443f5e816e8700eea87610e6d769657d6b8ec73028457bf2ca4036',
@@ -57,8 +57,8 @@ const muta = new Muta({
     /**
      * timeout_gap 表示一笔交易发出后，最多允许几个块的延迟.如果随着链的进行, block 超出了
      * timeout_gap 的设置但是交易仍然没有上链,那么这笔交易就被认为无效了.
-     * 比起以太坊的 txpool 的不确定性,muta提供了tx及时性的检测和保障.
-     * timeoutGap 并没有默认值,但是 js-sdk 预设为20,你可以所以更改
+     * 比起以太坊的 txpool 的不确定性,muta 提供了tx及时性的检测和保障.
+     * timeoutGap 并没有默认值,但是 js-sdk 预设为 20,你可以所以更改
      */
     timeoutGap: DEFAULT_TIMEOUT_GAP,
   });
@@ -75,9 +75,9 @@ const muta = Muta.createDefaultMutaInstance();
 
 好的，现在你已经了解了 muta 类了，非常简单，接下来让我们看看分层确定性钱包吧。
 
-#### Step 2：创建分层确定性HD钱包，来管理你的账户
+#### Step 2：创建分层确定性 HD 钱包，来管理你的账户
 
-首先,如果你不了解 HD 钱包(分层确定性钱包)，请先了解：
+如果想要了解 HD 钱包(分层确定性钱包) 的具体信息，可以从这些 eip 中获取：
 1. [bip32](https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki)
 2. [bip39](https://github.com/bitcoin/bips/blob/master/bip-0039.mediawiki)
 3. [bip44](https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki)
@@ -116,13 +116,13 @@ Account 包含了一对公私钥对，以及他派生出来的地址，Muta 采�
 通过 HDWallet 可以派生出账户:
 
 ```js
-const account = hdWallet.deriveAccount(2);//我们派生accountIndex=2 的账户
+const account = hdWallet.deriveAccount(2); // 我们派生accountIndex=2 的账户
 ```
 
 当然，如果你有自己私钥，也可以通过指定私钥创建 Account：
 
 ```js
-const account = Account.fromPrivateKey(
+const account = Muta.accountFromPrivateKey(
     '0x1000000000000000000000000000000000000000000000000000000000000000',
   );
 ```
@@ -197,7 +197,7 @@ const blockInfo = await client.getBlock('10');
 也可以获得最新的高度的区块:
 
 ```js
-const latestBlockInfo = await client.getBlock(null);
+const latestBlockInfo = await client.getBlock();
 ```
 
 当然，你可以直接获得最新区块的高度：
@@ -208,7 +208,7 @@ const latestBlockHeight = await client.getLatestBlockHeight();
 
 接下来我们更进一步，我们从节点 Query 一些数据，还记得么 Query 和 Mutation 的差别么?
 
-Muta 拥有若干 service，例如 [metadata](./metadata_service.md) 服务会提供一些关于链的基础信息；[asset](./asset_service.md) 资产服务可以提供创建用户自定义 token 的功能(User defined tokens)。
+Muta 拥有若干 service，例如 [metadata](./built_in_service.md) 服务会提供一些关于链的基础信息；[asset](./built_in_service.md) 资产服务可以提供创建用户自定义 token 的功能(User defined tokens)。
 服务之间通常居然有依赖关系，可以互相调用，构建出更高级的业务逻辑。如果你是要和内置服务交互，那么请参考我们的内置服务的 GraphQL API 接口手册，如果你是要和用户自定义服务交互，那么可以在 GitHub issue 下留下大侠的足迹。
 
 为了进一步学习，我们现在向 AssetService 来发起 Query 请求，访问数据。在发起任何 Query 之前，我们都必须知道请求接口交互的数据格式是什么。
@@ -305,7 +305,7 @@ export interface Balance {
 那么我们通过 Client 的工具方法 composeTransaction 来构建一个这样的交易对象：
 
 ```typescript
-    const tx = await client.composeTransaction<CreateAssetParam>({
+    const tx = await client.composeTransaction({
         method: 'create_asset',
         payload: { name: 'MY_COIN', symbol: 'SC', supply: 10000000 },
         serviceName: 'asset',
@@ -331,8 +331,7 @@ export interface Balance {
 当区块链认为一笔交易比成功的提交了，他会返回一张 Receipt 交易凭证，给出了交易的诸多信息，以及交易执行后的返回，我们可以通过getReceipt 来获得凭证：
 
 ```typescript
-    const receipt: Receipt = await this.client.getReceipt(utils.toHex(txHash));
-
+    const receipt = await client.getReceipt(txHash);
 ```
 
 Receipt 凭证的数据类型如下:
@@ -409,7 +408,7 @@ export interface Asset {
   // 
   const asset = assetReceipt.response.ret;
   
-  const assetId = assetReceipt.asset_id;
+  const assetId = asset.id;
 ```
 
 查询一下某个用户的余额：
