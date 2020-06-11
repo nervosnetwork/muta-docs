@@ -1,8 +1,8 @@
-# 配置说明
+# Configuration
 
-默认的创世块和配置样例在 `devtools/chain/` 文件夹中，此处对其中的一些字段进行说明。
+Default genesis block and config example is in `devtools/chain/` Here's some explanation to it.
 
-## 创世块
+## Genesis block
 
 `genesis.toml`:
 
@@ -50,39 +50,39 @@ payload = '''
 '''
 ```
 
-创世块的初始化参数：
+Genesis block default setup:
 
-- `timestamp`: 创世块的时间戳，可以随意设置，配置成 0，或者当天 0 点的时间都可以。
-- `prevhash`: 可以随意设置，只会影响查询创世块时的字段显示。
+- `timestamp`: timestamp of genesis block, can be set to arbitrary timestamp. For example, it can be 0 or 00:00 on some day
+- `prevhash`: can be set to arbitrary value, it only affects the outcome when querying genesis block
 
-`services` 为各个 service 的初始化参数。各 service 的初始化参数说明：
+`services`: default value for configs in services
 
-- `asset`: 如果链需要发行原生资产，可以参考上面的例子填写，否则可以去掉
-  - `id`: 资产的唯一 id，建议设置成 hash ，以免在之后和链上其他资产重复
-  - `name`: 资产名字
-  - `symbol`: 资产简称
-  - `supply`: 资产发行总量
-  - `issuer`: 发行方地址
-- `metadata`: 链的元数据，必须填写
-  - `chain_id`: 链唯一 id，建议设置为任意 hash
-  - `common_ref`: BLS 签名需要
-  - `timeout_gap`: 交易池能接受的最大超时块范围。用户在发送交易的时候，需要填写 `timeout` 字段，表示块高度超过这个值后，如果该交易还没有被打包，则以后都不会被打包，这样可以确保之前的某笔交易超时后一定会失败，避免用户的交易很长时间未被打包后换 `nonce` 重发交易，结果两笔交易都上链的情况。当用户填写的 `timeout` > `chain_current_height` + `timeout_gap` 时，交易池会拒绝这笔交易。考虑到一些特殊情况（比如一些冷钱包对交易签名后较长时间才发出），该值可以适当调大
-  - `cycles_limit`: 10进制，链级别对单个交易可以消耗的最大 `cycle` 的限制
-  - `cycles_price`: 最小 cycle 价格，目前没有使用
-  - `interval`: 出块间隔，单位为 ms。当设置为 3s 的时候，出块间隔并不是严格的 3s，而是在 3s 附近波动，这是因为 Overlord 共识在响应性上的优化。当网络状况较好的时候，会小于 3s，网络情况较差，则会略大于 3s。
-  - `verifier_list`: 共识列表
-    - `bls_pub_key`: 节点的 BLS 公钥
-    - `address`: 节点的地址
-    - `propose_weight`: 节点的出块权重。如果有四个共识节点，出块权重分别为 `1, 2, 3, 4`，则第一个节点的出块概率为 `1 / (1 + 2 + 3 + 4)`。投票权重的逻辑类似。
-    - `vote_weight`: 节点的投票权重
-  - `propose_ratio`: propose 阶段的超时时间与出块时间的比例。例如 `propose_ratio` 为 5, `interval` 为 3000，则 propose 阶段的超时时间为 `15 / 10 * 3000 = 4500`，单位均为毫秒。
-  - `prevote_ratio`: prevote 阶段的超时时间与出块时间的比例
-  - `precommit_ratio`: precommit 阶段的超时时间与出块时间的比例
-  - `brake_ratio`: brake 阶段的超时时间与出块时间的比例
-  - `tx_num_limit`: 每一个块里最多可以打包的交易数
-  - `max_tx_size`: 单个交易最大的字节数
+- `asset`: [Optional] Exist if a chain issues native asset, you can refer to example above
+  - `id`: unique identifier of an asset, it's recommended to set it as a hash value avoid duplication with other assets on the chain in the future
+  - `name`: asset name
+  - `symbol`: asset short name
+  - `supply`: total supply of the asset
+  - `issuer`: issuer address
+- `metadata`: [Required] Metadata of the chain
+  - `chain_id`: unique identifier of the chain, it's recommended to set it as a random hash value.
+  - `common_ref`: needed for BLS signature
+  - `timeout_gap`: max timeout an exchange pool can wait on a block. Users need to fill in `timeout` when starting a transaction to indicate this transaction will not be included in the chain after block height exceeds this value. This will make sure the failure of the timeout transaction and avoid user starting a new transaction with new `nonce` after waiting for a long time which produces 2 transactions on the chain eventually. If user entered `timeout` > `chain_current_height` + `timeout_gap`, exchange pool will reject this transaction. For some special cases (Ex: cold wallet sends the transaction after signing for a long time), `transaction_gap` can be set to a bigger value accordingly
+  - `cycles_limit`: base 10 number, max `cycle` can be run for a single transaction on the chain level
+  - `cycles_price`: minimum price for a cycle, currently not in use
+  - `interval`: interval between generating blocks, measured in millisecond. When it's set to 3s, it's not strictly 3s but it's about 3s. Due to optimization of `Overload` consensus on latency. It will be less than 3s in a good network condition, and more than 3s in a bad network condition
+  - `verifier_list`: consensus list
+    - `bls_pub_key`: BLS public key of the node
+    - `address`: node address
+    - `propose_weight`: weight of node when producing blocks. For example: 4 nodes, weights are `1, 2, 3, 4`, first node's chance of producing a block is `1 / (1 + 2 + 3 + 4)`
+    - `vote_weight`: weight of node when voting, similar calculation process as `propose_weight`
+  - `propose_ratio`: ratio between timeout and block producing time in propose stage. For example: if `propose_ratio` is 5, `interval` is 3000ms, then timeout at propose stage is `15 / 10 * 3000 = 4500`, all measured in millisecond
+  - `prevote_ratio`: ratio between timeout and block producing time in prevote stage
+  - `precommit_ratio`: ratio between timeout and block producing time in precommit stage
+  - `brake_ratio`: ratio between timeout and block producing time in brake stage
+  - `tx_num_limit`: max number of transaction in a single block
+  - `max_tx_size`: max number of byte in a single transaction
 
-## 链的运行配置
+## Runtime config
 
 `config.toml`:
 
@@ -128,37 +128,37 @@ metrics = true
 # modules_level = { "overlord::state::process" = "debug", core_consensus = "error" }
 ```
 
-- `privkey`: 节点私钥，节点的唯一标识，在作为 bootstraps 节点时，需要给出地址和该私钥对应的公钥让其他节点连接；如果是出块节点，该私钥对应的地址需要在 consensus verifier_list 中
-- `data_path`: 链数据所在目录
+- `privkey`: Private key of the node, also the only identifier of the node, used when bootstraps the node. In order for other nodes to connect, it needs to expose address and corresponding public key. If it's a block producing node, its address needs to be included in consensus `verifier_list`
+- `data_path`: where chain data is stored
 - `graphql`:
-  - `listening_address`: GraphQL 监听地址
-  - `graphql_uri`: GraphQL 服务访问路径
-  - `graphiql_uri`: GraphiQL 访问路径
-  - `workers`: 处理 http 的线程数量，填 0 的话，会默认按 CPU 的核数
-  - `maxconn`: 最大连接数
+  - `listening_address`: listening address of GraphQL
+  - `graphql_uri`: URL to access GraphQL service
+  - `graphiql_uri`: URL to access GraphiQL
+  - `workers`: number of thread to handle http request. If 0 is entered, will default use number of CPU core
+  - `maxconn`: max number of connection
 - `network`:
-  - `listening_address`: 链 p2p 网络监听地址
-  - `rpc_timeout`: RPC 调用（例如从其它节点拉交易）超时时间，单位为秒
-- `network.bootstraps`: 起链时连接的初始节点信息
-  - `pubkey`: 公钥
-  - `address`: 网络地址
-- `mempool`: 交易池相关配置
-  - `pool_size`: 交易池大小
-  - `broadcast_txs_size`: 一次批量广播的交易数量
-  - `broadcast_txs_interval`: 每次广播交易的时间间隔，单位 ms
+  - `listening_address`: listening address of the chain
+  - `rpc_timeout`: timeout of RPC call (Ex: pull transaction from other nodes), measured in second
+- `network.bootstraps`: starting node info when bootstraps the chain
+  - `pubkey`: public key
+  - `address`: network address
+- `mempool`: exchange pool configurations
+  - `pool_size`: size of pool
+  - `broadcast_txs_size`: number of transaction in one broadcast
+  - `broadcast_txs_interval`: interval between each broadcast, measured in millisecond
 - `executor`:
-  - `light`: 设为 true 时，节点将只保存最新高度的 state
-- `logger`: 日志相关配置
-  - `filter`: 全局日志级别
-  - `log_to_console`: 是否输出日志到 console，生产环境建议设为 false
-  - `console_show_file_and_line`: 当 `log_to_console` 和本配置都置为 true 时，console 输出的日志里会包含日志打印处的文件和行数。本地通过日志调试时有用，一般可以设为 false。
-  - `log_to_file`: 是否输出日志到文件
-  - `metrics`: 是否输出 metrics。logger 模块中有专门的 metrics 输出函数，如有需要，可以用来输出 metrics 日志，不受全局日志级别的影响，且对应的日志会输出到专门的文件。
-  - `log_path`: 会在该路径生成两个日志文件：`muta.log` 和 `metrics.log`。`metrics.log`中包含了专门的 metrics 日志，`muta.log` 中包含了其它所有 log 输出。
+  - `light`: when set to true, node will only keep the state of latest block hight
+- `logger`: logger configuration
+  - `filter`: log level globally
+  - `log_to_console`: whether output the log to console, it's recommended to set to false in production
+  - `console_show_file_and_line`: when `log_to_console` and `console_show_file_and_line` are both true, log will include file and number of lines
+  - `log_to_file`: whether output log to file
+  - `metrics`: whether output metrics, there are metric functions in logger module. It's independent from global log level, and it will output to specific files
+  - `log_path`: generates 2 log files in this path: `muta.log` and `metrics.log`. `metrics.log` includes metrics log, `muta.log` includes all other logs
 
-## 日志示例
+## Log sample
 
-文件中的日志均为 json 格式，方便用程序处理。其中 message 一般为一个嵌套的 json 结构，用来表达结构化信息。
+All logs are in json format, each message is a nested json structure.
 
 ```bash
 $ tail logs/muta.log -n 1
