@@ -1,9 +1,9 @@
-# 多节点链部署指南
+# Multi-node Deployment
 
-## 生成公私钥
+## Generate public key and private key
 
 ```bash
-# 安装 muta-keypair 工具
+# Install muta-keypair
 $ cargo +nightly install --git https://github.com/nervosnetwork/muta.git --bin muta-keypair
 
 $ muta-keypair -h
@@ -24,8 +24,8 @@ OPTIONS:
     -n, --number <number>                   Number of keypairs to generate [default: 4]
     -p, --private_keys <private_keys>...    Generate keypairs from a given private key vector
 
-# 共同商议好一个字符串，经过 hex 编码后作为 BLS 签名的 common_ref 用
-# 或者一个人先用 muta-keypair 生成，把随机产生的 common_ref 分发给其它人
+# Come up with a string together, after encoding it with hexidecimal, use it as common_ref of BLS signature
+# Or one guy generates key using muta-keypair, then shares randomly generated common_ref with others 
 $ muta-keypair -n 1
 {
   "common_ref": "0x37537a3658476b334a71",
@@ -62,17 +62,17 @@ $ muta-keypair -n 2 -c 37537a3658476b334a71
 }
 ```
 
-## 生成创世块
+## Generate genesis block
 
-一个创世块的示例如下。
-其中重点需要商议的部分是：
+Example of genesis block below.
+Key components need to be discussed:
 
-- common_ref: 刚刚大家生成公钥时用的 common_ref
-- verifier_list: 初始出块节点，需要填写地址，bls_pub_key 和权重
+- common_ref: common_ref used to generate the public key
+- verifier_list: inital block producing nodes, need to provide address, bls_pub_key and weight
 
-其它创世块信息可以参考配置说明。
+Other genesis block info can be referred to configuration guide.
 
-生成创世块后，分发给各个节点。每个节点所使用的创世块必须一致，否则不在同一条链。
+After generated genesis block, distribute it to nodes. Each node must use the same genesis block, otherwise they won't be considered on the same chain.
 
 ```toml
 timestamp = 0
@@ -130,9 +130,9 @@ payload = '''
 '''
 ```
 
-## 各节点生成自己的配置文件
+## Each node has its own config file
 
-链配置示例如下:
+Example of chain config:
 
 ```
 # crypto
@@ -176,24 +176,22 @@ metrics = true
 # modules_level = { "overlord::state::process" = "debug", core_consensus = "error" }
 ```
 
-其中与网络相关的需要特别注意：
+Pay attention to network related config:
 
 ```
-# 该配置为监听的网络地址
+# Listening address for network
 [network]
 listening_address = "0.0.0.0:1337"
 
-# 该配置为起链时连接的节点
+# nodes config when bootstrap the chain
 [[network.bootstraps]]
 pubkey = "0x02ff12550ee3a923a0c7cc4fc2bea0670ec3057f8a368fb4d375957cdc26e0bce9"
 address = "44.55.66.77:1337"
 ```
 
-可以商议 1 个或多个节点作为 bootstraps 节点，bootstraps 节点的 `network.bootstraps` 配置可以不填。
-在起链时需要 bootstraps 节点先启动。
+1 or more nodes can be setup as bootstrap node. `network.bootstraps` can be left empty in bootstrap node. 
+Bootstrap nodes need to run first when bootstrap the chain.
 
-其余节点的 `network.bootstraps` 配置填写 bootstraps 节点的链监听地址和公钥。
-启动后节点会连接这些 bootstraps 节点，然后通过 P2P 网络协议自动发现，从而连上整个链。
+Other nodes `network.bootstraps` field should be bootstraps node's chain listening address and public key. They will connect to bootstrap nodes after they start, then transmit through P2P to connect to the entire chain. 
 
-其余配置各个节点可以根据自己的需求自行修改。
-具体含义请参考配置说明章节。
+Feel free to modify other node configs, detail can be referred to corresponding chapters. 
