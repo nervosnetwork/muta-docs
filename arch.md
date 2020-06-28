@@ -23,10 +23,10 @@ on the way..
 #### 提案节点
 
 5. `Consensus` 向 `Mempool` 请求筛选一批交易，`Mempool` 会根据一些系统参数如: `CyclesLimit`，来决定最后筛选出的交易数量
-6. `Consensus` 将筛选后的交易打包成 `Block` 并且对它签名后组成 `Proposal`，然后通过 `Network` 广播给其他节点。
+6. `Consensus` 将筛选后的交易打包成 `Block` 并且对它签名后组成 `Proposal`，然后通过 `Network` 广播给其他节点。
     - `Muta` 使用了 `Compact Blocks`，所以 `Block` 中并不存放交易的具体内容
 
-#### 提案块投票
+#### 提案块投票
 7. 通过 `Network` 收到提案节点的`Proposal`，验证 `Proposal` 的签名、区块参数等基础信息。
 8. 查看本地是否存在对应交易。
 9. 不存在的交易将通过 `Network` 从网络获取。
