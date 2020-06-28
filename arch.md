@@ -3,7 +3,7 @@
 ![](./static/muta_arch.png)
 
 ## Components
-on the way..
+见各组件详细文档
 
 ## Flow
 ### 交易
