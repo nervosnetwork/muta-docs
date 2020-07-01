@@ -324,6 +324,22 @@ pub trait ServiceSDK {
     fn deal(&mut self, params: &ExecutorParams) -> ProtocolResult<()>;
 ```
 
+## Tx Hook
+
+在每笔交易执行的前后，框架还会调用 Service 的 tx_hook_before、tx_hook_after 方法，这两个方法需分别使用 `#[tx_hook_before]`、`#[tx_hook_after]` 过程宏标记。Service 可借助 tx hook 完成针对交易的特定逻辑，比如验证交易的发起人是否满足特定的条件，若不满足，可直接终止该交易的执行。
+
+```rust
+// Tx hook method
+#[tx_hook_before]
+fn check_balance(&self, ctx: ServiceContext) -> ServiceResponse<()> {
+    let caller = ctx.get_caller();
+    // Check caller balance...
+    // if caller.balance < xxx {
+    //     ctx.cancel("abort tx".to_owned())
+    // }
+}
+```
+
 ## 序列化
 
 Service 主要使用两种序列化方案: Json 和 [RLP](https://github.com/ethereum/wiki/wiki/RLP);
