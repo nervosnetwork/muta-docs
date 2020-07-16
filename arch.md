@@ -1,11 +1,15 @@
 # Architecture
 
-![](./static/muta_arch.png)
+## System Architecture
+![](./static/arch/arch.png)
 
 ## Components
 见各组件详细文档
 
-## Flow
+## Core Flow
+> 用户发 Transaction 到 Transaction 上链发生了什么
+
+![](./static/arch/core-flow.png)
 ### 交易
 #### 从 User
 
@@ -37,3 +41,9 @@
 12. 异步的将交易提交给 `Framework` 执行。
 13. `Framework` 根据交易内容找到对应的 `Service`。
 14. 执行成功后，数据存储到 `Storage`
+
+## Parallet Execution
+![](./static/arch/parallet.png)
+
+## Execution Block
+![](./static/arch/execution-block.png)

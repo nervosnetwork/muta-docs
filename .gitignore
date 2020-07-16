@@ -3,3 +3,4 @@ _book
 *.pdf
 *.patch
 *.sh
+.DS_Store
