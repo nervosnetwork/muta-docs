@@ -119,7 +119,7 @@ $ ./target/release/examples/muta-chain
 我们通过 [muta-sdk](./js_sdk) 和 nodejs 封装了一个交互式命令行，可以更方便的与 muta 进行交互。
 
 ```bash
-$ npm install -g muta-cli@0.2.0
+$ npm install -g muta-cli@0.2.0-dev.2
 
 $ muta-cli repl
 > await client.getLatestBlockHeight()
