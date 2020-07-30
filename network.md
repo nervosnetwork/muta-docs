@@ -69,71 +69,89 @@
 
 ```
 network
-├── common.rs                   # 常用辅助函数
-├── compression
-│   ├── mod.rs
-│   └── snappy.rs               # snappy 实现上述接口
-├── config.rs                   # 网络配置定义
-├── connection
-│   ├── control.rs              # 封装 tentacle 提供的发送接口
-│   ├── keeper.rs               # 处理 tentacle 抛出的各种连接事件
-│   └── mod.rs                  # 连接池配置以及处理节点管理发出的连接或者断开请求
-├── endpoint.rs                 # 定义共识和交易池的消息路由地址格式
-├── error.rs                    # 定义网络错误
-├── event.rs                    # 定义网络用到的所有事件
-├── lib.rs
-├── message
-│   ├── mod.rs                  # 定义网络信息格式以及序列化和反序列化
-│   ├── serde_multi.rs          # 辅助实现 serde 定义的序列化/反序列化函数，供交易池和共识使用
-│   └── serde.rs                # 辅助实现 serde 定义的序列化/反序列化函数，供交易池和共识使用
-├── metrics.rs                  # Prometheus metrics 数据反馈
-├── outbound
-│   ├── gossip.rs               # 广播接口实现
-│   ├── mod.rs
-│   └── rpc.rs                  # RPC 接口实现
-├── peer_manager
-│   ├── addr_set.rs             # 节点地址信息维护
-│   ├── diagnostic.rs           # 用于辅助测试时使用，暴露节点管理内部状态
-│   ├── disc.rs                 # tentacle 发现协议需要实现的接口
-│   ├── ident.rs                # tentacle 识别协议需要实现的接口
-│   ├── mod.rs
-│   ├── peer.rs                 # 节点定义
-│   ├── retry.rs                # 节点重试次数管理
-│   ├── save_restore.rs         # 节点信息持久化，暂时只保存到文件
-│   ├── shared.rs               # 当前连接的所有节点信息记录
-│   ├── test_manager.rs         # 节点管理单元测试
-│   ├── time.rs                 # 时间处理
-│   └── trust_metric.rs         # 节点打分实现
-├── protocols
-│   ├── core.rs                 # 所有协议聚合
-│   ├── discovery.rs            # 发现协议构造
-│   ├── identify.rs             # 识别协议构造
-│   ├── macro.rs                # 辅助宏
-│   ├── mod.rs
-│   ├── ping.rs                 # Ping 协议构造
-│   └── transmitter.rs          # 传输协议构造
-├── reactor
-│   ├── mod.rs                  # 共识和交易池回调逻辑处理
-│   └── router.rs               # 传输协议收到的消息路由
-├── rpc_map.rs                  # 维护 RPC 请求的状态表
-├── rpc.rs                      # 定义 RPC 信息的格式
-├── selfcheck.rs                # 自检服务
-├── service.rs                  # 整个网络服务的构造
-├── test
-│   └── mock.rs                 # 单元测试需要 mock 的 tentacle 数据类型
-├── test.rs
-└── traits.rs                   # 网络模块内部组件间交互的接口定义
+   ├── common.rs                       # 常用辅助函数
+   ├── compression
+   │   ├── mod.rs
+   │   └── snappy.rs                   # snappy 实现上述接口
+   ├── config.rs                       # 网络配置定义
+   ├── connection
+   │   ├── control.rs                  # 封装 tentacle 提供的发送接口
+   │   ├── keeper.rs                   # 处理 tentacle 抛出的各种连接事件
+   │   └── mod.rs                      # 连接池配置以及处理节点管理发出的连接或者断开请求
+   ├── endpoint.rs                     # 定义共识和交易池的消息路由地址格式
+   ├── error.rs                        # 定义网络错误
+   ├── event.rs                        # 定义网络用到的所有事件
+   ├── lib.rs
+   ├── message
+   │   ├── mod.rs                      # 定义网络信息格式以及序列化和反序列化
+   │   ├── serde_multi.rs              # 辅助实现 serde 定义的序列化/反序列化函数，供交易池和共识使用
+   │   └── serde.rs                    # 辅助实现 serde 定义的序列化/反序列化函数，供交易池和共识使用
+   ├── metrics.rs                      # Prometheus metrics 数据反馈
+   ├── outbound
+   │   ├── gossip.rs                   # 广播接口实现
+   │   ├── mod.rs
+   │   └── rpc.rs                      # RPC 接口实现
+   ├── peer_manager
+   │   ├── addr_set.rs                 # 节点地址信息维护
+   │   ├── diagnostic.rs               # 用于辅助测试时使用，暴露节点管理内部状态
+   │   ├── mod.rs
+   │   ├── peer.rs                     # 节点定义
+   │   ├── retry.rs                    # 节点重试次数管理
+   │   ├── save_restore.rs             # 节点信息持久化，暂时只保存到文件
+   │   ├── shared.rs                   # 当前连接的所有节点信息记录
+   │   ├── tags.rs                     # 节点的 tag 管理
+   │   ├── test_manager.rs             # 节点管理单元测试
+   │   ├── time.rs                     # 时间处理
+   │   └── trust_metric.rs             # 节点打分实现
+   ├── protocols
+   │   ├── core.rs
+   │   ├── discovery                   # 发现协议
+   │   │   ├── addr.rs                 # 地址管理
+   │   │   ├── behaviour.rs            # 消息处理
+   │   │   ├── message.rs              # 消息定义
+   │   │   ├── protocol.rs             # 消息解析
+   │   │   └── substream.rs            # 抽象的消息流
+   │   ├── discovery.rs
+   │   ├── identify                    # Identify 协议
+   │   │   ├── behaviour.rs            # 消息处理
+   │   │   ├── common.rs               # 通用辅助函数
+   │   │   ├── message.rs              # 消息定义
+   │   │   └── protocol.rs             # 消息解析
+   │   ├── identify.rs
+   │   ├── macro.rs
+   │   ├── mod.rs
+   │   ├── ping                        # Ping 协议
+   │   │   ├── behaviour.rs            # 消息处理
+   │   │   ├── message.rs              # 消息定义
+   │   │   └── protocol.rs             # 消息解析
+   │   ├── ping.rs
+   │   ├── transmitter                 # 传输协议
+   │   │   ├── behaviour.rs            # 消息处理
+   │   │   ├── message.rs              # 消息定义
+   │   │   └── protocol.rs             # 消息解析
+   │   └── transmitter.rs
+   ├── reactor
+   │   ├── mod.rs                      # 共识和交易池回调逻辑处理
+   │   └── router.rs                   # 传输协议收到的消息路由
+   ├── rpc_map.rs                      # 维护 RPC 请求的状态表
+   ├── rpc.rs                          # 定义 RPC 信息的格式
+   ├── selfcheck.rs                    # 自检服务
+   ├── service.rs                      # 整个网络服务的构造
+   ├── test
+   │   └── mock.rs                     # 单元测试需要 mock 的 tentacle 数据类型
+   ├── test.rs                         # 网络模块内部组件间交互的接口定义
+   └── traits.rs
 
-8 directories, 47 files
+15 directories, 64 files
 ```
 
 ## 配置
 
  名称 | 默认值 | 描述
  -----|--------|------
- bootstraps| 空 | bootstraps 节点的列表，为节点的 16 进制公钥字符串（必须 "0x" 开头）以及 ```host:port``` 格式的地址。
- whitelist | 空 | 白名单节点列表，为节点的链上地址，同样是 16 进制字符串，必须 "0x" 开头。注意： 非 PeerId 。
- whitelist_peers_only| false | 是否只连接白名单内的节点，共识节点会自动加入白名单
+ bootstraps| 空 | bootstraps 节点的列表，为节点的 peer id, Base58 编码 以及 ```host:port``` 格式的地址
+ allowlist | 空 | 白名单节点列表，为节点的 peer id
+ allowlist_only| false | 是否只连接白名单内的节点，共识节点会自动加入白名单
  trust_interval_duration | 60 | 节点打分系统所使用的打分周期时长，单位为秒
  trust_max_history_duration | 24 * 60 * 60 * 10 = 10 天 | 节点打分系统保存的历史周期时长，单位为秒
  fatal_ban_duration | 60 * 60 = 1 小时 | 因严重错误行为导致节点断开后，拒绝再次连接的时长，单位为秒
