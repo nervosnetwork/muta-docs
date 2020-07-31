@@ -1,119 +1,88 @@
-# 存储设计
+# Storage
 
-## 目标
+## 概述
 
-存储模块负责对上层模块提供数据的的持久化支持，采用 key-value 数据库。
+Storage 负责对上层模块提供数据的访问、持久化支持，存储方式采用 kv 结构。
 
-模块主要分两个组件：
+接口上，主要有两种类型
+1. Storage 针对具体业务数据的存储逻辑，需要依靠 Adapter 的能力完成访问、持久化能力。
+2. Adapter 一种底层 KV 操作的抽象，理论上任何拥有 kv 存储能力的数据库都可以方便的接入，比如 RocksDB、LevelDB、Redis 等。
 
-- Storage
-- Adapter
+Muta 使用 RocksDB Adapter 作为默认的数据库。
 
-Storage 组件为上层组件提供了统一的数据存储接口，而 Adapter 则负责对更底层
-的数据库具体实现提供统一的抽象接口，使得不同的数据库实现可以方便的接入。
+Storage 接口主要提供了以下数据类型的读写：
+
+- Transaction
+- Receipt
+- Block
+- LatestProof: 当前最新区块的 Proof
+- WAL: 提供给 Overlord 操作 WAL 数据。WAL 是一种预写入机制，为了避免在出现意外 Down 机后可以继续运行，可参阅 [Overlord 文档](./overlord.md)获取更多信息
 
 ## 设计
-
-Storage 接口设计主要和业务逻辑有关，大体分为：
-
-- Transaction 交易数据存储
-- Receipt 交易回执存储
-- Epoch 块存储
-- LatestProof 当前最新共识的 Proof，同步需要
-
-Adapter 接口负责上述 Storage 逻辑对应的数据结构，通过 Protocol 提供的
-Codec 序列化接口，完成对数据的存储操作。大体操作可以分为：
-
-- get
-- insert
-- remove
-- iter
-- batch_modify
-
-## 接口
-
-### Storage
-
-#### 基本上通用 CR
-
-```rust
-async fn get_xxx(&self, key: XXX) -> ProtocolResult<XXX>;
-async fn insert_xxx(&self, key: XXX, value: XXX) -> ProtocolResult<()>;
-async fn contains_xxx(&self, key: XXX) -> ProtocolResult<bool>;
+### 目录结构
+https://github.com/nervosnetwork/muta/tree/master/core/storage
+```
+├── ...
+└── src
+    ├── adapter
+    │   ├── memory.rs // 基于内存数据库作为底层存储，只在单元测试中使用
+    │   ├── mod.rs
+    │   └── rocks.rs // 基于 RocksDB 作为数据库存储，用于真实的运行环境
+    ├── lib.rs // 
+    └── tests // Storage 的单元测试用例
 ```
 
-没有更新和删除接口，以下是例外
+### 存储逻辑
 
-LatestProof 有更新接口，且是固定的 Key。
-
-### Adapter
-
-```rust
+首先有 5 个列族为数据做逻辑划分, 分别 `Block`, `Receipt`, `SignedTransaction`, `WAL`，`HashHeight`, 各列族在源码中的定义如下：
+```
 #[derive(Debug, Copy, Clone, Display)]
 pub enum StorageCategory {
-    Epoch,
+    Block, // Block, Latest Block, Latest Block Proof
     Receipt,
     SignedTransaction,
-}
-
-pub trait StorageSchema {
-    type Key: ProtocolCodec + Send;
-    type Value: ProtocolCodec + Send;
-
-    fn category() -> StorageCategory;
-}
-
-#[async_trait]
-pub trait Storage<Adapter: StorageAdapter>: Send + Sync {
-    async fn insert_transactions(&self, signed_txs: Vec<SignedTransaction>) -> ProtocolResult<()>;
-
-    async fn get_transaction_by_hash(
-        &self,
-        tx_hash: Hash,
-    ) -> ProtocolResult<Option<SignedTransaction>>;
-}
-
-pub enum StorageBatchModify<S: StorageSchema> {
-    Remove,
-    Insert(<S as StorageSchema>::Value),
-}
-
-#[async_trait]
-pub trait StorageAdapter: Sync + Send {
-    async fn insert<S: StorageSchema>(
-        &self,
-        key: <S as StorageSchema>::Key,
-        val: <S as StorageSchema>::Value,
-    ) -> ProtocolResult<()>;
-
-    async fn get<S: StorageSchema>(
-        &self,
-        key: <S as StorageSchema>::Key,
-    ) -> ProtocolResult<Option<<S as StorageSchema>::Value>>;
-
-    async fn remove<S: StorageSchema>(&self, key: <S as StorageSchema>::Key) -> ProtocolResult<()>;
-
-    async fn contains<S: StorageSchema>(
-        &self,
-        key: <S as StorageSchema>::Key,
-    ) -> ProtocolResult<bool>;
-
-    // TODO: Query struct?
-    fn iter<S: StorageSchema + 'static>(
-        &self,
-        keys: Vec<<S as StorageSchema>::Key>,
-    ) -> Box<dyn Stream<Item = ProtocolResult<Option<<S as StorageSchema>::Value>>>>;
-
-    async fn batch_modify<S: StorageSchema>(
-        &self,
-        keys: Vec<<S as StorageSchema>::Key>,
-        vals: Vec<StorageBatchModify<S>>,
-    ) -> ProtocolResult<()>;
+    Wal,
+    HashHeight, // block height 对应的 Block hash 的映射
 }
 ```
 
-Adapter 通过 Schema 和 Protocol Codec， 直接对应表的数据结构进行序列化和反序列化操作。Storage 层无需关心序列化和反序列操作，拿到的直接就是对应的数据结构。
+各列族实际存储的 KV 数据:
+- Block
+    - Block
+        - key: [height]
+        - value: Block
+    - Latest Block:
+        - key: "latest_hash" 
+        - value: Block
+    - Latest Block Proof
+        - key: "latest_proof"
+        - value: Block
+- Receipt
+    - key: [block-height]-[transaction-hash]
+    - value: Receipt
+- SignedTransaction
+    - key: [block-height]-[transaction-hash]
+    - value: SignedTransaction
+- WAL
+    - key: "overlord_wal"
+    - value: Bytes // 数据格式由 Overlord 定义
+- HashHeight
+    - key: [Block-hash]
+    - value: height
 
-使用 Stream 实现异步原生的遍历，批量读取操作。
+对于 `SignedTransaction` 和 `Receipt` 这两种数据我们特地加了 `Height` 作为前缀，作用是使得数据可以尽量的按顺序进行排序，在物理上尽量落到一份文件上，加快读取数据，详细读取流程如下：
+```
+// 以 SignedTransaction 举例
+BlockHeight(BigEndian U64) + TransactionHash -> SignedTransaction: 交易哈希到交易的映射
+- 一次性查询高度 1 的全部 Tx: db.range_scan(1 + 0x00001000)
+```
 
-BatchModify 则将插入和删除进行了整合，接口稍简洁干净一些。
+Muta 是一个高性能的区块链框架，一个区块可以处理数万笔 `SignedTransaction`，对应的也会生成数万条 `Receipt`，如果持续不断的压测那么很快数据量就会达到数十亿的级别，在这种数据体量下经过内部测试，随机读和循序读的性能差距达到了 **300** 倍左右。
+
+### 序列化
+所有数据均使用 protocol-buffers 序列化和反序列化
+
+## 参考
+- [WAL](https://en.wikipedia.org/wiki/Write-ahead_logging): write-ahead logging 
+- [protocol-buffers](https://developers.google.com/protocol-buffers): Protocol buffers are a language-neutral, platform-neutral extensible mechanism for serializing structured data.
+- [RocksDB](https://rocksdb.org/): A Persistent Key-Value Store for Flash and RAM Storage
