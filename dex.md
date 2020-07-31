@@ -12,7 +12,36 @@
 
 ## 1. 思考需要的 Service
 
-我们一共需要 2 个 Service，除了 Dex Service 外，由于 Dex 链需要有进行交易的资产，所以还需要一个 Asset Service。Asset Service 除了常见的发行、转账、查询功能外，还需要一个锁定资产功能。因为用户发起挂单交易时，需要锁定用户资产，确保成交时有足够的余额来完成交易。Dex 订单成交时，需要修改用户资产余额，所以 Asset Service 需要提供修改余额接口，并且该接口只能由 Dex Service 调用，无法被用户直接调用。我们将 Asset Service 的接口定义如下：
+我们一共需要 2 个 Service，除了 Dex Service 外，由于 Dex 链需要有进行交易的资产，所以还需要一个 Asset Service。
+Asset Service 除了常见的发行、转账、查询功能外，还需要一个锁定资产功能。
+因为用户发起挂单交易时，需要锁定用户资产，确保成交时有足够的余额来完成交易。
+Dex 订单成交时，需要修改用户资产余额，所以 Asset Service 需要提供修改余额接口，并且该接口只能由 Dex Service 调用，无法被用户直接调用。
+我们先将 Asset Service 的对其他 Service 接口定义如下：
+
+```rust
+
+pub trait AssetFacade {
+    fn lock(&mut self, ctx: ServiceContext, payload: ModifyBalancePayload) -> ServiceResponse<()>;
+
+    fn unlock(&mut self, ctx: ServiceContext, payload: ModifyBalancePayload)
+        -> ServiceResponse<()>;
+
+    fn add_value(
+        &mut self,
+        ctx: ServiceContext,
+        payload: ModifyBalancePayload,
+    ) -> ServiceResponse<()>;
+
+    fn sub_value(
+        &mut self,
+        ctx: ServiceContext,
+        payload: ModifyBalancePayload,
+    ) -> ServiceResponse<()>;
+}
+
+```
+
+然后我们定义 Asset Service 对外的接口，以及内部方法。标有 [read] ， [write] 的方法为对外方法。没有标记的方法为内部方法。
 
 ```rust
 #[cycles(210_00)]
@@ -21,15 +50,11 @@ fn create_asset(
     &mut self,
     ctx: ServiceContext,
     payload: CreateAssetPayload,
-) -> ProtocolResult<Asset>;
+) -> ServiceResponse<Asset> ;
 
 #[cycles(100_00)]
 #[read]
-fn get_asset(&self, ctx: ServiceContext, payload: GetAssetPayload) -> ProtocolResult<Asset>;
-
-#[cycles(210_00)]
-#[write]
-fn transfer(&mut self, ctx: ServiceContext, payload: TransferPayload) -> ProtocolResult<()> ;
+fn get_asset(&self, ctx: ServiceContext, payload: GetAssetPayload) -> ServiceResponse<Asset> ;
 
 #[cycles(100_00)]
 #[read]
@@ -37,39 +62,16 @@ fn get_balance(
     &self,
     ctx: ServiceContext,
     payload: GetBalancePayload,
-) -> ProtocolResult<GetBalanceResponse>;
+) -> ServiceResponse<GetBalanceResponse>;
 
 #[cycles(210_00)]
 #[write]
-fn lock_value(
-    &mut self,
-    ctx: ServiceContext,
-    payload: ModifyBalancePayload,
-) -> ProtocolResult<()>;
+fn transfer(&mut self, ctx: ServiceContext, payload: TransferPayload) -> ServiceResponse<()>;
 
-#[cycles(210_00)]
-#[write]
-fn unlock_value(
-    &mut self,
-    ctx: ServiceContext,
-    payload: ModifyBalancePayload,
-) -> ProtocolResult<()>;
+fn _add_value(&mut self, payload: &ModifyBalancePayload) -> ServiceResponse<()>;
 
-#[cycles(210_00)]
-#[write]
-fn add_value(
-    &mut self,
-    ctx: ServiceContext,
-    payload: ModifyBalancePayload,
-) -> ProtocolResult<()>;
+fn _sub_value(&mut self, payload: &ModifyBalancePayload) -> ServiceResponse<()>;
 
-#[cycles(210_00)]
-#[write]
-fn sub_value(
-    &mut self,
-    ctx: ServiceContext,
-    payload: ModifyBalancePayload,
-) -> ProtocolResult<()>;
 ```
 
 Dex Service 包含的功能有：
@@ -83,62 +85,35 @@ Dex Service 包含的功能有：
 功能 1、2、3、5 可由用户调用 Servcie 接口触发：
 
 ```rust
-    #[cycles(210_00)]
-    #[write]
-    fn add_trade(&mut self, ctx: ServiceContext, payload: AddTradePayload) -> ProtocolResult<()>;
+#[cycles(210_00)]
+#[write]
+fn add_trade(&mut self, ctx: ServiceContext, payload: AddTradePayload) -> ServiceResponse<()>;
 
-    #[read]
-    fn get_trades(&self, _ctx: ServiceContext) -> ProtocolResult<GetTradesResponse>;
+#[read]
+fn get_trades(&self, _ctx: ServiceContext) -> ServiceResponse<GetTradesResponse>;
 
-    #[cycles(210_00)]
-    #[write]
-    fn order(&mut self, ctx: ServiceContext, payload: OrderPayload) -> ProtocolResult<()>;
+#[cycles(210_00)]
+#[write]
+fn order(&mut self, ctx: ServiceContext, payload: OrderPayload) -> ServiceResponse<()> ;
 
-    #[read]
-    fn get_order(
-        &self,
-        ctx: ServiceContext,
-        payload: GetOrderPayload,
-    ) -> ProtocolResult<GetOrderResponse>;
+#[read]
+fn get_order(
+    &self,
+    _ctx: ServiceContext,
+    payload: GetOrderPayload,
+) -> ServiceResponse<GetOrderResponse> ;
 ```
 
 功能 4 由 `#[hook_after]` 自动触发：
 
 ```rust
-    #[hook_after]
-    fn match_and_deal(&mut self, params: &ExecutorParams) -> ProtocolResult<()>;
+#[hook_after]
+fn match_and_deal(&mut self, params: &ExecutorParams);
 ```
 
 ## 2. 开发 Asset Service，Dex Service
 
-### 使用脚手架 muta-drone 对 Service 进行初始化
-
-Service 设计完成后，我们进入开发阶段。我们需要新建一个 rust 工程，同时在工程中引用 Muta Library，好消息是 Muta 框架提供了脚手架 [muta-drone](https://www.npmjs.com/package/muta-drone) 来帮助开发者一键配置工程目录。
-
-- 安装脚手架
-
-```shell
-npm install -g muta-drone
-```
-
-- 运行 `drone node` 命令，按提示配置工程目录
-
-```shell
--> drone node
-    ? The name of your chain. muta-tutorial-dex     // 工程目录命
-    ? The chain id of your chain (32-Hash) (default: random generation)     // 回车键使用默认值
-    ? Private key of this node (secp256k1) (default: random generation)     // 回车键使用默认值
-    ? Verifier's address set, except you (eg. [0x1..., 0x2..])      // 回车键使用默认值
-    ? cycles limit 1099511627776        // 回车键使用默认值
-    Downloading template....
-    Copying template....
-    All right, enjoy!
-    Enter the following command to start your chain
-    $ cd muta-tutorial-dex && cargo run
-    When the rust compilation is complete, access graphiql play your chain.
-    $ open http://localhost:8000/graphiql
--> 
-```
+新建一个 cargo 项目，在 dependency 中依赖必要的 muta 组件，可以参看[源代码仓库](https://github.com/nervosnetwork/muta-tutorial-dex)
 
 muta-tutorial-dex 目录结构如下：
 
@@ -153,7 +128,11 @@ muta-tutorial-dex 目录结构如下：
 │   └── genesis.toml
 ├── rust-toolchain
 ├── services
-│   └── metadata
+│   └── asset
+│   │   ├── Cargo.toml
+│   │   └── src
+│   │       └── lib.rs
+│   └── dex
 │       ├── Cargo.toml
 │       └── src
 │           └── lib.rs
@@ -167,45 +146,35 @@ muta-tutorial-dex 目录结构如下：
 - services：包含链的所有 service
 - src：这条链的 bin 目录，在 main.rs 中，我们将 services 接入 muta library，并启动整条链
 
-services 目录中包含了一个 [metadata service](https://github.com/nervosnetwork/muta-template/tree/master/node-template/services/metadata)，该 service 为系统内置 service。我们需要在 services 目录中加上 asset service 和 dex service，脚手架 muta-drone 也有命令帮助我们构建 service 目录。
+> 注意：services 目录中并不包含了一个 [metadata service] ，但是 muta 链启动的时候，需要提供一个 metadata service 。
+我们需要在 ServiceMapping 中将 muta package 内置的 metadata service 注册进去。
 
-- 运行 `drone service` 命令，构建 service 工程目录
+```rust
+impl ServiceMapping for DefaultServiceMapping {
+    fn get_service<SDK: 'static + ServiceSDK, Factory: SDKFactory<SDK>>(
+        &self,
+        name: &str,
+        factory: &Factory,
+    ) -> ProtocolResult<Box<dyn Service>> {
+        let service = match name {
+            "asset" => Box::new(Self::new_asset(factory)?) as Box<dyn Service>,
+            "metadata" => Box::new(Self::new_metadata(factory)?) as Box<dyn Service>,
+            "dex" => Box::new(Self::new_dex(factory)?) as Box<dyn Service>,
+            _ => panic!("not found service"),
+        };
 
-```shell
--> cd muta-tutorial-dex
--> drone service asset
-        Downloading template....
-        Copying template....
-        Done! asset service path /patht/o/muta-tutorial-dex/services/asset
--> drone service dex
-        Downloading template....
-        Copying template....
-        Done! asset service path /path/to/muta-tutorial-dex/services/dex
+        Ok(service)
+    }
+
+    fn list_service_name(&self) -> Vec<String> {
+        vec!["asset".to_owned(), "metadata".to_owned(), "dex".to_owned()]
+    }
+}
 ```
-
-Service 工程目录如下：
-
-```shell
-./asset
-├── Cargo.toml
-├── rust-toolchain
-└── src
-    ├── lib.rs
-    └── types.rs
-
-./dex
-├── Cargo.toml
-├── rust-toolchain
-└── src
-    ├── lib.rs
-    └── types.rs
-```
-
-可以看到 [lib.rs](https://github.com/nervosnetwork/muta-template/blob/master/service-template/src/lib.rs) 和 [types.rs](https://github.com/nervosnetwork/muta-template/blob/master/service-template/src/types.rs) 默认帮我们实现了一个简单的读写 key-value 的 service。
 
 ### 编写 Asset Service
 
-学习完 [Service 开发指南](service_dev.md)，相信读者对如何开发 asset service 已经有了一定的想法，并且能够阅读 [asset service](https://github.com/mkxbl/muta-tutorial-dex/tree/master/services/asset) 源码。这里就不复述相关内容，仅向读者说明一些需要注意的地方：
+学习完 [Service 开发指南](service_dev.md)，相信读者对如何开发 asset service 已经有了一定的想法，并且能够阅读 [asset service](https://github.com/nervosnetwork/muta-tutorial-dex/tree/master/services/asset) 源码。这里就不复述相关内容，仅向读者说明一些需要注意的地方：
 
 #### 代码结构
 
@@ -218,7 +187,7 @@ Asset Service 通过 `fn init_genesis` 方法，注册了 Muta Tutorial Token，
 ```rust
 // lib.rs
 #[genesis]
-fn init_genesis(&mut self, payload: InitGenesisPayload) -> ProtocolResult<()> {
+fn init_genesis(&mut self, payload: InitGenesisPayload) {
     let asset = Asset {
         id: payload.id,
         name: payload.name,
@@ -275,46 +244,15 @@ Asset Service 的 `fn lock`、`fn unlock`、`fn add_value`、`fn sub_value` 接�
 const ADMISSION_TOKEN: Bytes = Bytes::from_static(b"dex_token");
 ```
 
-> 注意：由于框架正在持续的开发过程中，所以未来对调用的权限控制机制可能会修改
-
 ### 编写 Dex Service
 
-Dex Service 源码可以在 [这里](https://github.com/mkxbl/muta-tutorial-dex/tree/master/services/dex) 找到，注意事项同上。
+Dex Service 源码可以在 [这里](https://github.com/nervosnetwork/muta-tutorial-dex/tree/master/services/dex) 找到，注意事项同上。
 
 ## 3. 将 Service 接入框架，编译运行！
 
 前面已经提到，这部分工作将在 src 目录的 [main](https://github.com/nervosnetwork/muta-template/blob/master/node-template/src/main.rs) 文件中完成。脚手架下载的 main 文件已经帮我们实现了绝大部分代码，所以这部分工作将变得非常简单。
 
 在模版代码中，定义了一个 `struct DefaultServiceMapping` 结构体，并为该结构体实现了 `trait ServiceMapping`，框架通过 `trait ServiceMapping` 可以获取到所有 service 实例，从而将开发者定义的 service 接入框架底层组件。
-
-```rust
-struct DefaultServiceMapping;
-
-impl ServiceMapping for DefaultServiceMapping {
-    fn get_service<SDK: 'static + ServiceSDK>(
-        &self,
-        name: &str,
-        sdk: SDK,
-    ) -> ProtocolResult<Box<dyn Service>> {
-        let service = match name {
-            "asset" => Box::new(asset::AssetService::new(sdk)?) as Box<dyn Service>,
-            "metadata" => Box::new(metadata::MetadataService::new(sdk)?) as Box<dyn Service>,
-            _ => {
-                return Err(MappingError::NotFoundService {
-                    service: name.to_owned(),
-                }
-                .into())
-            }
-        };
-
-        Ok(service)
-    }
-
-    fn list_service_name(&self) -> Vec<String> {
-        vec!["asset".to_owned(), "metadata".to_owned()]
-    }
-}
-```
 
 `trait ServiceMapping` 包含两个方法，一个 `fn get_service` 用来根据 service 名称获取 service 实例，另一个 `fn list_service_name` 用来获取所有 service 名称。
 
@@ -323,31 +261,24 @@ impl ServiceMapping for DefaultServiceMapping {
 我们需要做的，仅仅是把 `fn get_service` 和 `fn list_service_name` 方法中的 service 集合，替换成我们 services 目录中包含的 service 集合：
 
 ```rust
-struct DefaultServiceMapping;
-
 impl ServiceMapping for DefaultServiceMapping {
-    fn get_service<SDK: 'static + ServiceSDK>(
+    fn get_service<SDK: 'static + ServiceSDK, Factory: SDKFactory<SDK>>(
         &self,
         name: &str,
-        sdk: SDK,
+        factory: &Factory,
     ) -> ProtocolResult<Box<dyn Service>> {
         let service = match name {
-            "metadata" => Box::new(metadata::MetadataService::new(sdk)?) as Box<dyn Service>,
-            "asset" => Box::new(asset::AssetService::new(sdk)?) as Box<dyn Service>,
-            "dex" => Box::new(dex::DexService::new(sdk)?) as Box<dyn Service>,
-            _ => {
-                return Err(MappingError::NotFoundService {
-                    service: name.to_owned(),
-                }
-                .into())
-            }
+            "asset" => Box::new(Self::new_asset(factory)?) as Box<dyn Service>,
+            "metadata" => Box::new(Self::new_metadata(factory)?) as Box<dyn Service>,
+            "dex" => Box::new(Self::new_dex(factory)?) as Box<dyn Service>,
+            _ => panic!("not found service"),
         };
 
         Ok(service)
     }
 
     fn list_service_name(&self) -> Vec<String> {
-        vec!["metadata".to_owned(), "asset".to_owned(), "dex".to_owned()]
+        vec!["asset".to_owned(), "metadata".to_owned(), "dex".to_owned()]
     }
 }
 ```
