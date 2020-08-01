@@ -15,13 +15,13 @@
 - **Service 介绍**
 	- [Service 开发指南](/service_dev.md)
 	- [Service 示例](/service_eg.md)
-	- [内置 Service 说明](/built_in_service.md)
 - **开发指南**
     - [开发一条 DEX 应用链](dex.md)
 - **接口**
 	- [接口](/graphql_api.md)
 - **SDK**
 	- [JS-SDK](/js_sdk.md)
+	- [Java-SDK](/java_sdk.md)
 - **常见问题**
 	- [FAQ](/faq.md)
 - **贡献说明**

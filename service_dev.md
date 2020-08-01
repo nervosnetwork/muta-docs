@@ -13,6 +13,7 @@ Muta 框架将用户自定义部分抽象成一个 Service，同时提供 `Servi
 3. 将这些 Service 接入框架，编译运行！
 
 这篇文章主要介绍 Service 的组成和开发指南。在熟悉 Service 之后，可以阅读 [开发一条 Dex 专有链](dex.md)，学习如何使用 Muta 框架从零开发一条区块链。
+参考代码在： [dex](https://github.com/nervosnetwork/muta-tutorial-dex)。
 
 ## 开发范式
 
@@ -29,7 +30,9 @@ Muta 框架将用户自定义部分抽象成一个 Service，同时提供 `Servi
 - 创世块配置
 - 事件
 - 资源消耗统计（Cycle）
-- 与区块链相关的钩子函数，`before_block` 在一个区块执行前调用 Service 的函数，`after_block` 在一个区块执行后调用 Service 的函数
+- 与区块链相关的钩子函数
+ - `hook_before` 和 `hook_after` 在一个区块执行前/后调用的函数
+ - `tx_hook_before` 和 `tx_hook_after` 在每一个 tx 前/后调用的函数
 
 接下来我们分别介绍每个组件。
 
@@ -42,27 +45,30 @@ Muta 框架将用户自定义部分抽象成一个 Service，同时提供 `Servi
 ```rust
 pub trait ServiceSDK {
     // Alloc or recover a `Map` by` var_name`
-    fn alloc_or_recover_map<Key: 'static + FixedCodec + PartialEq, Val: 'static + FixedCodec>(
+    fn alloc_or_recover_map<
+        Key: 'static + Send + FixedCodec + Clone + PartialEq,
+        Val: 'static + FixedCodec,
+    >(
         &mut self,
         var_name: &str,
-    ) -> ProtocolResult<Box<dyn StoreMap<Key, Val>>>;
+    ) -> Box<dyn StoreMap<Key, Val>>;
 
     // Alloc or recover a `Array` by` var_name`
     fn alloc_or_recover_array<Elm: 'static + FixedCodec>(
         &mut self,
         var_name: &str,
-    ) -> ProtocolResult<Box<dyn StoreArray<Elm>>>;
+    ) -> Box<dyn StoreArray<Elm>>;
 
     // Alloc or recover a `Uint64` by` var_name`
-    fn alloc_or_recover_uint64(&mut self, var_name: &str) -> ProtocolResult<Box<dyn StoreUint64>>;
+    fn alloc_or_recover_uint64(&mut self, var_name: &str) -> Box<dyn StoreUint64>;
 
     // Alloc or recover a `String` by` var_name`
-    fn alloc_or_recover_string(&mut self, var_name: &str) -> ProtocolResult<Box<dyn StoreString>>;
+    fn alloc_or_recover_string(&mut self, var_name: &str) -> Box<dyn StoreString>;
 
     // Alloc or recover a `Bool` by` var_name`
-    fn alloc_or_recover_bool(&mut self, var_name: &str) -> ProtocolResult<Box<dyn StoreBool>>;
+    fn alloc_or_recover_bool(&mut self, var_name: &str) -> Box<dyn StoreBool>;
 
-... ...
+    // more functions are hidden
 }
 ```
 
@@ -70,23 +76,28 @@ pub trait ServiceSDK {
 
 ```rust
 pub trait ServiceSDK {
+    
     // Get a value from the service state by key
-    fn get_value<Key: FixedCodec, Ret: FixedCodec>(&self, key: &Key)
-        -> ProtocolResult<Option<Ret>>;
+    fn get_value<Key: FixedCodec, Ret: FixedCodec>(&self, key: &Key) -> Option<Ret>;
 
     // Set a value to the service state by key
-    fn set_value<Key: FixedCodec, Val: FixedCodec>(
-        &mut self,
-        key: Key,
-        val: Val,
-    ) -> ProtocolResult<()>;
+    fn set_value<Key: FixedCodec, Val: FixedCodec>(&mut self, key: Key, val: Val);
 
+    // more functions are hidden
+}
+```
+
+更有 get/set_account_value 这样便捷的方法。
+
+```rust
+pub trait ServiceSDK {
+    
     // Get a value from the specified address by key
     fn get_account_value<Key: FixedCodec, Ret: FixedCodec>(
         &self,
         address: &Address,
         key: &Key,
-    ) -> ProtocolResult<Option<Ret>>;
+    ) -> Option<Ret>;
 
     // Insert a pair of key / value to the specified address
     fn set_account_value<Key: FixedCodec, Val: FixedCodec>(
@@ -94,9 +105,9 @@ pub trait ServiceSDK {
         address: &Address,
         key: Key,
         val: Val,
-    ) -> ProtocolResult<()>;
+    );
 
-... ...
+    // more functions are hidden
 }
 ```
 
@@ -106,13 +117,15 @@ pub trait ServiceSDK {
 
 ```rust
 // A dex service
-pub struct DexService<SDK: ServiceSDK> {
-    sdk: SDK,
+pub struct DexService<SDK: ServiceSDK, A> {
+    _sdk: SDK,
     trades: Box<dyn StoreMap<Hash, Trade>>,
     buy_orders: Box<dyn StoreMap<Hash, Order>>,
     sell_orders: Box<dyn StoreMap<Hash, Order>>,
     history_orders: Box<dyn StoreMap<Hash, Order>>,
     validity: Box<dyn StoreUint64>,
+    // 这里的 asset 是依赖另一个 AssetService 的服务，A 是她的 trait type param
+    asset: A,
 }
 ```
 
@@ -120,24 +133,32 @@ pub struct DexService<SDK: ServiceSDK> {
 
 ## 接口方法
 
-Service 通过过程宏标记方法，来提供链外和其他 Service 可以调用的接口，以 Dex Service 为例：
+Service 通过过程宏标记方法，来提供链外可以调用的接口。
+
+> 调用其他 Service 的接口，必须声明其他接口的 trait(推荐)， 然后在注册 Service 的时候，通过适当的方法将其他 Service 的实例传入。之后会说明。
+
+以 Dex Service 为例：
 
 ```rust
 #[service]
 impl<SDK: 'static + ServiceSDK> DexService<SDK> {
-    #[cycles(210_00)]
-    #[write]
-    fn add_trade(&mut self, ctx: ServiceContext, payload: AddTradePayload) -> ProtocolResult<()>;
+   #[cycles(210_00)]
+   #[write]
+   fn add_trade(&mut self, ctx: ServiceContext, payload: AddTradePayload) -> ServiceResponse<()>;
 
-    #[read]
-    fn get_trades(&self, _ctx: ServiceContext) -> ProtocolResult<GetTradesResponse>;
+  #[read]
+  fn get_trades(&self, _ctx: ServiceContext) -> ServiceResponse<GetTradesResponse>;
 
-... ...
 }
 ```
+
 给 Service 结构体绑定方法的 `impl` 块中，需要标记 `#[service]` 过程宏，该过程宏会给 Service 自动实现 `Service` trait，框架通过该 trait 和 Service 交互。
 
-Dex Service 中定义了增加交易对和读取交易对两个接口方法，标记了 `#[write]` 的为写方法，该方法可以改变 Service 状态；标记了 `#[read]` 的为读方法，该方法不能改变 Service 状态；方法的第二个参数必须为 `ServiceContext` 类型，该类型负责管理交易执行的上下文；方法的第三个参数是可选的，定义接口的输入参数，同时需要为该类型实现序列化 trait，目前框架使用的是 json 序列化方案：
+Dex Service 中定义了增加交易对和读取交易对两个接口方法，标记了 `#[write]` 的为写方法，该方法可以改变 Service 状态；标记了 `#[read]` 的为读方法，该方法不能改变 Service 状态；
+
+方法的第二个参数**必须**为 `ServiceContext` 类型，该类型负责管理交易执行的上下文；
+
+方法的第三个参数是**可选**的，定义接口的输入参数，同时需要为该类型实现序列化 trait，目前框架使用的是 **json** 序列化方案：
 
 ```rust
 #[derive(Deserialize, Serialize, Clone, Debug, PartialEq, Eq)]
@@ -151,31 +172,24 @@ pub struct AddTradePayload {
 
 ## 返回值和错误处理
 
-接口方法的返回值统一为 `ProtocolResult<T>` 类型：
+接口方法的返回值统一为 `ServiceResponse<T>` 类型：
 
 ```rust
-pub type ProtocolResult<T> = Result<T, ProtocolError>;
-
-#[derive(Debug, Constructor, Display)]
-#[display(fmt = "[ProtocolError] Kind: {:?} Error: {:?}", kind, error)]
-pub struct ProtocolError {
-    kind:  ProtocolErrorKind,
-    error: Box<dyn Error + Send>,
+#[derive(Debug, Clone, Default)]
+pub struct ServiceResponse<T: Default> {
+    pub code:          u64,
+    pub succeed_data:  T,
+    pub error_message: String,
 }
-
-impl From<ProtocolError> for Box<dyn Error + Send> {
-    fn from(error: ProtocolError) -> Self {
-        Box::new(error) as Box<dyn Error + Send>
-    }
-}
-
-impl Error for ProtocolError {}
 ```
 
-每个 Service 定义自己的错误类型，并将该类型转换为 `ProtocolError` 供框架统一处理，以 Dex Service 为例
+对于正确的数据返回，只需将数据通过 ServiceResponse.from_succeed(succeed_data: T) 即可创建 ServiceResponse
+
+对于错误返回，推荐每个 Service 定义自己的错误类型，然后通过ServiceResponsef.from_error(code: u64, error_message: String)，创建 ServiceResponse。以 Dex Service 为例
 
 ```rust
-#[derive(Debug, Display, From)]
+
+#[derive(Debug, Display)]
 pub enum DexError {
     #[display(fmt = "Parsing payload to json failed {:?}", _0)]
     JsonParse(serde_json::Error),
@@ -191,11 +205,22 @@ pub enum DexError {
     OrderNotExisted,
 }
 
-impl std::error::Error for DexError {}
+impl DexError {
+    fn code(&self) -> u64 {
+        match self {
+            DexError::JsonParse(_) => 201,
+            DexError::IllegalTrade { .. } => 202,
+            DexError::TradeExisted { .. } => 203,
+            DexError::TradeNotExisted { .. } => 204,
+            DexError::OrderOverdue => 205,
+            DexError::OrderNotExisted => 206,
+        }
+    }
+}
 
-impl From<DexError> for ProtocolError {
-    fn from(err: DexError) -> ProtocolError {
-        ProtocolError::new(ProtocolErrorKind::Service, Box::new(err))
+impl<T: Default> From<DexError> for ServiceResponse<T> {
+    fn from(err: DexError) -> ServiceResponse<T> {
+        ServiceResponse::from_error(err.code(), err.to_string())
     }
 }
 ```
@@ -206,9 +231,22 @@ impl From<DexError> for ProtocolError {
 
 ```rust
 #[genesis]
-fn init_genesis(&mut self, payload: GenesisPayload) -> ProtocolResult<()> {
-    self.validity.set(payload.order_validity)
-}
+    fn init_genesis(&mut self, payload: InitGenesisPayload) {
+        assert!(self.profits.is_empty());
+
+        let mut info = payload.info;
+        info.tx_fee_discount.sort();
+        self.sdk.set_value(INFO_KEY.to_string(), info);
+        self.sdk.set_value(
+            MINER_PROFIT_OUTLET_KEY.to_string(),
+            payload.miner_profit_outlet_address,
+        );
+
+        for miner in payload.miner_charge_map.into_iter() {
+            self.miners
+                .insert(miner.address, miner.miner_charge_address);
+        }
+    }
 ```
 
 ## 资源消耗统计：cycle
@@ -216,37 +254,55 @@ fn init_genesis(&mut self, payload: GenesisPayload) -> ProtocolResult<()> {
 接口方法中使用 `ServiceContext` 的 `fn sub_cycles` 接口，可以消耗一定数量的 cycles ，接口如下：
 
 ```rust
-pub fn sub_cycles(&self, cycles: u64) -> ProtocolResult<()>;
+pub fn sub_cycles(&self, cycles: u64) -> bool
 ```
 
 此外，如果接口方法消耗的 cycles 是固定数量，可以使用过程宏 `#[cycles(amount)]` 标记接口方法，框架会自动扣除 `amount` 数量的 cycles 。例如，创建资产方法消耗固定 210_00 数量的 cycles: 
 
 ```rust
 #[cycles(210_00)]
-#[write]
-fn create_asset(&mut self, ctx: ServiceContext, payload: CreateAssetPayload) -> ProtocolResult<Asset>;
+    #[write]
+    fn create_asset(
+        &mut self,
+        ctx: ServiceContext,
+        payload: CreateAssetPayload,
+    ) -> ServiceResponse<Asset> ;
 ```
 
 ## 事件
 
-使用 `ServiceContext` 的 `fn emit_event` 接口，可以向链外抛出事件信息:
+使用 `ServiceContext` 的 `fn emit_event` 接口，可以向链外抛出事件信息。 name 类似于 topic， message 则是信息：
 
 ```rust
-pub fn emit_event(&self, message: String) -> ProtocolResult<()> ;
+pub fn emit_event(&self, name: String, message: String) {
+        self.events.borrow_mut().push(Event {
+            service: self.service_name.clone(),
+            name,
+            data: message,
+        })
+    }；
 ```
 
 抛出的事件 message 为 json 序列化的字符串，以 Asset Service 为例：
 
 ```rust
-let event = TransferEvent {
-    asset_id: payload.asset_id,
-    from: ctx.get_caller(),
-    to: payload.to,
-    value: payload.value,
-};
-let event_json = serde_json::to_string(&event).map_err(AssetError::JsonParse)?;
-ctx.emit_event(event_json)
+macro_rules! serde_json_string {
+    ($payload: expr) => {
+        match serde_json::to_string(&$payload).map_err(AssetError::JsonParse) {
+            Ok(s) => s,
+            Err(e) => return e.into(),
+        };
+    };
+}
+
+
+let event_json = serde_json_string!(event);
+ctx.emit_event("TransferAsset".to_owned(), event_json);
+ServiceResponse::from_succeed(())
 ```
+
+这段代码使用到了一个在 Asset Service 内自定义的宏 serde_json_string。
+该宏只是简单地将传入的数据 json stringfy 成字符串返回，或者当 json stringfy 出错的时候，直接在当前方法下 return AssetError::JsonParse 的错误。
 
 ## ServiceContext 中的其他方法
 
@@ -280,53 +336,58 @@ pub fn get_extra(&self) -> Option<Bytes>；
 // 获取当前区块时间戳
 pub fn get_timestamp(&self) -> u64；
 
-// 抛出事件信息
-pub fn emit_event(&self, message: String) -> ProtocolResult<()>；
+// 获得已经事件信息
+pub fn get_events(&self) -> Vec<Event>；
+
+// 获得 tx 调用的 service name
+pub fn get_service_name(&self) -> &str;
+
+// 获得 tx 调用的 method name
+pub fn get_service_method(&self) -> &str;
+
+// 获得 tx 调用的 payload
+pub fn get_payload(&self) -> &str;
 ```
 
 ## Service 调用
 
-通过 ServiceSDK 提供 `fn write` 和 `fn read` 两个方法，可以调用其他 Service。前者可以改变被调用 Service 的状态，后者为只读调用：
+一个 Service 调用另一个 Service，等同于一个 Rust function 中调用另一个 funtion。
+例如在 Dex Service 中调用 Asset Service，只需要通过 Dex Service 自身的 asset 变量，就可以访问 Asset Service了。
+Trait bound A 推荐是 Asset Service 对其他 Service 暴露出来的方法。
+
+该 asset 属性需要在构造 DexService 的时候传入。之后我们会讲到。
 
 ```rust
-pub trait ServiceSDK {
-    fn read(
-        &self,
-        ctx: &ServiceContext,
-        extra: Option<Bytes>,
-        service: &str,
-        method: &str,
-        payload: &str,
-    ) -> ProtocolResult<String>;
 
-    fn write(
-        &mut self,
-        ctx: &ServiceContext,
-        extra: Option<Bytes>,
-        service: &str,
-        method: &str,
-        payload: &str,
-    ) -> ProtocolResult<String>;
-
-... ...
+pub struct DexService<SDK: ServiceSDK, A> {
+    _sdk: SDK,
+    trades: Box<dyn StoreMap<Hash, Trade>>,
+    buy_orders: Box<dyn StoreMap<Hash, Order>>,
+    sell_orders: Box<dyn StoreMap<Hash, Order>>,
+    history_orders: Box<dyn StoreMap<Hash, Order>>,
+    validity: Box<dyn StoreUint64>,
+    asset: A,
 }
-```
 
-第二个参数 `ServiceContext` 直接传入自身的上下文；第三个参数传入调用的任意附加信息；第四个参数为被调 Service 的名称；第五个参数为调用其他 Service 的接口方法的名称；第五个参数为调用参数 json 序列化后的字符串；
+```
 
 ## Hook
 
-每个区块执行前后，框架会分别调用 Service 的 hook_before、hook_after 方法, 这两个方法需分别使用 `#[hook_before]`、`#[hook_after]` 过程宏标记。Service 可借助 hook 功能完成特定逻辑，如 DPoS Service 可在 hook_after 方法中统计候选验证人抵押 token 数量，进行验证人变更等操作；Dex Service 可在 hook_after 方法中对订单进行匹配和成交操作：
+每个 block 执行前后，框架会分别调用 Service 的 hook_before、hook_after 方法, 这两个方法需分别使用 `#[hook_before]`、`#[hook_after]` 过程宏标记。
+Service 可借助 hook 功能完成特定逻辑，如 DPoS Service 可在 hook_after 方法中统计候选验证人抵押 token 数量，进行验证人变更等操作；Dex Service 可在 hook_after 方法中对订单进行匹配和成交操作：
 
 ```rust
 // Hook method in dex service
 #[hook_after]
-    fn deal(&mut self, params: &ExecutorParams) -> ProtocolResult<()>;
+    fn match_and_deal(&mut self, params: &ExecutorParams)；
 ```
+
+注意，hook_before 和 hook_after 不允许返回任何数据类型。这意味着他们没有**错误**一说。开发者必须在方法内妥善处理可能遇到的业务异常，**切不可抛出 panic**。
 
 ## Tx Hook
 
-在每笔交易执行的前后，框架还会调用 Service 的 tx_hook_before、tx_hook_after 方法，这两个方法需分别使用 `#[tx_hook_before]`、`#[tx_hook_after]` 过程宏标记。Service 可借助 tx hook 完成针对交易的特定逻辑，比如验证交易的发起人是否满足特定的条件，若不满足，可直接终止该交易的执行。
+在每笔交易执行的前后，框架还会调用 Service 的 tx_hook_before、tx_hook_after 方法，这两个方法需分别使用 `#[tx_hook_before]`、`#[tx_hook_after]` 过程宏标记。
+Service 可借助 tx hook 完成针对交易的特定逻辑，比如验证交易的发起人是否满足特定的条件，若不满足，可直接终止该交易的执行。
 
 ```rust
 // Tx hook method
@@ -340,19 +401,30 @@ fn check_balance(&self, ctx: ServiceContext) -> ServiceResponse<()> {
 }
 ```
 
+tx_hook_before 和 tx_hook_after 可以返回错误。
+
+1. 无论 tx_hook_before 执行的结果是失败还是成功，tx_hook_before 所造成的改动，包括 state 和 event，都将被保留。
+2. 如果 tx_hook_before 返回了错误，那么 tx 的逻辑将被跳过。
+3. 如果 tx_hook_after 执行成功，那么 tx 的改动 和 tx_hook_after 的改动，都将被保留。
+4. 如果 tx_hook_after 执行失败，那么 tx 的改动 和 tx_hook_after 的改动，都将被遗弃。
+
 ## 序列化
 
 Service 主要使用两种序列化方案: Json 和 [RLP](https://github.com/ethereum/wiki/wiki/RLP);
 
 ### Json
 
-用户发送交易和返回结果，均使用 json 序列化，因此接口方法的输入参数中的 `payload` 和返回值 `ProtocolResult<Response>` 中的 `Response` 都需要实现 json 序列化的 trait。以 [Asset Service](https://github.com/mkxbl/muta-tutorial-dex/tree/master/services/asset) 的 `fn create_asset` 接口方法为例：
+用户发送交易和返回结果，均使用 json 序列化，因此接口方法的输入参数中的 `payload` 和返回值 `ServiceResponse<_>` 中的 `Response` 都需要实现 json 序列化的 trait。以 [Asset Service](https://github.com/mkxbl/muta-tutorial-dex/tree/master/services/asset) 的 `fn create_asset` 接口方法为例：
 
 ```rust
 // 接口方法
 #[cycles(210_00)]
 #[write]
-fn create_asset(&mut self, ctx: ServiceContext, payload: CreateAssetPayload) -> ProtocolResult<Asset>;
+fn create_asset(
+        &mut self,
+        ctx: ServiceContext,
+        payload: CreateAssetPayload,
+    ) -> ServiceResponse<Asset>;
 
 // 标记 #[derive(Deserialize, Serialize)] 以实现 json 序列化
 #[derive(Deserialize, Serialize, Clone, Debug)]
@@ -372,23 +444,6 @@ pub struct Asset {
 }
 ```
 
-Service 之间调用的参数和返回值同样使用 json 序列化，以 [Dex Service](https://github.com/mkxbl/muta-tutorial-dex/tree/master/services/dex) 调用 [Asset Service](https://github.com/mkxbl/muta-tutorial-dex/tree/master/services/asset) 为例：
-
-```rust
-// 对调用参数进行 json 序列化
-let payload_str =
-    serde_json::to_string(&lock_asset_payload).map_err(DexError::JsonParse)?;
-
-// 使用 json 序列化之后的参数，进行 service 调用
-self.sdk.write(
-    &self.get_call_asset_ctx(),
-    Some(ADMISSION_TOKEN.clone()),
-    "asset",
-    "lock",
-    &payload_str,
-)?;
-```
-
 ### RLP
 
 对于存储到世界状态的数据结构，为了保证序列化的一致性，该数据结构需要实现 `trait FixedCodec`，我们默认使用 RLP 方案来实现该 trait 。以 [Asset Service](https://github.com/mkxbl/muta-tutorial-dex/tree/master/services/asset) 为例：
@@ -396,7 +451,7 @@ self.sdk.write(
 ```rust
 // Asset 需要存入世界状态 
 pub struct AssetService<SDK> {
-    sdk:    SDK,
+    // 省略其他
     assets: Box<dyn StoreMap<Hash, Asset>>,
 }
 
@@ -442,32 +497,73 @@ impl rlp::Encodable for Asset {
 
 ## 构造方法
 
-构造方法返回 Service 实例，以 Dex Service 为例：
+构造方法返回 Service 实例，以 Asset Service 为例：
 
 ```rust
 #[service]
-impl<SDK: 'static + ServiceSDK> DexService<SDK> {
-    pub fn new(mut sdk: SDK) -> ProtocolResult<Self> {
-        let trades: Box<dyn StoreMap<Hash, Trade>> = sdk.alloc_or_recover_map(TRADES_KEY)?;
-        let buy_orders: Box<dyn StoreMap<Hash, Order>> =
-            sdk.alloc_or_recover_map(BUY_ORDERS_KEY)?;
-        let sell_orders: Box<dyn StoreMap<Hash, Order>> =
-            sdk.alloc_or_recover_map(SELL_ORDERS_KEY)?;
-        let history_orders: Box<dyn StoreMap<Hash, Order>> =
-            sdk.alloc_or_recover_map(HISTORY_ORDERS_KEY)?;
-        let validity: Box<dyn StoreUint64> = sdk.alloc_or_recover_uint64(VALIDITY_KEY)?;
+impl<SDK: ServiceSDK> AssetService<SDK> {
+    pub fn new(mut sdk: SDK) -> Self {
+        let assets: Box<dyn StoreMap<Hash, Asset>> = sdk.alloc_or_recover_map(ASSETS_KEY);
 
-        Ok(Self {
-            sdk,
-            trades,
-            buy_orders,
-            sell_orders,
-            history_orders,
-            validity,
-        })
+        Self { sdk, assets }
+    }
+}
+```
+
+## 初始化&注册 Service
+
+DefaultServiceMapping 类负责向 Muta 注册 Service。
+1. 将要注册的 Service 手动添加到 list_service_name 方法的列表中。
+2. 通过 SDKFactory，获得，获得对应 Service 的 ServiceSDK，ServiceSDK的作用见上文。
+3. 如果一个 Service 依赖其他的 Service，先将其他 Service 构造出来。
+4. 如果有循环依赖，可以先完成构造，最后设置依赖。
+
+> 例子中的 new_dex，就是先获取 AssetService 的实例，然后再初始化 DexService 自身
+
+```rust
+
+impl ServiceMapping for DefaultServiceMapping {
+    fn get_service<SDK: 'static + ServiceSDK, Factory: SDKFactory<SDK>>(
+        &self,
+        name: &str,
+        factory: &Factory,
+    ) -> ProtocolResult<Box<dyn Service>> {
+        let service = match name {
+            "asset" => Box::new(Self::new_asset(factory)?) as Box<dyn Service>,
+            "metadata" => Box::new(Self::new_metadata(factory)?) as Box<dyn Service>,
+            "dex" => Box::new(Self::new_dex(factory)?) as Box<dyn Service>,
+            _ => panic!("not found service"),
+        };
+
+        Ok(service)
     }
 
-... ...
+    fn list_service_name(&self) -> Vec<String> {
+        vec!["asset".to_owned(), "metadata".to_owned(), "dex".to_owned()]
+    }
+}
+
+impl DefaultServiceMapping {
+    fn new_asset<SDK: 'static + ServiceSDK, Factory: SDKFactory<SDK>>(
+        factory: &Factory,
+    ) -> ProtocolResult<AssetService<SDK>> {
+        Ok(AssetService::new(factory.get_sdk("asset")?))
+    }
+
+    fn new_metadata<SDK: 'static + ServiceSDK, Factory: SDKFactory<SDK>>(
+        factory: &Factory,
+    ) -> ProtocolResult<MetadataService<SDK>> {
+        Ok(MetadataService::new(factory.get_sdk("metadata")?))
+    }
+
+    fn new_dex<SDK: 'static + ServiceSDK, Factory: SDKFactory<SDK>>(
+        factory: &Factory,
+    ) -> ProtocolResult<DexService<SDK, AssetService<SDK>>> {
+        let asset = Self::new_asset(factory)?;
+        Ok(DexService::new(factory.get_sdk("dex")?, asset))
+    }
+}
+
 ```
 
 ## Service 示例

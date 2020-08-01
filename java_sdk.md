@@ -6,7 +6,7 @@ Java-SDK 是官方推出的基于 JavaScript 的 SDK。用于与 Muta RPC 进行
 
 为了使我们不会迷惑，在开始之前需要了解一些基本的概念。当然，如果已经很熟悉 Muta ，那么请直接跳过这个部分吧。
 
-- [Service](./built_in_service.md): Muta 提供的各种服务由 Service 暴露
+- [Service](https://github.com/nervosnetwork/muta/tree/master/built-in-services/): Muta 提供的各种服务由 Service 暴露
 - [GraphQL](https://graphql.org): Muta 的 RPC 服务由GraphQL 提供，虽然名字带有 QL(Query Language)，但它是拥有 mutation 能力的
 
 ## Install
@@ -36,7 +36,7 @@ dependencies {
 
 ## Examples
 
-接下来的例子中，我们将通过 5 个步骤，实现在链上创建一种属于我们的[资产(Asset)](./built_in_service.md)，并转账给另一个账户。
+接下来的例子中，我们将通过 5 个步骤，实现在链上创建一种属于我们的[资产(Asset)](https://github.com/nervosnetwork/muta/tree/master/built-in-services/asset) ，并转账给另一个账户。
 
 - Step 1：创建分层确定性 HD 钱包，来管理你的账户
 - Step 2：创建一个 Account 对象，来管理账户的公私钥对，并对交易进行签名

@@ -1,6 +1,5 @@
-_book
-.vscode
-*.pdf
-*.patch
-*.sh
-.DS_Store
+# IntelliJ project files
+.idea
+*.iml
+out
+gen
