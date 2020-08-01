@@ -14,11 +14,11 @@ prevhash = "0x44915be5b6c20b0678cf05fcddbbaa832e25d7e6ac538784cd5c24de00d47472"
 name = "asset"
 payload = '''
 {
-    "id": "0xf56924db538e77bb5951eb5ff0d02b88983c49c45eea30e8ae3e7234b311436c",
-    "name": "MutaToken",
-    "symbol": "MT",
-    "supply": 320000011,
-    "issuer": "0xf8389d774afdad8755ef8e629e5a154fddc6325a"
+   "id": "0xf56924db538e77bb5951eb5ff0d02b88983c49c45eea30e8ae3e7234b311436c",
+   "name": "MutaToken",
+   "symbol": "MT",
+   "supply": 320000011,
+   "issuer": "muta14e0lmgck835vm2dfm0w3ckv6svmez8fdgdl705"
 }
 '''
 
@@ -27,18 +27,19 @@ name = "metadata"
 payload = '''
 {
     "chain_id": "0xb6a4d7da21443f5e816e8700eea87610e6d769657d6b8ec73028457bf2ca4036",
-    "common_ref": "0x703873635a6b51513451",
+    "common_ref": "0x6c747758636859487038",
     "timeout_gap": 20,
-    "cycles_limit": 1000000,
+    "cycles_limit": 4294967295,
     "cycles_price": 1,
     "interval": 3000,
     "verifier_list": [
-        {
-            "bls_pub_key": "0x04188ef9488c19458a963cc57b567adde7db8f8b6bec392d5cb7b67b0abc1ed6cd966edc451f6ac2ef38079460eb965e890d1f576e4039a20467820237cda753f07a8b8febae1ec052190973a1bcf00690ea8fc0168b3fbbccd1c4e402eda5ef22",
-            "address": "0xf8389d774afdad8755ef8e629e5a154fddc6325a",
-            "propose_weight": 1,
-            "vote_weight": 1
-        }
+       {
+           "bls_pub_key": "0x04102947214862a503c73904deb5818298a186d68c7907bb609583192a7de6331493835e5b8281f4d9ee705537c0e765580e06f86ddce5867812fceb42eecefd209f0eddd0389d6b7b0100f00fb119ef9ab23826c6ea09aadcc76fa6cea6a32724",
+           "pub_key": "0x02ef0cb0d7bc6c18b4bea1f5908d9106522b35ab3c399369605d4242525bda7e60",
+           "address": "muta14e0lmgck835vm2dfm0w3ckv6svmez8fdgdl705",
+           "propose_weight": 1,
+           "vote_weight": 1
+       }
     ],
     "propose_ratio": 15,
     "prevote_ratio": 10,
@@ -72,6 +73,7 @@ payload = '''
   - `interval`: 出块间隔，单位为 ms。当设置为 3s 的时候，出块间隔并不是严格的 3s，而是在 3s 附近波动，这是因为 Overlord 共识在响应性上的优化。当网络状况较好的时候，会小于 3s，网络情况较差，则会略大于 3s。
   - `verifier_list`: 共识列表
     - `bls_pub_key`: 节点的 BLS 公钥
+    - `pub_key`: 节点的公钥
     - `address`: 节点的地址
     - `propose_weight`: 节点的出块权重。如果有四个共识节点，出块权重分别为 `1, 2, 3, 4`，则第一个节点的出块概率为 `1 / (1 + 2 + 3 + 4)`。投票权重的逻辑类似。
     - `vote_weight`: 节点的投票权重
@@ -88,7 +90,7 @@ payload = '''
 
 ```toml
 # crypto
-privkey = "0x45c56be699dca666191ad3446897e0f480da234da896270202514a0e1a587c3f"
+privkey = "0x5ec982173d54d830b6789cbbbe43eaa2853a5ff752d1ebc1b266cf9790314f8a"
 
 # db config
 data_path = "./devtools/chain/data"
@@ -105,8 +107,11 @@ max_payload_size = 1048576
 listening_address = "0.0.0.0:1337"
 rpc_timeout = 10
 
+[consensus]
+sync_txs_chunk_size = 5000
+
 [[network.bootstraps]]
-pubkey = "0x031288a6788678c25952eba8693b2f278f66e2187004b64ac09416d07f83f96d5b"
+peer_id = "QmTEJkB5QKWsEq37huryZZfVvqBKb54sHnKn9TQcA6j3n9"
 address = "0.0.0.0:1888"
 
 [mempool]
@@ -126,6 +131,15 @@ log_to_file = true
 metrics = true
 # you can specify log level for modules with config below
 # modules_level = { "overlord::state::process" = "debug", core_consensus = "error" }
+
+[rocksdb]
+max_open_files = 64
+
+# [apm]
+# service_name = "muta"
+# tracing_address = "127.0.0.1:6831"
+# tracing_batch_size = 50
+
 ```
 
 - `privkey`: 节点私钥，节点的唯一标识，在作为 bootstraps 节点时，需要给出地址和该私钥对应的公钥让其他节点连接；如果是出块节点，该私钥对应的地址需要在 consensus verifier_list 中
@@ -136,6 +150,7 @@ metrics = true
   - `graphiql_uri`: GraphiQL 访问路径
   - `workers`: 处理 http 的线程数量，填 0 的话，会默认按 CPU 的核数
   - `maxconn`: 最大连接数
+  - `max_payload_size` 每个请求的最大字节数
 - `network`:
   - `listening_address`: 链 p2p 网络监听地址
   - `rpc_timeout`: RPC 调用（例如从其它节点拉交易）超时时间，单位为秒
@@ -155,6 +170,12 @@ metrics = true
   - `log_to_file`: 是否输出日志到文件
   - `metrics`: 是否输出 metrics。logger 模块中有专门的 metrics 输出函数，如有需要，可以用来输出 metrics 日志，不受全局日志级别的影响，且对应的日志会输出到专门的文件。
   - `log_path`: 会在该路径生成两个日志文件：`muta.log` 和 `metrics.log`。`metrics.log`中包含了专门的 metrics 日志，`muta.log` 中包含了其它所有 log 输出。
+- `rocksdb`
+  - `max_open_files` rocksdb 最大打开文件个数，即 fd。
+-  `apm`: application performace monitor，用以监控系统全链路性能
+  - `service_name` 需要监控的服务
+  - `tracing_address` 需要将监控数据推送至服务器的地址
+  - `tracing_batch_size` 分批推送，每一次分批的大小
 
 ## 日志示例
 
