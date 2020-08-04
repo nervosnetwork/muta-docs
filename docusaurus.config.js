@@ -1,7 +1,7 @@
 const path = require("path");
 
 const allDocHomesPaths = [
-  'muta-docs/docs/',
+  'docs/',
 ];
 
 module.exports = {

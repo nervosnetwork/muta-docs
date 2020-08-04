@@ -818,27 +818,27 @@ ul.connected-list.connected-list--hover > li:hover {
  */
 
 .domain-bg {
-  background-image: url(/muta-docs/img/nodes-bg-light.svg);
+  background-image: url(/img/nodes-bg-light.svg);
 }
 
 .domain-bg.domain-bg--config {
-  background-image: url(/muta-docs/cogs-bg-light.svg);
+  background-image: url(/img/cogs-bg-light.svg);
 }
 
 .domain-bg.domain-bg--observability {
-  background-image: url(/muta-docs/img/charts-bg-light.svg);
+  background-image: url(/img/charts-bg-light.svg);
 }
 
 .domain-bg.domain-bg--operations {
-  background-image: url(/muta-docs/img/circuit-bg-light.svg);
+  background-image: url(/img/circuit-bg-light.svg);
 }
 
 .domain-bg.domain-bg--testing {
-  background-image: url(/muta-docs/img/testing-bg-light.svg);
+  background-image: url(/img/testing-bg-light.svg);
 }
 
 .domain-bg.domain-bg--vector {
-  background-image: url(/muta-docs/img/vector-bg-light.svg);
+  background-image: url(/img/vector-bg-light.svg);
 }
 
 .domain-bg--hover:not(:hover) {
@@ -2598,27 +2598,27 @@ html[data-theme="dark"] {
  */
 
 html[data-theme="dark"] .domain-bg {
-  background-image: url(/muta-docs/muta-docs/static/img/nodes-bg-dark.svg);
+  background-image: url(/static/img/nodes-bg-dark.svg);
 }
 
 html[data-theme="dark"] .domain-bg.domain-bg--config {
-  background-image: url(/muta-docs/static/img/cogs-bg-dark.svg);
+  background-image: url(/static/img/cogs-bg-dark.svg);
 }
 
 html[data-theme="dark"] .domain-bg.domain-bg--observability {
-  background-image: url(/muta-docs/static/img/charts-bg-dark.svg);
+  background-image: url(/static/img/charts-bg-dark.svg);
 }
 
 html[data-theme="dark"] .domain-bg.domain-bg--operations {
-  background-image: url(/muta-docs/static/img/circuit-bg-dark.svg);
+  background-image: url(/static/img/circuit-bg-dark.svg);
 }
 
 html[data-theme="dark"] .domain-bg.domain-bg--testing {
-  background-image: url(/muta-docs/static/img/testing-bg-dark.svg);
+  background-image: url(/static/img/testing-bg-dark.svg);
 }
 
 html[data-theme="dark"] .domain-bg.domain-bg--vector {
-  background-image: url(/muta-docs/static/img/vector-bg-dark.svg);
+  background-image: url(/static/img/vector-bg-dark.svg);
 }
 
 .header-github-link:hover {

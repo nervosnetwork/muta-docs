@@ -58,7 +58,7 @@ function Footer() {
           <div className="row footer__links">
             <div className="col col--5 footer__col">
               <div className="margin-bottom--md">
-                <SVG className="navbar__logo" src="/muta-docs/img/muta.svg" alt="Muta" width="150" height="auto" />
+                <SVG className="navbar__logo" src="/img/muta.svg" alt="Muta" width="150" height="auto" />
               </div>
               <div className="margin-bottom--md">
                 <MailingListForm description={false} width="150px" />

@@ -15,7 +15,7 @@ function GuideCategoryPage(props) {
         <div className="container">
           <h1>{category.title} Guides</h1>
           {category.description && <div className="hero--subtitle">{category.description}</div>}
-          <div><Link to="/muta-docs/guides">View All Guides</Link></div>
+          <div><Link to="/guides">View All Guides</Link></div>
         </div>
       </header>
     </Layout>
