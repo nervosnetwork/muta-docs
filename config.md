@@ -139,7 +139,6 @@ max_open_files = 64
 # service_name = "muta"
 # tracing_address = "127.0.0.1:6831"
 # tracing_batch_size = 50
-
 ```
 
 - `privkey`: 节点私钥，节点的唯一标识，在作为 bootstraps 节点时，需要给出地址和该私钥对应的公钥让其他节点连接；如果是出块节点，该私钥对应的地址需要在 consensus verifier_list 中
@@ -176,6 +175,17 @@ max_open_files = 64
   - `service_name` 需要监控的服务
   - `tracing_address` 需要将监控数据推送至服务器的地址
   - `tracing_batch_size` 分批推送，每一次分批的大小
+
+## 出块逻辑
+Overlord 提供两种出块逻辑，随机出块和轮询出块。随机出块根据节点的 `propose_weight` 使用确定性随机算法选择 leader，按照 `vote_weight` 进行计票。轮询出块轮流选择 leader，所以这时 `propose_weight` 是不生效的。轮询出块也是按照 `vote_weight` 进行计票。
+Muta 中有随机出块特性的开关， 通过 `features = ["random_leader"]` 开启，在 muta-chain 中，默认是使用随机出块的。在使用 Muta 框架进行开发的时候，在 `Cargo.toml` 中的 muta 依赖中可以选择出块方式：
+
+```rust
+# 轮询出块
+muta = { git = "https://github.com/nervosnetwork/muta", branch = "master" }
+# 随机出块
+muta = { git = "https://github.com/nervosnetwork/muta", branch = "master", features = ["random_leader"] }
+```
 
 ## 日志示例
 
