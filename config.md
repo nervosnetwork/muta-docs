@@ -106,6 +106,7 @@ max_payload_size = 1048576
 [network]
 listening_address = "0.0.0.0:1337"
 rpc_timeout = 10
+inbound_conn_limit = 20
 
 [consensus]
 sync_txs_chunk_size = 5000
@@ -154,6 +155,7 @@ max_open_files = 64
 - `network`:
   - `listening_address`: 链 p2p 网络监听地址
   - `rpc_timeout`: RPC 调用（例如从其它节点拉交易）超时时间，单位为秒
+  - `inbound_conn_limit`: 连入类型的连接允许的最大数量，连出的最大数量由最大连接数减去本配置项的值
 - `network.bootstraps`: 起链时连接的初始节点信息
   - `pubkey`: 公钥
   - `address`: 网络地址
