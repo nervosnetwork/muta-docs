@@ -57,7 +57,7 @@ const features = [
     icon: 'shuffle',
     description: (
       <>
-        Muta was used in <a href="https://github.com/HuobiGroup/huobi-chain">Huobichain</a>, one of the leading financial public chain, which have runnning steadily for around half years.
+        Muta was used in <a href="https://github.com/HuobiGroup/huobi-chain">Huobichain</a>, one of the leading financial public chain, which have runnning steadily for around half a year.
       </>
     ),
   },
