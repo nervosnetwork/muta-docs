@@ -1,28 +1,31 @@
-# Muta Documentation
+# Website
 
-### Visit the Documentation Site
+This website is built using Docusaurus 2, a modern static website generator.
 
-* [Muta Documentation](https://nervosnetwork.github.io/muta-docs/)
+## Installation
 
-### Build the documentation site
+```bash
+yarn
+```
 
-* Install docsify-cli globally, which helps initializing and previewing the website locally. 
+## Local Development
 
-  ```shell
-  $ npm i docsify-cli -g
-  ```
-  > **Note**
-  > 
-  > You can also install docsify-cli by Yarn:
-  >
-  > ```shell
-  > $ yarn global add docsify-cli
-  > ```
-  > If you have not use Yarn before, install it on your system firstly. Please refer to [official installation documents](https://yarnpkg.com/lang/en/docs/install/).
+```bash
+yarn start
+```
 
-* Use the `docsify serve` command to view the site on localhost `http://localhost:3000`, and real-time reload whenever you save changes.
+This command starts a local development server and open up a browser window.
+Most changes are reflected live without having to restart the server.
 
-  ```shell
-  $ cd docs
-  $ docsify serve
-  ```
+## Build
+
+```bash
+yarn build
+```
+
+This command generates static content into the `build` directory and can be
+served using any static contents hosting service.
+
+## Deployment
+
+Automatically setup through GitHub Pages. Commits to master will update the production site and each branch will get a preview site as part of the Github checks.
