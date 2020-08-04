@@ -27,6 +27,7 @@ name = "metadata"
 payload = '''
 {
     "chain_id": "0xb6a4d7da21443f5e816e8700eea87610e6d769657d6b8ec73028457bf2ca4036",
+    "bech32_address_hrp": "muta",
     "common_ref": "0x6c747758636859487038",
     "timeout_gap": 20,
     "cycles_limit": 4294967295,
@@ -66,6 +67,7 @@ payload = '''
   - `issuer`: 发行方地址
 - `metadata`: 链的元数据，必须填写
   - `chain_id`: 链唯一 id，建议设置为任意 hash
+  - `bech32_address_hrp`: 链上地址的抬头，人类可读部分，创世块后不允许修改，注意需要符合 bech32 hrp 的规范
   - `common_ref`: BLS 签名需要
   - `timeout_gap`: 交易池能接受的最大超时块范围。用户在发送交易的时候，需要填写 `timeout` 字段，表示块高度超过这个值后，如果该交易还没有被打包，则以后都不会被打包，这样可以确保之前的某笔交易超时后一定会失败，避免用户的交易很长时间未被打包后换 `nonce` 重发交易，结果两笔交易都上链的情况。当用户填写的 `timeout` > `chain_current_height` + `timeout_gap` 时，交易池会拒绝这笔交易。考虑到一些特殊情况（比如一些冷钱包对交易签名后较长时间才发出），该值可以适当调大
   - `cycles_limit`: 10进制，链级别对单个交易可以消耗的最大 `cycle` 的限制
