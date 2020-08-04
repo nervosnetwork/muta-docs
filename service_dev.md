@@ -124,7 +124,7 @@ pub struct DexService<SDK: ServiceSDK, A> {
     sell_orders: Box<dyn StoreMap<Hash, Order>>,
     history_orders: Box<dyn StoreMap<Hash, Order>>,
     validity: Box<dyn StoreUint64>,
-    // 这里的 asset 是依赖另一个 AssetService 的服务，A 是她的 trait type param
+    // 这里的 asset 是依赖另一个 AssetService 的服务，A 是它的 trait type param
     asset: A,
 }
 ```
@@ -148,7 +148,6 @@ impl<SDK: 'static + ServiceSDK> DexService<SDK> {
 
   #[read]
   fn get_trades(&self, _ctx: ServiceContext) -> ServiceResponse<GetTradesResponse>;
-
 }
 ```
 
@@ -184,8 +183,7 @@ pub struct ServiceResponse<T: Default> {
 ```
 
 对于正确的数据返回，只需将数据通过 ServiceResponse.from_succeed(succeed_data: T) 即可创建 ServiceResponse
-
-对于错误返回，推荐每个 Service 定义自己的错误类型，然后通过ServiceResponsef.from_error(code: u64, error_message: String)，创建 ServiceResponse。以 Dex Service 为例
+对于错误返回，推荐每个 Service 定义自己的错误类型，然后通过 ServiceResponsef.from_error(code: u64, error_message: String)，创建 ServiceResponse。以 Dex Service 为例
 
 ```rust
 
@@ -223,6 +221,22 @@ impl<T: Default> From<DexError> for ServiceResponse<T> {
         ServiceResponse::from_error(err.code(), err.to_string())
     }
 }
+```
+
+
+在 muta-protocol 中提供了一个 `parse_resp` 宏去解析 ServiceResponse，当 ServiceResponse 错误的时候直接返回，正确的时候获得返回值。假设 AssetService 提供了一个接口 `native_asset() -> ServiceResponse<Asset>` 展开代码如下：
+
+```rust
+    /// Expand code
+    /// let resp = self.asset.native_asset(ctx);
+    /// let asset = {
+    ///     if resp.is_error() {
+    ///         return ServiceResponse::from_error(resp.code, resp.error_message);
+    ///     }
+    ///     resp
+    /// };
+    let resp = self.asset.native_asset(ctx);
+    let asset = parse_resp!(resp);
 ```
 
 ## 创世配置
@@ -316,28 +330,28 @@ pub fn get_tx_hash(&self) -> Option<Hash>;
 pub fn get_nonce(&self) -> Option<Hash>;
 
 // 获取 cycle 价格
-pub fn get_cycles_price(&self) -> u64；
+pub fn get_cycles_price(&self) -> u64;
 
 // 获取  cycle limit
-pub fn get_cycles_limit(&self) -> u64；
+pub fn get_cycles_limit(&self) -> u64;
 
 // 获取已消耗 cycles 数量
-pub fn get_cycles_used(&self) -> u64；
+pub fn get_cycles_used(&self) -> u64;
 
 // 获取交易发起方地址
-pub fn get_caller(&self) -> Address；
+pub fn get_caller(&self) -> Address;
 
 // 获取交易所在区块高度
-pub fn get_current_height(&self) -> u64；
+pub fn get_current_height(&self) -> u64;
 
 // 获取额外信息
-pub fn get_extra(&self) -> Option<Bytes>；
+pub fn get_extra(&self) -> Option<Bytes>;
 
 // 获取当前区块时间戳
-pub fn get_timestamp(&self) -> u64；
+pub fn get_timestamp(&self) -> u64;
 
 // 获得已经事件信息
-pub fn get_events(&self) -> Vec<Event>；
+pub fn get_events(&self) -> Vec<Event>;
 
 // 获得 tx 调用的 service name
 pub fn get_service_name(&self) -> &str;
