@@ -1,1 +1,0 @@
-(window.webpackJsonp=window.webpackJsonp||[]).push([[9],{157:function(t){t.exports=JSON.parse('{"allTagsPath":"/muta-docs/guides/tags","slug":"type-tutorial","name":"type: tutorial","count":6,"permalink":"/muta-docs/guides/tags/type-tutorial"}')}}]);

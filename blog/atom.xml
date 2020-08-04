@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-    <id>https://nervosnetwork.github.io/blog</id>
+    <id>docs.muta.dev/blog</id>
     <title>Muta Blog</title>
     <updated>2020-05-11T00:00:00.000Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
-    <link rel="alternate" href="https://nervosnetwork.github.io/blog"/>
+    <link rel="alternate" href="docs.muta.dev/blog"/>
     <subtitle>Muta Blog</subtitle>
-    <icon>https://nervosnetwork.github.io/img/muta-logo.png</icon>
+    <icon>docs.muta.dev/img/muta-logo.png</icon>
     <rights>Copyright © 2020 Timber, Inc.</rights>
     <entry>
         <title type="html"><![CDATA[共识算法发展历程（从 Paxos 聊起...)]]></title>
         <id>consensus-cangshu</id>
-        <link href="https://nervosnetwork.github.io/muta-docs/blog/consensus-cangshu"/>
+        <link href="docs.muta.dev/blog/consensus-cangshu"/>
         <updated>2020-05-11T00:00:00.000Z</updated>
         <summary type="html"><![CDATA[Let's talk about Consensus]]></summary>
     </entry>
