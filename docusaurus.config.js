@@ -8,8 +8,8 @@ module.exports = {
   title: "Muta",
   tagline:
     "Build your own blockchain, today!",
-  url: "https://nervosnetwork.github.io",
-  baseUrl: "/muta-docs/",
+  url: "docs.muta.dev",
+  baseUrl: "/",
   favicon: "/img/muta-logo.png",
   organizationName: "nervosnetwork",
   projectName: "muta-docs",
