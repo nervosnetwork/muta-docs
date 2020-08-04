@@ -224,11 +224,7 @@ impl<T: Default> From<DexError> for ServiceResponse<T> {
 ```
 
 
-在 muta-protocol 中提供了一个 `parse_resp` 宏去解析 ServiceResponse。`parse_resp` 有两种使用方式：
-
-假设 AssetService 提供了一个接口 `native_asset() -> ServiceResponse<Asset>`
-
-* 当 ServiceResponse 错误的时候直接返回，正确的时候获得返回值
+在 muta-protocol 中提供了一个 `parse_resp` 宏去解析 ServiceResponse，当 ServiceResponse 错误的时候直接返回，正确的时候获得返回值。假设 AssetService 提供了一个接口 `native_asset() -> ServiceResponse<Asset>` 展开代码如下：
 
 ```rust
     /// Expand code
@@ -241,19 +237,6 @@ impl<T: Default> From<DexError> for ServiceResponse<T> {
     /// };
     let resp = self.asset.native_asset(ctx);
     let asset = parse_resp!(resp);
-```
-
-* ServiceResponse 中的泛型类型不一样，直接返回的时候要更改 `succeed_data` 的类型
-
-```rust
-    /// Expand code
-    /// if resp.is_error() {
-    ///     return ServiceResponse::from_error(resp.code, resp.error_message);
-    /// } else {
-    ///     return ServiceResponse::from_succeed(String::new());  
-    /// }
-    let resp = self.asset.native_asset(ctx);
-    parse_resp!(resp, String::new());
 ```
 
 ## 创世配置
