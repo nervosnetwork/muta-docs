@@ -1,4 +1,3 @@
-<<<<<<< HEAD:overlord.md
 # Overlord 架构设计
 
 - [Overlord 架构设计](#overlord-架构设计)
@@ -33,13 +32,6 @@
     - [密码学接口](#密码学接口)
       - [Wal 接口](#wal-接口)
   - [Overlord 配置](#overlord-配置)
-=======
----
-title: Overlord 共识
----
-
-import Alert from '@site/src/components/Alert';
->>>>>>> docs: initial new website:docs/docs_zh/advanced/core/overlord.md
 
 ## 目标
 
@@ -375,7 +367,6 @@ pub trait Crypto {
     ) -> Result<(), Box<dyn Error + Send>>;
 }
 ```
-<<<<<<< HEAD:overlord.md
 
 #### Wal 接口
 
@@ -396,5 +387,3 @@ muta = { git = "https://github.com/nervosnetwork/overlord", branch = "master" }
 # 随机出块
 muta = { git = "https://github.com/nervosnetwork/overlord", branch = "master", features = ["random_leader"] }
 ```
-=======
->>>>>>> docs: initial new website:docs/docs_zh/advanced/core/overlord.md
