@@ -12,7 +12,7 @@ module.exports = {
   baseUrl: "/muta-docs/",
   favicon: "/img/muta-logo.png",
   organizationName: "nervosnetwork",
-  projectName: "new-docs",
+  projectName: "muta-docs",
   customFields: {
     metadata: require("./metadata"),
   },
