@@ -2,7 +2,7 @@ import React from 'react';
 import {Redirect} from '@docusaurus/router';
 
 function Docs() {
-  return <Redirect to="/muta-docs/docs/about/what-is-muta/" />;
+  return <Redirect to="/docs/about/what-is-muta/" />;
 }
 
 export default Docs;
