@@ -1,0 +1,1 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[41],{193:function(e){e.exports=JSON.parse('{"allTagsPath":"/muta-docs/guides/tags","slug":"level-medium","name":"level: medium","count":3,"permalink":"/muta-docs/guides/tags/level-medium"}')}}]);

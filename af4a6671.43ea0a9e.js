@@ -1,0 +1,1 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[81],{233:function(t){t.exports=JSON.parse('{"category":{"name":"getting-started","title":"Getting Started","description":"Take Muta from zero to production in under 10 minutes.","permalink":"/muta-docs/guides/getting-started"}}')}}]);

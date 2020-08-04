@@ -1,0 +1,1 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[85],{236:function(e){e.exports=JSON.parse('{"category":{"name":"advanced","title":"Advanced","description":"Go beyond the basics, and extract the full potential of Muta.","permalink":"/muta-docs/guides/advanced"}}')}}]);
