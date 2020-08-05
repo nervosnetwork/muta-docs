@@ -3,7 +3,7 @@ title: 架构设计
 ---
 
 ## System Architecture
-![](/static/docs-img/arch/arch.png)
+![](/docs-img/arch/arch.png)
 
 ## Components
 见各组件详细文档
@@ -11,7 +11,7 @@ title: 架构设计
 ## Core Flow
 > 用户发 Transaction 到 Transaction 上链发生了什么
 
-![](/static/docs-img/arch/core-flow.png)
+![](/docs-img/arch/core-flow.png)
 
 ### 交易
 #### 从 User
@@ -46,8 +46,8 @@ title: 架构设计
 14. 执行成功后，数据存储到 `Storage`
 
 ## Parallet Execution
-![](/static/docs-img/arch/parallet.png)
+![](/docs-img/arch/parallet.png)
 
 ## Execution Block
 
-![](/static/docs-img/arch/execution-block.png)
+![](/docs-img/arch/execution-block.png)

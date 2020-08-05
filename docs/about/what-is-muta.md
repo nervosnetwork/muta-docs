@@ -28,7 +28,7 @@ Developers can simply customize the functional parts of the chain by developing 
 
 ## What are the key features of Muta?
 
-### High performance which can meet the demands of the production environment
+### High performance
 
 * **Built-in [Overlord][overlord] Consensus Algorithm**. It introduces aggregated signatures to reduce message complexity, and decouples state sequencing and transaction consensus to achieve parallel consensus and execution, which improves consensus efficiency by leaps and bounds compared with PBFT, Tendermint, Hotstuff, etc. In production test, Overlord has been able to support hundreds of consensus nodes, reaching thousands of transactions per second processing capacity, and the transaction latency is less than a few seconds.
 
@@ -38,7 +38,7 @@ Developers can simply customize the functional parts of the chain by developing 
 
 ### Easiest to use
 
-* **Focus only on developing the functionality of the chain**. [Consensus][overlord], [storage][storage], [mempool][mempool] and [network](network) are already built into the framework as foundational modules, so developers only need to develop services to extend the functionality of the chain.
+* **Focus only on developing the functionality of the chain**. [Consensus][overlord], [storage][storage], [mempool][mempool] and [network][network] are already built into the framework as foundational modules, so developers only need to develop services to extend the functionality of the chain.
 
 * **Developing a Service is quite easy**. When we originally designed Service, we wanted to lower the development barrier for developers so that more developers who are not as familiar with blockchain can get up to speed quickly and develop their own blockchain. As a result, [developing services][service-dev] is now very similar to develop contracts in terms of experience, so if you're already familiar with how to develop contracts, congratulations, you've also learned how to develop Service.
 
@@ -58,7 +58,7 @@ Developers can simply customize the functional parts of the chain by developing 
 ### Build your first blockchain, make the initial configuration, and attempt simple interactions
 * [Getting Started][getting-started]
 * [Configuration][config]
-* [Tutorial: Build a multi-node blockchain network][deploy]
+* [Deployment][deploy]
 * [Tutorial: Benchmark the performance of your chain][benchmark-muta]
 * [Tutorial: Visualizing your node using Prometheus and Grafana][monitor]
 
@@ -130,13 +130,13 @@ As an entrepreneurial team, we are still recruiting excellent developers :heart:
 [config]: ../setup/config.md
 [genesis-config]: ../setup/genesis-config.md
 [node-config]: ../setup/node-config.md
-[deploy]: ../deploy/deploy.md
+[deploy]: ../setup/deploy.md
 
-[dev-overview]: ../dev/dev-overview.md
+[dev-list]: ../dev/dev-overview.md
 [service-dev]: ../dev/service-dev.md
 [poe-chain]: ../dev/poe-chain.md
 [dex]: ../dev/dex.md
-[service-list]: ../dev/service-list.md
+[service-list]: ../dev/service-list/service-list.md
 
 [arch]: ../advanced/arch.md
 [overlord]: ../advanced/core/overlord.md
@@ -147,12 +147,11 @@ As an entrepreneurial team, we are still recruiting excellent developers :heart:
 
 [sdk-java]: ../toolchain/sdk-java.md
 [sdk-js]: ../toolchain/sdk-js.md
-[benchmark-tool]: ../toolchain/benchmark-tool
+[benchmark-tool]: ../toolchain/benchmark-tool.md
 [keypair]: ../toolchain/keypair.md
 [muta-cli]: ../toolchain//muta-cli.md
 
 [benchmark-muta]: ../../../guides/getting-started/benchmark
-[monitor]: ../../../guides/getting-started/monitor
-[muta-cli]: ../../../guides/getting-started/muta-cli
+[monitor]: ../../../guides/getting-started/monitoring
 
 

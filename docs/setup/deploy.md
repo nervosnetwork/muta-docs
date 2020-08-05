@@ -462,4 +462,4 @@ In this tutorial you've learned to generate your own keypairs, create a genesis 
 Your next step may be:
 
 
-[getting-started]: ../getting-started.md
+[getting-started]: ./getting-started.md

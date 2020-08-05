@@ -81,7 +81,7 @@ module.exports = {
     },
     {
       "avatar": "https://github.com/zhouyun-zoe.png",
-      "bio": "Zhouyun is the professional char of Muta. Love everything expect programming.",
+      "bio": "Zhouyun is the PM of Muta. Love everything expect programming.",
       "github": "https://github.com/zhouyun-zoe",
       "id": "zhouyun-zoe",
       "keybase": "https://keybase.io/zhouyun-zoe",

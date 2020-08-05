@@ -192,7 +192,7 @@ You can use GraphiQL or Muta-cli to interact with your chain.
 
 By default, the chain exposes the GraphQL interface on port 8000 for users to interact with the chain. Open http://127.0.0.1:8000/graphiql, and you will see:
 
-![](./static/graphiql.png)
+![](/docs-img/graphiql.png)
 
 Enter the GraphQL statement on the left and click the execute button in the middle to see the execution result on the right. Click Docs on the right to view the interface documentation. For more GraphQL usage, please refer to [Official Document](https://graphql.org/).
 
@@ -350,10 +350,10 @@ Your next step may be:
 
 * Decentralize your network with more nodes in the Start a Private Network tutorial.
 
-<Jump to="/docs/setup/config/">View Deploy a Multi-node Tutorial</Jump>
+<Jump to="/guides/getting-started/deploying/">View Deploy a Multi-node Tutorial</Jump>
 
 * Add custom functionality in the Build a dApp tutorial.
 
-<Jump to="/docs/setup/config/">View Service Guide</Jump>
+<Jump to="/docs/dev/dev-overview/">View Service Guide</Jump>
 
 If you experienced any issues with this tutorial or want to provide feedback, feel free to open a GitHub issue or reach out on Discord.

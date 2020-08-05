@@ -50,7 +50,7 @@ function HighlightListPage(props) {
         <div className="container container--xs">
           <h1>Vector Highlights</h1>
           <div className="hero--subtitle">
-            New features &amp; updates. Follow <a href="https://twitter.com/vectordotdev" target="_blank"> <i className="feather icon-twitter"></i> @vectordotdev</a> for real-time updates!
+            New features &amp; updates. Follow <a href="https://twitter.com/nervosnetwork" target="_blank"> <i className="feather icon-twitter"></i> @nervosnetwork</a> for real-time updates!
           </div>
           <div className="hero--search">
             <input

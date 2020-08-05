@@ -32,6 +32,7 @@ name = "metadata"
 payload = '''
 {
     "chain_id": "0xb6a4d7da21443f5e816e8700eea87610e6d769657d6b8ec73028457bf2ca4036",
+    "bech32_address_hrp": "muta",
     "common_ref": "0x703873635a6b51513451",
     "timeout_gap": 20,
     "cycles_limit": 4294967295,
@@ -82,6 +83,7 @@ Let’s go line-by-line and understand what each parameter means.
 | Parameter     | Description                                                                                                   |Default   |  |
 |:--------------|:--------------------------------------------------------------------------------------------------------------|:---      |:--- |
 | `chain_id`    | unique identifier of the chain, it's recommended to set it as a random hash value.                            |   0x       |  |
+| `bech32_address_hrp`    | human-readable header of the address, need to comply with bech32 hrp specification                                |          |  |
 | `common_ref`  | needed for BLS signature                                                                                        |   0x      |  |
 | `timeout_gap` | max timeout an exchange pool can wait on a block. Users need to fill in `timeout` when starting a transaction to indicate this transaction will not be included in the chain after block height exceeds this value. This will make sure the failure of the timeout transaction and avoid user starting a new transaction with new `nonce` after waiting for a long time which produces 2 transactions on the chain eventually. If user entered `timeout` > `chain_current_height` + `timeout_gap`, exchange pool will reject this transaction. For some special cases (Ex: cold wallet sends the transaction after signing for a long time), `transaction_gap` can be set to a bigger value accordingly                     | 20   |  |
 | `cycles_limit`| base 10 number, max `cycle` can be run for a single transaction on the chain level                              |  1000000 |  |

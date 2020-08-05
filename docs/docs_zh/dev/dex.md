@@ -5,9 +5,9 @@ title: 使用 Muta 框架从零开发一条 Dex 专有链
 
 我们的目标是开发一条链上挂单、链上撮合、链上成交的简易 dex 专有链，旨在通过 step by step 的流程，帮助开发者熟悉 Muta 框架，学会如何使用框架开发自己的区块链。
 
-> 在开始本教程之前，开发者需要先学习 [Service 开发指南](service_dev.md)
+> 在开始本教程之前，开发者需要先学习 [Service 开发指南][service-dev]
 
-我们按照 [Service 开发指南](service_dev.md) 中提到的，使用 Muta 框架开发自己的区块链流程，来开发这条 dex 专有链：
+我们按照 [Service 开发指南][service-dev] 中提到的，使用 Muta 框架开发自己的区块链流程，来开发这条 dex 专有链：
 
 1. 思考自己链的专属需求，确定需要哪些 Service
 2. 如果需要的 Service 有现成的，可以直接复用；如果没有，可以自己开发
@@ -177,7 +177,7 @@ impl ServiceMapping for DefaultServiceMapping {
 
 ### 编写 Asset Service
 
-学习完 [Service 开发指南](service_dev.md)，相信读者对如何开发 asset service 已经有了一定的想法，并且能够阅读 [asset service](https://github.com/nervosnetwork/muta-tutorial-dex/tree/master/services/asset) 源码。这里就不复述相关内容，仅向读者说明一些需要注意的地方：
+学习完 [Service 开发指南][service-dev]，相信读者对如何开发 asset service 已经有了一定的想法，并且能够阅读 [asset service](https://github.com/nervosnetwork/muta-tutorial-dex/tree/master/services/asset) 源码。这里就不复述相关内容，仅向读者说明一些需要注意的地方：
 
 #### 代码结构
 
@@ -288,6 +288,8 @@ impl ServiceMapping for DefaultServiceMapping {
 
 到这里，所有的开发工作就完成了，运行 `cargo run` 编译并启动 dex 链。
 
-通过浏览器打开 http://localhost:8000/graphiql ，即可与 dex 链进行交互，graphiql 的使用方法参见[文档](graphql_api.md)。
+通过浏览器打开 http://localhost:8000/graphiql ，即可与 dex 链进行交互，graphiql 的使用方法参见[文档](https://graphql.org/)。
 
 > 注意：由于框架正在持续的开发过程中，所以框架的 api 有可能发生变动
+
+[service-dev]: ./service-dev.md

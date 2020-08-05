@@ -124,7 +124,7 @@ pub struct DexService<SDK: ServiceSDK, A> {
     sell_orders: Box<dyn StoreMap<Hash, Order>>,
     history_orders: Box<dyn StoreMap<Hash, Order>>,
     validity: Box<dyn StoreUint64>,
-    // 这里的 asset 是依赖另一个 AssetService 的服务，A 是她的 trait type param
+    // 这里的 asset 是依赖另一个 AssetService 的服务，A 是它的 trait type param
     asset: A,
 }
 ```
@@ -225,6 +225,21 @@ impl<T: Default> From<DexError> for ServiceResponse<T> {
 }
 ```
 
+在 muta-protocol 中提供了一个 `parse_resp` 宏去解析 ServiceResponse，当 ServiceResponse 错误的时候直接返回，正确的时候获得返回值。假设 AssetService 提供了一个接口 `native_asset() -> ServiceResponse<Asset>` 展开代码如下：
+
+```rust
+    /// Expand code
+    /// let resp = self.asset.native_asset(ctx);
+    /// let asset = {
+    ///     if resp.is_error() {
+    ///         return ServiceResponse::from_error(resp.code, resp.error_message);
+    ///     }
+    ///     resp
+    /// };
+    let resp = self.asset.native_asset(ctx);
+    let asset = parse_resp!(resp);
+```
+
 ## 创世配置
 
 如果创世块的世界状态需要包含 Service 的初始状态，可以在 Service 中通过过程宏`#[genesis]` 标注的 `fn init_genesis` 方法来完成。框架在创建创世块时，会调用 Service 中标注了 `#[genesis]` 的方法来完成初始化，该函数最多只有一个。
@@ -316,28 +331,28 @@ pub fn get_tx_hash(&self) -> Option<Hash>;
 pub fn get_nonce(&self) -> Option<Hash>;
 
 // 获取 cycle 价格
-pub fn get_cycles_price(&self) -> u64；
+pub fn get_cycles_price(&self) -> u64;
 
 // 获取  cycle limit
-pub fn get_cycles_limit(&self) -> u64；
+pub fn get_cycles_limit(&self) -> u64;
 
 // 获取已消耗 cycles 数量
-pub fn get_cycles_used(&self) -> u64；
+pub fn get_cycles_used(&self) -> u64;
 
 // 获取交易发起方地址
-pub fn get_caller(&self) -> Address；
+pub fn get_caller(&self) -> Address;
 
 // 获取交易所在区块高度
-pub fn get_current_height(&self) -> u64；
+pub fn get_current_height(&self) -> u64;
 
 // 获取额外信息
-pub fn get_extra(&self) -> Option<Bytes>；
+pub fn get_extra(&self) -> Option<Bytes>;
 
 // 获取当前区块时间戳
-pub fn get_timestamp(&self) -> u64；
+pub fn get_timestamp(&self) -> u64;
 
 // 获得已经事件信息
-pub fn get_events(&self) -> Vec<Event>；
+pub fn get_events(&self) -> Vec<Event>;
 
 // 获得 tx 调用的 service name
 pub fn get_service_name(&self) -> &str;
@@ -379,7 +394,7 @@ Service 可借助 hook 功能完成特定逻辑，如 DPoS Service 可在 hook_a
 ```rust
 // Hook method in dex service
 #[hook_after]
-    fn match_and_deal(&mut self, params: &ExecutorParams)；
+    fn match_and_deal(&mut self, params: &ExecutorParams);
 ```
 
 注意，hook_before 和 hook_after 不允许返回任何数据类型。这意味着他们没有**错误**一说。开发者必须在方法内妥善处理可能遇到的业务异常，**切不可抛出 panic**。
@@ -568,7 +583,7 @@ impl DefaultServiceMapping {
 
 ## Service 示例
 
-这里有一个功能类似 ERC-20 的 [Asset Service 示例](https://github.com/nervosnetwork/muta/tree/master/built-in-services/asset)，读者可以查看一个 Service 的全貌。更多的 Service 示例，请参考 [Service 示例](./service_eg.md)。
+这里有一个功能类似 ERC-20 的 [Asset Service 示例](https://github.com/nervosnetwork/muta/tree/master/built-in-services/asset)，读者可以查看一个 Service 的全貌。更多的 Service 示例，请参考 [Service 示例](service-list.md)。
 
 ## 下一站
 

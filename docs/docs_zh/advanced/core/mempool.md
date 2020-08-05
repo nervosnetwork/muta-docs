@@ -94,6 +94,6 @@ Mempool 收到共识的删除指定 `tx_hashes` 集合的请求时，先清空 `
 
 Mempool 的插入和打包过程如下图所示。
 
-![image](./static/mempool_process.png)
+![image](/docs-img/mempool_process.png)
 
 [^1] compact block: 压缩区块，leader 发送的 proposal 中仅包含交易哈希，收到 proposal 的节点检查交易哈希是否在本地 Mempool 中，如果没有则向 leader 请求缺失的完整交易。通过 compact block 的设计，可以减少交易传输量，提高带宽利用率。

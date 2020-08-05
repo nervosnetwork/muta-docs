@@ -27,6 +27,7 @@ max_payload_size = 1048576
 [network]
 listening_address = "0.0.0.0:1337"
 rpc_timeout = 10
+inbound_conn_limit = 20
 
 [consensus]
 sync_txs_chunk_size = 5000
@@ -90,6 +91,7 @@ Let’s go line-by-line and understand what each parameter means.
 |:--------------|:--------------------------------------------------------------------------------------------------------------|:---      |:--   |
 | `listening_address`| listening address of the chain                                                          |         ||
 | `rpc_timeout`        | timeout of RPC call (Ex: pull transaction from other nodes), measured in second                                                                                  |    10    ||
+|`inbound_conn_limit`|The maximum number of connections allowed for incoming connections and the maximum number of outgoing connections is the maximum number of connections minus the value of this configuration item.| 20||
 
 ### Consensus parameters
 

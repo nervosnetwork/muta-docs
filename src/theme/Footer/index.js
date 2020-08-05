@@ -64,11 +64,11 @@ function Footer() {
                 <MailingListForm description={false} width="150px" />
               </div>
               <div>
-                <a href="https://twitter.com/nervosnetwork" target="_blank"><i className="feather icon-twitter" alt="Vector's Twitter"></i></a>
+                <a href="https://twitter.com/nervosnetwork" target="_blank"><i className="feather icon-twitter" alt="Muta's Twitter"></i></a>
                 &nbsp;&nbsp;&nbsp;&nbsp;
-                <a href="https://discord.com/invite/rN35fe8" target="_blank"><i className="feather icon-message-circle" alt="Vector's Chat"></i></a>
+                <a href="https://discord.com/invite/rN35fe8" target="_blank"><i className="feather icon-message-circle" alt="Muta's Chat"></i></a>
                 &nbsp;&nbsp;&nbsp;&nbsp;
-                <a href="https://github.com/nervosnetwork/muta" target="_blank"><i className="feather icon-github" alt="Vector's Github Repo"></i></a>
+                <a href="https://github.com/nervosnetwork/muta" target="_blank"><i className="feather icon-github" alt="Muta's Github Repo"></i></a>
               </div>
             </div>
             {links.map((linkItem, i) => (

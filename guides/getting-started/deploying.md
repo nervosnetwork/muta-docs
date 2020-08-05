@@ -449,7 +449,7 @@ CONFIG=./devtools/chain/config-bill.toml GENESIS=./devtools/chain/genesis.toml c
 
 You should see the console outputs something as follows:
 
-![](/static/img/private-network.png)
+![](/docs-img/private-network.png)
 
 Congratulations! You've started your own blockchain!
 
@@ -460,5 +460,3 @@ Congratulations! You've started your own blockchain!
 ## Next Step
 
 In this tutorial you've learned to generate your own keypairs, create a genesis block, config your node, and start a multi-node network based on your custom configuration.
-
-Your next step may be:
