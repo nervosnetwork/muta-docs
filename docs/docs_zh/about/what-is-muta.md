@@ -113,13 +113,13 @@ Muta 框架提供了搭建一个分布式区块链网络所需的全部核心组
 [config]: ../setup/config.md
 [genesis-config]: ../setup/genesis-config.md
 [node-config]: ../setup/node-config.md
-[deploy]: ../deploy/deploy.md
+[deploy]: ../setup/deploy.md
 
 [dev-overview]: ../dev/dev-overview.md
 [service-dev]: ../dev/service-dev.md
 [poe-chain]: ../dev/poe-chain.md
 [dex]: ../dev/dex.md
-[service-list]: ../dev/service-list.md
+[service-list]: ../dev/service-list/service-list.md
 
 [arch]: ../advanced/arch.md
 [overlord]: ../advanced/core/overlord.md
@@ -130,9 +130,9 @@ Muta 框架提供了搭建一个分布式区块链网络所需的全部核心组
 
 [sdk-java]: ../toolchain/sdk-java.md
 [sdk-js]: ../toolchain/sdk-js.md
-[benchmark-tool]: ../toolchain/benchmark-tool
+[benchmark-tool]: ../toolchain/benchmark-tool.md
 [keypair]: ../toolchain/keypair.md
 [muta-cli]: ../toolchain/muta-cli.md
 
 [benchmark-muta]: ../../../guides/getting-started/benchmark
-[monitor]: ../../../guides/getting-started/monitor
+[monitor]: ../../../guides/getting-started/monitoring

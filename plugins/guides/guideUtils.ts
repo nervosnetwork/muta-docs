@@ -59,7 +59,7 @@ export async function generateGuides(
             break;
 
           case 'getting-started':
-            description = 'Take Vector from zero to production in under 10 minutes.';
+            description = 'Take Vector from zero to production in under 30 minutes.';
             break;
 
         }

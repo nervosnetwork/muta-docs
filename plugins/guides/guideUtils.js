@@ -45,7 +45,7 @@ async function generateGuides(guideDir, { siteConfig, siteDir }, options) {
                     description = 'Go beyond the basics, and extract the full potential of Muta.';
                     break;
                 case 'getting-started':
-                    description = 'Take Muta from zero to production in under 10 minutes.';
+                    description = 'Take Muta from zero to production in under 30 minutes.';
                     break;
             }
             categories.unshift({

@@ -188,7 +188,7 @@ You can use GraphiQL or Muta-cli to interact with your chain.
 
 By default, the chain exposes the GraphQL interface on port 8000 for users to interact with the chain. Open http://127.0.0.1:8000/graphiql, and you will see:
 
-![](../../../../static/docs-img/graphiql.png)
+![](/docs-img/graphiql.png)
 
 Enter the GraphQL statement on the left and click the execute button in the middle to see the execution result on the right. Click Docs on the right to view the interface documentation. For more GraphQL usage, please refer to [Official Document](https://graphql.org/).
 

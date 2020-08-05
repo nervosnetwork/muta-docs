@@ -18,7 +18,7 @@ pub struct AuthorizationService<SDK> {
 从结构中可以看出，Authorization Service 主要是维护了一个 `verifiied_list`。
 `verified_list` 是一个（service 名字 — 方法名字）的数组。
 
-![auth-imag](../../../../static/auth.svg)
+![auth-imag](/docs-img/auth.svg)
 
 如上图所示，当交易池收到交易的时候，交易池会调用 Authorization Service，将交易序列化之后发给 Authorization Service。
 这时 Authorization Service 的 check_authorization 方法会被调用。
