@@ -158,6 +158,7 @@ network
  soft_ban_duration | 60 * 10 = 10 分钟 | 因一般错误行为导致节点断开后，拒绝再次连接的时长，单位为秒
  max_connected_peers | 40 | 最大连接节点数量
  inbound_conn_limit | 20 | 连入类型的连接允许的最大数量，连出的最大数量由最大连接数减去本配置项的值
+ same_ip_conn_limit | 1 | 同一个 IP 地址允许的最大的连接数
  listening_address | "0.0.0.0:2337" | 监听地址
  rpc_timeout | 10 | rpc 请求超时响应时间
  selfcheck_interval | 30 | 网络自检间隔周期

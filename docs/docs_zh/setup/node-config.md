@@ -27,6 +27,7 @@ max_payload_size = 1048576
 [network]
 listening_address = "0.0.0.0:1337"
 rpc_timeout = 10
+same_ip_conn_limit = 1
 inbound_conn_limit = 20
 
 [consensus]
