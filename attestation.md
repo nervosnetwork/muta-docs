@@ -4,7 +4,7 @@
 
 > 在开始本教程之前，开发者需要先学习 [Service 开发指南](service_dev.md)
 
-我们按照 [Service 开发指南](service_dev.md) 中提到的，使用 Muta 框架开发自己的区块链流程，来开发这条 dex 专有链：
+我们按照 [Service 开发指南](service_dev.md) 中提到的，使用 Muta 框架开发自己的区块链流程，来开发这条存证专有链：
 
 1. 思考自己链的专属需求，确定需要哪些 Service
 2. 如果需要的 Service 有现成的，可以直接复用；如果没有，可以自己开发
@@ -41,7 +41,7 @@ npm install -g muta-drone
     Copying template....
     All right, enjoy!
     Enter the following command to start your chain
-    $ cd muta-tutorial-dex && cargo run
+    $ cd muta-tutorial-attestation && cargo run
     When the rust compilation is complete, access graphiql play your chain.
     $ open http://localhost:8000/graphiql
 ```
@@ -73,7 +73,7 @@ muta-tutorial-attestation 目录结构如下：
 - services：包含链的所有 service
 - src：这条链的 bin 目录，在 main.rs 中，我们将 services 接入 muta library，并启动整条链
 
-services 目录中包含了一个 [metadata service](https://github.com/nervosnetwork/muta-template/tree/master/node-template/services/metadata)，该 service 为系统内置 service。我们需要在 services 目录中加上 asset service 和 dex service，脚手架 muta-drone 也有命令帮助我们构建 service 目录。
+services 目录中包含了一个 [metadata service](https://github.com/nervosnetwork/muta-template/tree/master/node-template/services/metadata)，该 service 为系统内置 service。我们需要在 services 目录中加上 attestation service 脚手架 muta-drone 也有命令帮助我们构建 service 目录。
 
 - 运行 `drone service` 命令，构建 service 工程目录
 
@@ -82,7 +82,7 @@ services 目录中包含了一个 [metadata service](https://github.com/nervosne
 -> drone service attestation
         Downloading template....
         Copying template....
-        Done! asset service path /path/to/muta-tutorial-dex/services/attestation
+        Done! asset service path /path/to/muta-tutorial-attestation/services/attestation
 ```
 
 Service 工程目录如下：
@@ -258,7 +258,7 @@ impl ServiceMapping for DefaultServiceMapping {
         let service = match name {
             "metadata" => Box::new(metadata::MetadataService::new(sdk)?) as Box<dyn Service>,
             "asset" => Box::new(asset::AssetService::new(sdk)?) as Box<dyn Service>,
-            "attestation" => Box::new(dex::AttestationService::new(sdk)?) as Box<dyn Service>,
+            "attestation" => Box::new(attestation::AttestationService::new(sdk)?) as Box<dyn Service>,
             _ => {
                 return Err(MappingError::NotFoundService {
                     service: name.to_owned(),
@@ -280,9 +280,9 @@ impl ServiceMapping for DefaultServiceMapping {
 }
 ```
 
-到这里，所有的开发工作就完成了，运行 `cargo run` 编译并启动 dex 链。
+到这里，所有的开发工作就完成了，运行 `cargo run` 编译并启动链。
 
-通过浏览器打开 http://localhost:8000/graphiql ，即可与 dex 链进行交互，graphiql 的使用方法参见[文档](graphql_api.md)。
+通过浏览器打开 http://localhost:8000/graphiql ，即可与链进行交互，graphiql 的使用方法参见[文档](graphql_api.md)。
 
 
 开发一个更加复杂，功能更多的 Service 的例子请参考下一页。 
