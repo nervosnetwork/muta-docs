@@ -1,5 +1,4 @@
-_book
-.vscode
-*.pdf
-*.patch
-*.sh
+node_modules
+build
+
+.docusaurus
