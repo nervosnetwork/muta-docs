@@ -143,7 +143,7 @@ module.exports = {
     [
       "@docusaurus/plugin-content-docs",
       {
-        editUrl: "https://github.com/nervosnetwork/muta/edit/master/website/",
+        editUrl: "https://github.com/nervosnetwork/muta-docs/edit/master/",
         sidebarPath: require.resolve("./sidebars.js"),
       },
     ],
