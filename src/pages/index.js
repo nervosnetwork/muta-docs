@@ -39,7 +39,7 @@ const features = [
     icon: 'unlock',
     description: (
       <>
-        Muta provides you with all the core components needed to build a blockchain so that you can focus on developing your business logic. It's just as easy as writing a smart contract. 
+        Muta provides you with all the core components needed to build a blockchain so that you can focus on developing your business logic. It's just as easy as writing a smart contract.
       </>
     ),
   },
@@ -143,7 +143,7 @@ function Home() {
                 height={360}
               />
           <p className="hero--subsubtitle">
-            Muta is Developed by <strong><em>Nervos Team</em></strong>.
+            Muta is Summoned by <strong><em>Nervos Team</em></strong>.
           </p>
         </div>
       </header>
