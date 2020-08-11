@@ -7,9 +7,9 @@ In this section we will understand how to customize node running parameters in `
 
 ## Overview
 
-Let's take a look at `devtools/chain/config.toml`.
+Let's take a look at `devtools/chain/config.toml` .
 
-```
+``` 
 # crypto
 privkey = "0x5ec982173d54d830b6789cbbbe43eaa2853a5ff752d1ebc1b266cf9790314f8a"
 
@@ -70,19 +70,22 @@ Let’s go line-by-line and understand what each parameter means.
 
 | Parameter     | Description                                                                                                   |Default   |   |
 |:--------------|:--------------------------------------------------------------------------------------------------------------|:---      |:--|
-| `privkey`   | 节点私钥，节点的唯一标识，在作为 bootstraps 节点时，需要给出地址和该私钥对应的公钥让其他节点连接；如果是出块节点，该私钥对应的地址需要在 consensus verifier_list 中 |         |   |
-| `data_path`    | 链数据所在目录                                                                                |        |   |
+| `privkey` | 节点私钥，节点的唯一标识，在作为 bootstraps 节点时，需要给出地址和该私钥对应的公钥让其他节点连接；如果是出块节点，该私钥对应的地址需要在 consensus verifier_list 中 |         |   |
+| `data_path` | 链数据所在目录                                                                                |        |   |
 
 ### GraphQL parameters
 
 | Parameter     | Description                                                                                                   |Default   ||
 |:--------------|:--------------------------------------------------------------------------------------------------------------|:---      |:--   |
-| `listening_address`| GraphQL 监听地址                                                          |         ||
-| `graphql_uri`        | GraphQL 服务访问路径                                                                                   |        ||
-| `graphiql_uri`      | GraphiQL 访问路径                                                                                           |          ||
-| `workers`      | 处理 http 的线程数量，填 0 的话，会默认按 CPU 的核数                                                               |          ||
-| `maxconn`      | 最大连接数                                                                                                       |          ||
-| `max_payload_size`| 每个请求的最大字节数
+| `listening_address` | GraphQL 监听地址                                                          |     127.0.0.1:8000    ||
+| `graphql_uri` | GraphQL 服务访问路径                                                                                   |    /graphql    ||
+| `graphiql_uri` | GraphiQL 访问路径                                                                                           |     /graphiql     ||
+| `workers` | 处理 http 的线程数量，填 0 的话，会默认按 CPU 的核数                                                               |     0     ||
+| `maxconn` | 最大连接数                                                                                                       |    25000      ||
+| `max_payload_size`      |      每个请求允许的最大 bytes 数                                |   1048576      ||
+| `tls` | 是否开启 tls                                                                                                       |      none    ||
+| `tls.private_key_file_path` | TLS private key                |          ||
+| `tls.certificate_chain_file_path` | TLS    certificate                                                                                                  |          ||
 
 ## Network parameters
 
@@ -103,15 +106,15 @@ Let’s go line-by-line and understand what each parameter means.
 
 | Parameter     | Description                                                                                                   |Default   ||
 |:--------------|:--------------------------------------------------------------------------------------------------------------|:---      |:--   |
-| `pool_size`| 交易池大小                                                        |         ||
+| `pool_size` | 交易池大小                                                        |         ||
 | `broadcast_txs_size` | 一次批量广播的交易数量                                                                                  |        ||
-| `broadcast_txs_interval`      | 每次广播交易的时间间隔，单位 ms                                                                        |          ||
+| `broadcast_txs_interval` | 每次广播交易的时间间隔，单位 ms                                                                        |          ||
 
 ## Executor parameters
 
 | Parameter     | Description                                                                                                   |Default   ||
 |:--------------|:--------------------------------------------------------------------------------------------------------------|:---      |:--   |
-| `light`| 设为 true 时，节点将只保存最新高度的 state                                                         |         ||
+| `light` | 设为 true 时，节点将只保存最新高度的 state                                                         |         ||
 
 ## Logger parameters
 
@@ -139,5 +142,3 @@ application performace monitor，用以监控系统全链路性能
 | `service_name`|     需要监控的服务                       |   "muta"      ||
 | `tracing_address`|     需要将监控数据推送至服务器的地址                       |   "127.0.0.1:6831"     ||
 | `tracing_batch_size`|     分批推送，每一次分批的大小                       |   50      ||
-
-
