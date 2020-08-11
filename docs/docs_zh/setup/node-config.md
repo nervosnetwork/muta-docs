@@ -114,7 +114,7 @@ Let’s go line-by-line and understand what each parameter means.
 | Parameter     | Description                                                                                                   |Default   ||
 |:--------------|:--------------------------------------------------------------------------------------------------------------|:---      |:--   |
 | `light`| 设为 true 时，节点将只保存最新高度的 state                                                         |         ||
-| `triedb_cache_size` | TrieDB 的缓存大小 |        ||
+| `triedb_cache_size` | TrieDB 的缓存大小 | 无默认值，推荐2000       ||
 
 ## Logger parameters
 
