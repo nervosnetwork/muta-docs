@@ -19,11 +19,11 @@ prevhash = "0x44915be5b6c20b0678cf05fcddbbaa832e25d7e6ac538784cd5c24de00d47472"
 name = "asset"
 payload = '''
 {
-    "id": "0xf56924db538e77bb5951eb5ff0d02b88983c49c45eea30e8ae3e7234b311436c",
-    "name": "MutaToken",
-    "symbol": "MT",
-    "supply": 320000011,
-    "issuer": "0xf8389d774afdad8755ef8e629e5a154fddc6325a"
+   "id": "0xf56924db538e77bb5951eb5ff0d02b88983c49c45eea30e8ae3e7234b311436c",
+   "name": "MutaToken",
+   "symbol": "MT",
+   "supply": 320000011,
+   "issuer": "muta14e0lmgck835vm2dfm0w3ckv6svmez8fdgdl705"
 }
 '''
 
@@ -33,18 +33,19 @@ payload = '''
 {
     "chain_id": "0xb6a4d7da21443f5e816e8700eea87610e6d769657d6b8ec73028457bf2ca4036",
     "bech32_address_hrp": "muta",
-    "common_ref": "0x703873635a6b51513451",
+    "common_ref": "0x6c747758636859487038",
     "timeout_gap": 20,
     "cycles_limit": 4294967295,
     "cycles_price": 1,
     "interval": 3000,
     "verifier_list": [
-        {
-            "bls_pub_key": "0x04188ef9488c19458a963cc57b567adde7db8f8b6bec392d5cb7b67b0abc1ed6cd966edc451f6ac2ef38079460eb965e890d1f576e4039a20467820237cda753f07a8b8febae1ec052190973a1bcf00690ea8fc0168b3fbbccd1c4e402eda5ef22",
-            "address": "0xf8389d774afdad8755ef8e629e5a154fddc6325a",
-            "propose_weight": 1,
-            "vote_weight": 1
-        }
+       {
+           "bls_pub_key": "0x04102947214862a503c73904deb5818298a186d68c7907bb609583192a7de6331493835e5b8281f4d9ee705537c0e765580e06f86ddce5867812fceb42eecefd209f0eddd0389d6b7b0100f00fb119ef9ab23826c6ea09aadcc76fa6cea6a32724",
+           "pub_key": "0x02ef0cb0d7bc6c18b4bea1f5908d9106522b35ab3c399369605d4242525bda7e60",
+           "address": "muta14e0lmgck835vm2dfm0w3ckv6svmez8fdgdl705",
+           "propose_weight": 1,
+           "vote_weight": 1
+       }
     ],
     "propose_ratio": 15,
     "prevote_ratio": 10,
@@ -71,8 +72,8 @@ payload = '''
 |:--------------|:--------------------------------------------------------------------------------------------------------------|:---      |:--   |
 | `id`          | 资产的唯一 id，建议设置成 hash ，以免在之后和链上其他资产重复                                                          |0         ||
 | `name`        | 资产名字                                                                                                        |0x        ||
-| `symbol`      | 资产简称                                                                                                        |          ||
-| `supply`      | 资产发行总量                                                                                                     |          ||
+| `symbol`      | 资产简称                                                                                                        |   "MT"       ||
+| `supply`      | 资产发行总量                                                                                                     |   320000011       ||
 | `issuer`      | 发行方地址                                                                                                       |          ||
 
 ### Metadata service 参数

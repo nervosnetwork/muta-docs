@@ -27,8 +27,6 @@ max_payload_size = 1048576
 [network]
 listening_address = "0.0.0.0:1337"
 rpc_timeout = 10
-same_ip_conn_limit = 1
-inbound_conn_limit = 20
 
 [consensus]
 sync_txs_chunk_size = 5000
@@ -79,12 +77,15 @@ Let’s go line-by-line and understand what each parameter means.
 
 | Parameter     | Description                                                                                                   |Default   ||
 |:--------------|:--------------------------------------------------------------------------------------------------------------|:---      |:--   |
-| `listening_address`| listening address of GraphQL                                                          |         ||
-| `graphql_uri`        | URL to access GraphQL service                                                                                   |        ||
-| `graphiql_uri`      | URL to access GraphiQL                                                                                           |          ||
+| `listening_address`| listening address of GraphQL                                                          |    127.0.0.1:8000      ||
+| `graphql_uri`        | URL to access GraphQL service                                                                                   |   /graphql     ||
+| `graphiql_uri`      | URL to access GraphiQL                                                                                           |   /graphiql       ||
 | `workers`      | number of thread to handle http request. If 0 is entered, will default use number of CPU core                 |     0     ||
 | `maxconn`      | max number of connection                                                                              |   25000       ||
-| `max_payload_size`      |     Size of transaction after serialization, maximum limit in bytes                                  |   1048576      ||
+| `max_payload_size`      |     Size of request after serialization, maximum limit in bytes                                  |   1048576      ||
+| `tls` | enable tls                                                                                                       |      none    ||
+| `tls.private_key_file_path` | TLS private key                |          ||
+| `tls.certificate_chain_file_path` | TLS    certificate                                                                                                  |          ||
 
 ### Network parameters
 
@@ -137,6 +138,17 @@ Let’s go line-by-line and understand what each parameter means.
 | Parameter     | Description                                                                                                   |Default   ||
 |:--------------|:--------------------------------------------------------------------------------------------------------------|:---      |:--   |
 | `max_open_files `|     The maximum value of file descriptors (FD) allowed to be opened by rocksdb.                       |   64      ||
+
+### APM parameters
+
+Application Performace Monitor, used to monitor the system performance.
+
+| Parameter     | Description                                                                                                   |Default   ||
+|:--------------|:--------------------------------------------------------------------------------------------------------------|:---      |:--   |
+| `service_name`|     service that need to be monitored                       |   "muta"      ||
+| `tracing_address`|     the address of the server receiving the monitoring data                       |   "127.0.0.1:6831"     ||
+| `tracing_batch_size`|     batch push, size of each batch                       |   50      ||
+
 
 
 ## Log sample
