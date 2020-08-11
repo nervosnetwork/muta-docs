@@ -1,7 +1,8 @@
 const path = require("path");
+const versions = require('./versions.json');
 
 const allDocHomesPaths = [
-  'docs/',
+  '/docs/',
 ];
 
 module.exports = {
@@ -24,7 +25,26 @@ module.exports = {
         src: '/img/muta.svg',
       },
       links: [
-        { to: "docs/", label: "Docs", position: "left" },
+        { 
+          to: "docs/about/what-is-muta", 
+          label: "Docs", 
+          position: "left",
+          activeBasePath: 'docs',
+          items: [
+            {
+              label: 'Master/Unreleased',
+              to: 'docs/next/about/what-is-muta',
+            },
+            {
+              label: `${versions[0]}/Latest Stable`,
+              to: `docs/about/what-is-muta`,
+            },
+            ...versions.slice(1).map((version) => ({
+              label: version,
+              to: `docs/${version}/about/what-is-muta`,
+            })),
+          ],
+        },
         { to: "guides/", label: "Guides", position: "left" },
         { to: "blog/", label: "Blog", position: "left" },
         {
@@ -47,6 +67,11 @@ module.exports = {
             // ... more items
           ],
         }, 
+        {
+          to: 'versions',
+          label: `v${versions[0]}`,
+          position: 'right',
+        },
         {
           href: "https://github.com/nervosnetwork/muta",
           className: 'header-github-link',
@@ -132,10 +157,15 @@ module.exports = {
       },
       copyright: `Copyright © ${new Date().getFullYear()} Nervos Fundation`,
     },
+    gtag: {
+      trackingID: 'UA-134504127-4',
+    },
     algolia: {
-      apiKey: "**",
-      indexName: "**",
-      algoliaOptions: {}, // Optional, if provided by Algolia
+      apiKey: 'fb14be913734a0349b93461bd93b5704',
+      indexName: 'muta',
+      searchParameters: {
+        facetFilters: [`version:${versions[0]}`],
+      },
     },
   },
   presets: [],
@@ -147,6 +177,7 @@ module.exports = {
         sidebarPath: require.resolve("./sidebars.js"),
       },
     ],
+    '@docusaurus/plugin-google-gtag',
     [
       "@docusaurus/plugin-content-blog",
       {

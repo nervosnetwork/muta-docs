@@ -2089,6 +2089,13 @@ section .sub-title {
   margin-bottom: var(--ifm-heading-margin-bottom);
 }
 
+section .sub-titles {
+  color: var(--ifm-color-emphasis-600);
+  font-size: 1.15em;
+  margin-top: calc(var(--ifm-heading-margin-bottom) * -0.9);
+  margin-bottom: calc(var(--ifm-heading-margin-bottom) * 0.2);
+}
+
 section.shade {
   background-color: var(--ifm-panel-background-color);
   padding-left: var(--ifm-spacing-horizontal);
@@ -2194,10 +2201,6 @@ svg [stroke="#10E7FF"] {
 /**
  * table
  */
-
-table {
-  display: table;
-}
 
 .table-responsive {
   overflow-x: auto;
@@ -2541,6 +2544,27 @@ ul.tabs.rounded li.tab-item.tab-item--active {
 .markdown > :last-child {
   margin-bottom: var(--ifm-spacing-vertical) !important;
 }
+
+
+/******************************************************************************
+ * Version table Theme
+ ******************************************************************************/
+
+table.versions table {
+  display: block;
+}
+
+ table.versions td,
+ table.versions th,
+ table.versions tr {
+   border: none;
+   padding-left: 0;
+ }
+ 
+ table.versions td,
+ table.versions th {
+   text-align: left;
+ }
 
 /******************************************************************************
  * Dark Theme
