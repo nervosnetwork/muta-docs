@@ -116,6 +116,7 @@ network
    │   │   ├── behaviour.rs            # 消息处理
    │   │   ├── common.rs               # 通用辅助函数
    │   │   ├── message.rs              # 消息定义
+   │   │   ├── identification.rs       # 注册以及等待协议握手结果的异步信号
    │   │   └── protocol.rs             # 消息解析
    │   ├── identify.rs
    │   ├── macro.rs
@@ -261,35 +262,73 @@ Ping 协议本身很简单，就是重复我给你的数字，它主要的作用
 
 ### 识别协议
 
-Muta 目前使用的识别协议同样基于 [tentacle-identify](https://github.com/nervosnetwork/tentacle/tree/master/protocols/identify) 。
+Muta 的识别协议主要的功能有两个：
+- 验证 chain id
+- 交换本节点的监听地址以及对远端节点的观测地址
+
+```chain id``` 是写在链的创世块内的，每条链都会有不同的 id 。原则上，除非是 ```relayer``` 身份，
+属于不同链的节点不应该相互连接。
+
+远端节点的观测地址则可帮助远端地址判断自身是否公开可访问，还是在比如 NAT 的后面。目前 muta 要求
+节点都拥有公开可访问的地址。
+
+
+#### 协议握手基本流程
+
+```
+Client                                     Server
+   |            send identity           wait identity
+   |        ------------------->             |
+   V                                         V
+wait ack                                verify identity
+   |            send ack                     |
+   |        <-------------------             |
+   V                                         V
+verify ack                            wait open protocols
+   |        open other protocols             |
+   |        ------------------->             |
+   V                                         V
+open protocols                          protocols opened
+   |                                         |
+   |                                         |
+   V                                         V
+ done                                       done
+```
+
+基本流程由发起连接的节点（Client）发送自己的“身份”信息之后，对端节点（server）验证后发回确认
+后，再由 Client 节点开启其他的协议。默认的超时时间是 8 秒，任意一步出错或超时，都会导致连接
+被断开。
 
 #### 消息
 
 ```
-table Address {
-    bytes: Bytes,
+#[derive(Message)]
+pub struct AddressInfo {
+    #[prost(bytes, repeated, tag = "1")]
+    pub listen_addrs:  Vec<Vec<u8>>,
+    #[prost(bytes, tag = "2")]
+    pub observed_addr: Vec<u8>,
 }
 
-table IdentifyMessage {
-    // These are the addresses on which the peer is listening as multi-addresses.
-    listen_addrs: AddressVec,
-    // Observed each other's ip
-    observed_addr: Address,
-    // Custom message to indicate self ability, such as list protocols supported
-    identify: Bytes,
+#[derive(Message)]
+pub struct Identity {
+    #[prost(string, tag = "1")]
+    pub chain_id:  String,
+    #[prost(message, tag = "2")]
+    pub addr_info: Option<AddressInfo>,
+}
+
+#[derive(Message)]
+pub struct Acknowledge {
+    #[prost(message, tag = "1")]
+    pub addr_info: Option<AddressInfo>,
 }
 ```
 
-该协议的主要作用是帮助节点判断自己是否监听在公开的外部可直接访问的地址上，目前 Muta 要求节点必须
-监听在公开可访问的地址上，暂时并无多大用处。
+上面是 identify 协议会用到的三类消息的定义，```AddressInfo``` 为监听以及观测地址，```Identity```
+为 Client 节点需要发送的身份信息，```Acknowledge``` 为 Server 节点回复的确认信息。
 
-但错误返回信息依然会导致节点直接断开，比如
-- 发送重复的监听地址
-- 发送重复的观测地址
-- 一次发送超过 10 个地址
-- 无效信息
-- 超时
-
+监听地址列表最多只容许 10 个，且整个消息序列化后的大小不能超过 5KB 。
 
 ### 传输协议
 
