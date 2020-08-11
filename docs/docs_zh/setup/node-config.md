@@ -11,7 +11,7 @@ Let's take a look at `devtools/chain/config.toml`.
 
 ```
 # crypto
-privkey = "0x4a33067c449635c434cc758ed5f595e1f5653debc45233997c93814c31f710d5"
+privkey = "0x5ec982173d54d830b6789cbbbe43eaa2853a5ff752d1ebc1b266cf9790314f8a"
 
 # db config
 data_path = "./devtools/chain/data"
@@ -27,14 +27,12 @@ max_payload_size = 1048576
 [network]
 listening_address = "0.0.0.0:1337"
 rpc_timeout = 10
-same_ip_conn_limit = 1
-inbound_conn_limit = 20
 
 [consensus]
 sync_txs_chunk_size = 5000
 
 [[network.bootstraps]]
-peer_id = "QmeG2AjWkLbK5ThySV7TrX5KuFryPsaM8GBgDs6Ch1Z5xJ"
+peer_id = "QmTEJkB5QKWsEq37huryZZfVvqBKb54sHnKn9TQcA6j3n9"
 address = "0.0.0.0:1888"
 
 [mempool]
@@ -84,6 +82,7 @@ Let’s go line-by-line and understand what each parameter means.
 | `graphiql_uri`      | GraphiQL 访问路径                                                                                           |          ||
 | `workers`      | 处理 http 的线程数量，填 0 的话，会默认按 CPU 的核数                                                               |          ||
 | `maxconn`      | 最大连接数                                                                                                       |          ||
+| `max_payload_size`| 每个请求的最大字节数
 
 ## Network parameters
 
@@ -97,7 +96,7 @@ Let’s go line-by-line and understand what each parameter means.
 
 | Parameter     | Description                                                                                                   |Default   ||
 |:--------------|:--------------------------------------------------------------------------------------------------------------|:---      |:--   |
-| `pubkey`| 公钥                                                          |         ||
+| `peer_id`| 从公钥哈希到 base58 的一个 peer id                                                         |         ||
 | `address`        | 网络地址                                                                                  |        ||
 
 ## Mempool parameters
@@ -124,5 +123,21 @@ Let’s go line-by-line and understand what each parameter means.
 | `log_to_file`      | 是否输出日志到文件                                                              |          ||
 | `metrics`      | 是否输出 metrics。logger 模块中有专门的 metrics 输出函数，如有需要，可以用来输出 metrics 日志，不受全局日志级别的影响，且对应的日志会输出到专门的文件。      |          ||
 | `log_path`| 会在该路径生成两个日志文件：muta.log 和 metrics.log。metrics.log中包含了专门的 metrics 日志，muta.log 中包含了其它所有 log 输出。      |         ||
+
+### Rocksdb parameters
+
+| Parameter     | Description                                                                                                   |Default   ||
+|:--------------|:--------------------------------------------------------------------------------------------------------------|:---      |:--   |
+| `max_open_files `|     rocksdb 最大打开文件个数，即 fd                      |   64      ||
+
+### APM parameters
+
+application performace monitor，用以监控系统全链路性能
+
+| Parameter     | Description                                                                                                   |Default   ||
+|:--------------|:--------------------------------------------------------------------------------------------------------------|:---      |:--   |
+| `service_name`|     需要监控的服务                       |   "muta"      ||
+| `tracing_address`|     需要将监控数据推送至服务器的地址                       |   "127.0.0.1:6831"     ||
+| `tracing_batch_size`|     分批推送，每一次分批的大小                       |   50      ||
 
 
