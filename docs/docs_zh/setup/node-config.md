@@ -85,8 +85,8 @@ Let’s go line-by-line and understand what each parameter means.
 | `maxconn` | 最大连接数                                                                                                       |    25000      ||
 | `max_payload_size`      |      每个请求允许的最大 bytes 数                                |   1048576      ||
 | `tls` | 是否开启 tls                                                                                                       |      none    ||
-| `tls.private_key_file_path` | TLS private key                |          ||
-| `tls.certificate_chain_file_path` | TLS    certificate                                                                                                  |          ||
+| `tls.private_key_file_path` | TLS 证书对应的私钥                |          ||
+| `tls.certificate_chain_file_path` | TLS    证书                                                                                                  |          ||
 
 ## Network parameters
 

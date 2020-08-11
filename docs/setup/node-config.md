@@ -123,6 +123,7 @@ Let’s go line-by-line and understand what each parameter means.
 | Parameter     | Description                                                                                                   |Default   ||
 |:--------------|:--------------------------------------------------------------------------------------------------------------|:---      |:--   |
 | `light`| when set to true, node will only keep the state of latest block hight                                             |   false      ||
+| `triedb_cache_size` | TrieDB 的缓存大小 | 无默认值，推荐2000       ||
 
 ### Logger parameters
 
@@ -133,6 +134,7 @@ Let’s go line-by-line and understand what each parameter means.
 | `console_show_file_and_line`      | when `log_to_console` and `console_show_file_and_line` are both true, log will include file and number of lines                  |   false       ||
 | `log_to_file`      | whether output log to file                                                            |    true      ||
 | `metrics`      | whether output metrics. There are metric functions which is independent from global log level in logger module, and if it's needed, it can be used to output metrics to specific files.   |    true      ||
+| `log_path`| 2 files will be created in the dir: muta.log which contain logs and metrics.log which contains only metrics logs      |         ||
 
 ### Rocksdb parameters
 
