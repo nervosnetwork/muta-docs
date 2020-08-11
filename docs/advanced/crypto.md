@@ -9,13 +9,14 @@ Muta 使用 secp256k1 参数以实现椭圆曲线数字签名算法(ECDSA) 的�
 
 记私钥 p*r*, 对应地址函数 A(p*r*)，则有：
 
-A(p*r*) = Bit<sub>0..160</sub>(Keccak(ECDSAPUBKEY(p*r*)))
+A(p*r*) = Bit<sub>[12..32)</sub>(Keccak(ECDSAPUBKEY(p*r*)))
 
-Muta 的地址对应成一个 160bit 的值，生成的过程详细描述为：
+Muta 的地址对应成一个 bech32 的地址，生成的过程详细描述为：
 
 1. 私钥 -> 公钥：私钥通过 ECDSA 公钥生成算法转换为公钥
 2. 公钥 -> 哈希：公钥通过 Keccak 函数转换哈希值
 3. 哈希 -> 地址：截取前 160bit 哈希值
+4. 椭圆曲线地址 -> bech32 地址： 将椭圆曲线地址按 bech32 中的 base32 重新编码，随后配合 HRP，生成校验位和完整 bech32 地址
 
 ## 如何签名交易
 

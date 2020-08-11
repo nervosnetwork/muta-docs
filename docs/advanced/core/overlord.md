@@ -94,7 +94,7 @@ Overlord 共识由以下几个组件组成的：
 
 #### 提议阶段
 
-节点使用确定性随机算法确定本轮的 *Leader*。
+节点选择本轮的 *Leader*。
 
 **Leader**: 广播一个 *proposal*
 
@@ -187,11 +187,11 @@ pub enum SMREvent {
 
 ```rust
 /// Create a new SMR service.
-pub fn new() -> Self
+pub fn new() -> Self;
 /// Trigger a SMR action.
-pub fn trigger(&self, gate: SMRTrigger) -> Result<(), Error>
+pub fn trigger(&self, gate: SMRTrigger) -> Result<(), Error>;
 /// Goto a new consensus height.
-pub fn new_height(&self, height: u64) -> Result<(), Error>
+pub fn new_height(&self, height: u64) -> Result<(), Error>;
 ```
 
 ### 状态存储(State)
@@ -253,15 +253,6 @@ pub fn new_height(&self, height: u64) -> Result<(), Error>
 ### Wal
 
 在共识过程中，需要将一些消息写入到 Wal 中。当重启时，状态存储模块首先从 Wal 中读取消息，回复重启前的状态。Wal 模块只与状态存储模块交互。
-
-#### Wal 接口
-
-```rust
-/// Save wal information.
-pub async fn save(&self, info: Bytes) -> Result<(), Error>;
-/// Load wal information.
-pub fn load(&self) -> Result<Option<Bytes>, Error>;
-```
 
 ## Overlord 接口
 
@@ -347,4 +338,24 @@ pub trait Crypto {
         aggregate_signature: AggregatedSignature,
     ) -> Result<(), Box<dyn Error + Send>>;
 }
+```
+
+#### Wal 接口
+
+```rust
+/// Save wal information.
+pub async fn save(&self, info: Bytes) -> Result<(), Error>;
+/// Load wal information.
+pub fn load(&self) -> Result<Option<Bytes>, Error>;
+```
+
+## Overlord 配置
+
+Overlord 提供随机出块和轮询出块两种出块方式。随机出块采用确定性随机算法计算 leader，轮询出块轮流选择 leader。默认为轮询出块，在轮询出块下，`propose_weight` 不生效。在 `Cargo.toml` 中的 overlord 依赖中可以选择出块方式，方法如下：
+
+```rust
+# 轮询出块
+muta = { git = "https://github.com/nervosnetwork/overlord", branch = "master" }
+# 随机出块
+muta = { git = "https://github.com/nervosnetwork/overlord", branch = "master", features = ["random_leader"] }
 ```
