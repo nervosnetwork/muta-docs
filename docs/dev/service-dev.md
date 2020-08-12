@@ -236,7 +236,7 @@ impl<T: Default> From<DexError> for ServiceResponse<T> {
     ///     resp
     /// };
     let resp = self.asset.native_asset(ctx);
-    let asset = parse_resp!(resp);
+    let asset = try_service_resp!(resp);
 ```
 
 ## 创世配置

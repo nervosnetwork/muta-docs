@@ -18,6 +18,9 @@ function GuideCategoryPage(props) {
           <div><Link to="/guides">View All Guides</Link></div>
         </div>
       </header>
+      <main className="container container--s">
+        <GuideItems items={items} staggered={items[0].content.metadata.seriesPosition != null} />
+      </main>
     </Layout>
   );
 }

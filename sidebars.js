@@ -20,6 +20,7 @@ module.exports = {
             "setup/config",
             "setup/genesis-config",
             "setup/node-config",
+            "setup/cargo-config",
           ]
         },
         "setup/deploy",
@@ -112,6 +113,7 @@ module.exports = {
             "docs_zh/setup/config",
             "docs_zh/setup/genesis-config",
             "docs_zh/setup/node-config",
+            "setup/cargo-config",
           ]
         },
         "docs_zh/setup/deploy",

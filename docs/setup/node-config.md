@@ -27,8 +27,6 @@ max_payload_size = 1048576
 [network]
 listening_address = "0.0.0.0:1337"
 rpc_timeout = 10
-same_ip_conn_limit = 1
-inbound_conn_limit = 20
 
 [consensus]
 sync_txs_chunk_size = 5000
@@ -44,6 +42,7 @@ broadcast_txs_interval = 200
 
 [executor]
 light = false
+triedb_cache_size = 2000
 
 [logger]
 filter = "info"
@@ -79,12 +78,15 @@ Let’s go line-by-line and understand what each parameter means.
 
 | Parameter     | Description                                                                                                   |Default   ||
 |:--------------|:--------------------------------------------------------------------------------------------------------------|:---      |:--   |
-| `listening_address`| listening address of GraphQL                                                          |         ||
-| `graphql_uri`        | URL to access GraphQL service                                                                                   |        ||
-| `graphiql_uri`      | URL to access GraphiQL                                                                                           |          ||
+| `listening_address`| listening address of GraphQL                                                          |    127.0.0.1:8000      ||
+| `graphql_uri`        | URL to access GraphQL service                                                                                   |   /graphql     ||
+| `graphiql_uri`      | URL to access GraphiQL                                                                                           |   /graphiql       ||
 | `workers`      | number of thread to handle http request. If 0 is entered, will default use number of CPU core                 |     0     ||
 | `maxconn`      | max number of connection                                                                              |   25000       ||
-| `max_payload_size`      |     Size of transaction after serialization, maximum limit in bytes                                  |   1048576      ||
+| `max_payload_size`      |     Size of request after serialization, maximum limit in bytes                                  |   1048576      ||
+| `tls` | enable tls                                                                                                       |      none    ||
+| `tls.private_key_file_path` | TLS private key                |          ||
+| `tls.certificate_chain_file_path` | TLS    certificate                                                                                                  |          ||
 
 ### Network parameters
 
@@ -121,6 +123,7 @@ Let’s go line-by-line and understand what each parameter means.
 | Parameter     | Description                                                                                                   |Default   ||
 |:--------------|:--------------------------------------------------------------------------------------------------------------|:---      |:--   |
 | `light`| when set to true, node will only keep the state of latest block hight                                             |   false      ||
+| `triedb_cache_size` | TrieDB 的缓存大小 | 无默认值，推荐2000       ||
 
 ### Logger parameters
 
@@ -131,12 +134,24 @@ Let’s go line-by-line and understand what each parameter means.
 | `console_show_file_and_line`      | when `log_to_console` and `console_show_file_and_line` are both true, log will include file and number of lines                  |   false       ||
 | `log_to_file`      | whether output log to file                                                            |    true      ||
 | `metrics`      | whether output metrics. There are metric functions which is independent from global log level in logger module, and if it's needed, it can be used to output metrics to specific files.   |    true      ||
+| `log_path`| 2 files will be created in the dir: muta.log which contain logs and metrics.log which contains only metrics logs      |         ||
 
 ### Rocksdb parameters
 
 | Parameter     | Description                                                                                                   |Default   ||
 |:--------------|:--------------------------------------------------------------------------------------------------------------|:---      |:--   |
 | `max_open_files `|     The maximum value of file descriptors (FD) allowed to be opened by rocksdb.                       |   64      ||
+
+### APM parameters
+
+Application Performace Monitor, used to monitor the system performance.
+
+| Parameter     | Description                                                                                                   |Default   ||
+|:--------------|:--------------------------------------------------------------------------------------------------------------|:---      |:--   |
+| `service_name`|     service that need to be monitored                       |   "muta"      ||
+| `tracing_address`|     the address of the server receiving the monitoring data                       |   "127.0.0.1:6831"     ||
+| `tracing_batch_size`|     batch push, size of each batch                       |   50      ||
+
 
 
 ## Log sample
