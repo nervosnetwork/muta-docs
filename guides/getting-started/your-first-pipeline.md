@@ -37,7 +37,7 @@ In this tutorial, we will launch a Muta chain with default configuration, and in
 <TabItem value="macOS">  
 
 ```
-$ brew install autoconf libtool
+$ brew install autoconf libtool openssl 
 ```
 
 </TabItem>
