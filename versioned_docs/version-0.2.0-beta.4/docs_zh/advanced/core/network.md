@@ -69,83 +69,81 @@ title: P2P 网络
 
 ```
 network
-    ├── common.rs                           # 常用辅助函数
-    ├── compression
-    │   ├── mod.rs
-    │   └── snappy.rs                       # snappy 实现上述接口
-    ├── config.rs                           # 网络配置定义
-    ├── connection
-    │   ├── control.rs                      # 封装 tentacle 提供的发送接口
-    │   ├── keeper.rs                       # 处理 tentacle 抛出的各种连接事件
-    │   └── mod.rs                          # 连接池配置以及处理节点管理发出的连接或者断开请求
-    ├── endpoint.rs                         # 定义共识和交易池的消息路由地址格式
-    ├── error.rs                            # 定义网络错误
-    ├── event.rs                            # 定义网络用到的所有事件
-    ├── lib.rs
-    ├── message
-    │   ├── mod.rs                          # 定义网络信息格式以及序列化和反序列化
-    │   ├── serde_multi.rs                  # 辅助实现 serde 定义的序列化/反序列化函数，供交易池和共识使用
-    │   └── serde.rs                        # 辅助实现 serde 定义的序列化/反序列化函数，供交易池和共识使用
-    ├── metrics.rs                          # Prometheus metrics 数据反馈
-    ├── outbound
-    │   ├── gossip.rs                       # 广播接口实现
-    │   ├── mod.rs
-    │   └── rpc.rs                          # RPC 接口实现
-    ├── peer_manager
-    │   ├── addr_set.rs                     # 节点地址信息维护
-    │   ├── diagnostic.rs                   # 用于辅助测试时使用，暴露节点管理内部状态
-    │   ├── mod.rs
-    │   ├── peer.rs                         # 节点定义
-    │   ├── retry.rs                        # 节点重试次数管理
-    │   ├── save_restore.rs                 # 节点信息持久化，暂时只保存到文件
-    │   ├── session_book.rs                 # 已连接信息维护
-    │   ├── shared.rs                       # 当前连接的所有节点信息记录
-    │   ├── tags.rs                         # 节点的 tag 管理
-    │   ├── test_manager.rs                 # 节点管理单元测试
-    │   ├── time.rs                         # 时间处理
-    │   └── trust_metric.rs                 # 节点打分实现
-    ├── protocols
-    │   ├── core.rs
-    │   ├── discovery                       # 发现协议
-    │   │   ├── addr.rs                     # 地址管理
-    │   │   ├── behaviour.rs                # 消息处理
-    │   │   ├── message.rs                  # 消息定义
-    │   │   ├── protocol.rs                 # 消息解析
-    │   │   └── substream.rs                # 抽象的消息流
-    │   ├── discovery.rs
-    │   ├── identify                        # Identify 协议
-    │   │   ├── behaviour.rs                # 消息处理
-    │   │   ├── common.rs                   # 通用辅助函数
-    │   │   ├── identification.rs           # 注册以及等待协议握手结果的异步信号
-    │   │   ├── message.rs                  # 消息定义
-    │   │   ├── protocol.rs                 # 消息解析
-    │   │   └── tests.rs                    # 单元测试 
-    │   ├── identify.rs
-    │   ├── macro.rs
-    │   ├── mod.rs
-    │   ├── ping                            # Ping 协议
-    │   │   ├── behaviour.rs                # 消息处理
-    │   │   ├── message.rs                  # 消息定义
-    │   │   └── protocol.rs                 # 消息解析
-    │   ├── ping.rs
-    │   ├── transmitter                     # 传输协议
-    │   │   ├── behaviour.rs                # 消息处理
-    │   │   ├── message.rs                  # 消息定义
-    │   │   └── protocol.rs                 # 消息解析
-    │   └── transmitter.rs
-    ├── reactor
-    │   ├── mod.rs                          # 共识和交易池回调逻辑处理
-    │   ├── router.rs                       # 传输协议收到的消息路由
-    │   └── rpc_map.rs                      # 维护 RPC 请求的状态表
-    ├── rpc.rs                              # 定义 RPC 信息的格式
-    ├── selfcheck.rs                        # 自检服务
-    ├── service.rs                          # 整个网络服务的构造
-    ├── test
-    │   └── mock.rs                         # 单元测试需要 mock 的 tentacle 数据类型
-    ├── test.rs
-    └── traits.rs                           # 网络模块内部组件间交互的接口定义
+   ├── common.rs                       # 常用辅助函数
+   ├── compression
+   │   ├── mod.rs
+   │   └── snappy.rs                   # snappy 实现上述接口
+   ├── config.rs                       # 网络配置定义
+   ├── connection
+   │   ├── control.rs                  # 封装 tentacle 提供的发送接口
+   │   ├── keeper.rs                   # 处理 tentacle 抛出的各种连接事件
+   │   └── mod.rs                      # 连接池配置以及处理节点管理发出的连接或者断开请求
+   ├── endpoint.rs                     # 定义共识和交易池的消息路由地址格式
+   ├── error.rs                        # 定义网络错误
+   ├── event.rs                        # 定义网络用到的所有事件
+   ├── lib.rs
+   ├── message
+   │   ├── mod.rs                      # 定义网络信息格式以及序列化和反序列化
+   │   ├── serde_multi.rs              # 辅助实现 serde 定义的序列化/反序列化函数，供交易池和共识使用
+   │   └── serde.rs                    # 辅助实现 serde 定义的序列化/反序列化函数，供交易池和共识使用
+   ├── metrics.rs                      # Prometheus metrics 数据反馈
+   ├── outbound
+   │   ├── gossip.rs                   # 广播接口实现
+   │   ├── mod.rs
+   │   └── rpc.rs                      # RPC 接口实现
+   ├── peer_manager
+   │   ├── addr_set.rs                 # 节点地址信息维护
+   │   ├── diagnostic.rs               # 用于辅助测试时使用，暴露节点管理内部状态
+   │   ├── mod.rs
+   │   ├── peer.rs                     # 节点定义
+   │   ├── retry.rs                    # 节点重试次数管理
+   │   ├── save_restore.rs             # 节点信息持久化，暂时只保存到文件
+   │   ├── shared.rs                   # 当前连接的所有节点信息记录
+   │   ├── tags.rs                     # 节点的 tag 管理
+   │   ├── test_manager.rs             # 节点管理单元测试
+   │   ├── time.rs                     # 时间处理
+   │   └── trust_metric.rs             # 节点打分实现
+   ├── protocols
+   │   ├── core.rs
+   │   ├── discovery                   # 发现协议
+   │   │   ├── addr.rs                 # 地址管理
+   │   │   ├── behaviour.rs            # 消息处理
+   │   │   ├── message.rs              # 消息定义
+   │   │   ├── protocol.rs             # 消息解析
+   │   │   └── substream.rs            # 抽象的消息流
+   │   ├── discovery.rs
+   │   ├── identify                    # Identify 协议
+   │   │   ├── behaviour.rs            # 消息处理
+   │   │   ├── common.rs               # 通用辅助函数
+   │   │   ├── message.rs              # 消息定义
+   │   │   ├── identification.rs       # 注册以及等待协议握手结果的异步信号
+   │   │   └── protocol.rs             # 消息解析
+   │   ├── identify.rs
+   │   ├── macro.rs
+   │   ├── mod.rs
+   │   ├── ping                        # Ping 协议
+   │   │   ├── behaviour.rs            # 消息处理
+   │   │   ├── message.rs              # 消息定义
+   │   │   └── protocol.rs             # 消息解析
+   │   ├── ping.rs
+   │   ├── transmitter                 # 传输协议
+   │   │   ├── behaviour.rs            # 消息处理
+   │   │   ├── message.rs              # 消息定义
+   │   │   └── protocol.rs             # 消息解析
+   │   └── transmitter.rs
+   ├── reactor
+   │   ├── mod.rs                      # 共识和交易池回调逻辑处理
+   │   └── router.rs                   # 传输协议收到的消息路由
+   ├── rpc_map.rs                      # 维护 RPC 请求的状态表
+   ├── rpc.rs                          # 定义 RPC 信息的格式
+   ├── selfcheck.rs                    # 自检服务
+   ├── service.rs                      # 整个网络服务的构造
+   ├── test
+   │   └── mock.rs                     # 单元测试需要 mock 的 tentacle 数据类型
+   ├── test.rs                         # 网络模块内部组件间交互的接口定义
+   └── traits.rs
 
-12 directories, 63 files
+15 directories, 64 files
 ```
 
 ### 配置
@@ -365,7 +363,7 @@ pub struct NetworkMessage {
 网络模块定义了如下的注册接口
 
 ```rust
-    pub fn register_endpoint_handler<M>(&mut self, end: &str, handler: impl MessageHandler<Message = M>) -> ProtocolResult<()>
+    pub fn register_endpoint_handler<M>(&mut self, end: &str, handler: Box<dyn MessageHandler<Message = M>>) -> ProtocolResult<()>
     where
         M: MessageCodec;
 ```

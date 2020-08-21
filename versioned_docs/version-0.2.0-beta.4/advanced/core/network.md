@@ -1,5 +1,5 @@
 ---
-title: P2P 网络
+title: P2P Network
 ---
 
 网络模块是为共识和交易池两个模块提供消息收发的能力。
@@ -69,83 +69,80 @@ title: P2P 网络
 
 ```
 network
-    ├── common.rs                           # 常用辅助函数
-    ├── compression
-    │   ├── mod.rs
-    │   └── snappy.rs                       # snappy 实现上述接口
-    ├── config.rs                           # 网络配置定义
-    ├── connection
-    │   ├── control.rs                      # 封装 tentacle 提供的发送接口
-    │   ├── keeper.rs                       # 处理 tentacle 抛出的各种连接事件
-    │   └── mod.rs                          # 连接池配置以及处理节点管理发出的连接或者断开请求
-    ├── endpoint.rs                         # 定义共识和交易池的消息路由地址格式
-    ├── error.rs                            # 定义网络错误
-    ├── event.rs                            # 定义网络用到的所有事件
-    ├── lib.rs
-    ├── message
-    │   ├── mod.rs                          # 定义网络信息格式以及序列化和反序列化
-    │   ├── serde_multi.rs                  # 辅助实现 serde 定义的序列化/反序列化函数，供交易池和共识使用
-    │   └── serde.rs                        # 辅助实现 serde 定义的序列化/反序列化函数，供交易池和共识使用
-    ├── metrics.rs                          # Prometheus metrics 数据反馈
-    ├── outbound
-    │   ├── gossip.rs                       # 广播接口实现
-    │   ├── mod.rs
-    │   └── rpc.rs                          # RPC 接口实现
-    ├── peer_manager
-    │   ├── addr_set.rs                     # 节点地址信息维护
-    │   ├── diagnostic.rs                   # 用于辅助测试时使用，暴露节点管理内部状态
-    │   ├── mod.rs
-    │   ├── peer.rs                         # 节点定义
-    │   ├── retry.rs                        # 节点重试次数管理
-    │   ├── save_restore.rs                 # 节点信息持久化，暂时只保存到文件
-    │   ├── session_book.rs                 # 已连接信息维护
-    │   ├── shared.rs                       # 当前连接的所有节点信息记录
-    │   ├── tags.rs                         # 节点的 tag 管理
-    │   ├── test_manager.rs                 # 节点管理单元测试
-    │   ├── time.rs                         # 时间处理
-    │   └── trust_metric.rs                 # 节点打分实现
-    ├── protocols
-    │   ├── core.rs
-    │   ├── discovery                       # 发现协议
-    │   │   ├── addr.rs                     # 地址管理
-    │   │   ├── behaviour.rs                # 消息处理
-    │   │   ├── message.rs                  # 消息定义
-    │   │   ├── protocol.rs                 # 消息解析
-    │   │   └── substream.rs                # 抽象的消息流
-    │   ├── discovery.rs
-    │   ├── identify                        # Identify 协议
-    │   │   ├── behaviour.rs                # 消息处理
-    │   │   ├── common.rs                   # 通用辅助函数
-    │   │   ├── identification.rs           # 注册以及等待协议握手结果的异步信号
-    │   │   ├── message.rs                  # 消息定义
-    │   │   ├── protocol.rs                 # 消息解析
-    │   │   └── tests.rs                    # 单元测试 
-    │   ├── identify.rs
-    │   ├── macro.rs
-    │   ├── mod.rs
-    │   ├── ping                            # Ping 协议
-    │   │   ├── behaviour.rs                # 消息处理
-    │   │   ├── message.rs                  # 消息定义
-    │   │   └── protocol.rs                 # 消息解析
-    │   ├── ping.rs
-    │   ├── transmitter                     # 传输协议
-    │   │   ├── behaviour.rs                # 消息处理
-    │   │   ├── message.rs                  # 消息定义
-    │   │   └── protocol.rs                 # 消息解析
-    │   └── transmitter.rs
-    ├── reactor
-    │   ├── mod.rs                          # 共识和交易池回调逻辑处理
-    │   ├── router.rs                       # 传输协议收到的消息路由
-    │   └── rpc_map.rs                      # 维护 RPC 请求的状态表
-    ├── rpc.rs                              # 定义 RPC 信息的格式
-    ├── selfcheck.rs                        # 自检服务
-    ├── service.rs                          # 整个网络服务的构造
-    ├── test
-    │   └── mock.rs                         # 单元测试需要 mock 的 tentacle 数据类型
-    ├── test.rs
-    └── traits.rs                           # 网络模块内部组件间交互的接口定义
+   ├── common.rs                       # 常用辅助函数
+   ├── compression
+   │   ├── mod.rs
+   │   └── snappy.rs                   # snappy 实现上述接口
+   ├── config.rs                       # 网络配置定义
+   ├── connection
+   │   ├── control.rs                  # 封装 tentacle 提供的发送接口
+   │   ├── keeper.rs                   # 处理 tentacle 抛出的各种连接事件
+   │   └── mod.rs                      # 连接池配置以及处理节点管理发出的连接或者断开请求
+   ├── endpoint.rs                     # 定义共识和交易池的消息路由地址格式
+   ├── error.rs                        # 定义网络错误
+   ├── event.rs                        # 定义网络用到的所有事件
+   ├── lib.rs
+   ├── message
+   │   ├── mod.rs                      # 定义网络信息格式以及序列化和反序列化
+   │   ├── serde_multi.rs              # 辅助实现 serde 定义的序列化/反序列化函数，供交易池和共识使用
+   │   └── serde.rs                    # 辅助实现 serde 定义的序列化/反序列化函数，供交易池和共识使用
+   ├── metrics.rs                      # Prometheus metrics 数据反馈
+   ├── outbound
+   │   ├── gossip.rs                   # 广播接口实现
+   │   ├── mod.rs
+   │   └── rpc.rs                      # RPC 接口实现
+   ├── peer_manager
+   │   ├── addr_set.rs                 # 节点地址信息维护
+   │   ├── diagnostic.rs               # 用于辅助测试时使用，暴露节点管理内部状态
+   │   ├── mod.rs
+   │   ├── peer.rs                     # 节点定义
+   │   ├── retry.rs                    # 节点重试次数管理
+   │   ├── save_restore.rs             # 节点信息持久化，暂时只保存到文件
+   │   ├── shared.rs                   # 当前连接的所有节点信息记录
+   │   ├── tags.rs                     # 节点的 tag 管理
+   │   ├── test_manager.rs             # 节点管理单元测试
+   │   ├── time.rs                     # 时间处理
+   │   └── trust_metric.rs             # 节点打分实现
+   ├── protocols
+   │   ├── core.rs
+   │   ├── discovery                   # 发现协议
+   │   │   ├── addr.rs                 # 地址管理
+   │   │   ├── behaviour.rs            # 消息处理
+   │   │   ├── message.rs              # 消息定义
+   │   │   ├── protocol.rs             # 消息解析
+   │   │   └── substream.rs            # 抽象的消息流
+   │   ├── discovery.rs
+   │   ├── identify                    # Identify 协议
+   │   │   ├── behaviour.rs            # 消息处理
+   │   │   ├── common.rs               # 通用辅助函数
+   │   │   ├── message.rs              # 消息定义
+   │   │   └── protocol.rs             # 消息解析
+   │   ├── identify.rs
+   │   ├── macro.rs
+   │   ├── mod.rs
+   │   ├── ping                        # Ping 协议
+   │   │   ├── behaviour.rs            # 消息处理
+   │   │   ├── message.rs              # 消息定义
+   │   │   └── protocol.rs             # 消息解析
+   │   ├── ping.rs
+   │   ├── transmitter                 # 传输协议
+   │   │   ├── behaviour.rs            # 消息处理
+   │   │   ├── message.rs              # 消息定义
+   │   │   └── protocol.rs             # 消息解析
+   │   └── transmitter.rs
+   ├── reactor
+   │   ├── mod.rs                      # 共识和交易池回调逻辑处理
+   │   └── router.rs                   # 传输协议收到的消息路由
+   ├── rpc_map.rs                      # 维护 RPC 请求的状态表
+   ├── rpc.rs                          # 定义 RPC 信息的格式
+   ├── selfcheck.rs                    # 自检服务
+   ├── service.rs                      # 整个网络服务的构造
+   ├── test
+   │   └── mock.rs                     # 单元测试需要 mock 的 tentacle 数据类型
+   ├── test.rs                         # 网络模块内部组件间交互的接口定义
+   └── traits.rs
 
-12 directories, 63 files
+15 directories, 64 files
 ```
 
 ### 配置
@@ -160,8 +157,8 @@ network
  fatal_ban_duration | 60 * 60 = 1 小时 | 因严重错误行为导致节点断开后，拒绝再次连接的时长，单位为秒
  soft_ban_duration | 60 * 10 = 10 分钟 | 因一般错误行为导致节点断开后，拒绝再次连接的时长，单位为秒
  max_connected_peers | 40 | 最大连接节点数量
- same_ip_conn_limit | 1 | 同一个 IP 地址允许的最大的连接数
  inbound_conn_limit | 20 | 连入类型的连接允许的最大数量，连出的最大数量由最大连接数减去本配置项的值
+ same_ip_conn_limit | 1 | 同一个 IP 地址允许的最大的连接数
  listening_address | "0.0.0.0:2337" | 监听地址
  rpc_timeout | 10 | rpc 请求超时响应时间
  selfcheck_interval | 30 | 网络自检间隔周期
@@ -264,73 +261,35 @@ Ping 协议本身很简单，就是重复我给你的数字，它主要的作用
 
 ### 识别协议
 
-Muta 的识别协议主要的功能有两个：
-- 验证 chain id
-- 交换本节点的监听地址以及对远端节点的观测地址
-
-```chain id``` 是写在链的创世块内的，每条链都会有不同的 id 。原则上，除非是 ```relayer``` 身份，
-属于不同链的节点不应该相互连接。
-
-远端节点的观测地址则可帮助远端地址判断自身是否公开可访问，还是在比如 NAT 的后面。目前 muta 要求
-节点都拥有公开可访问的地址。
-
-
-#### 协议握手基本流程
-
-```
-Client                                     Server
-   |            send identity           wait identity
-   |        ------------------->             |
-   V                                         V
-wait ack                                verify identity
-   |            send ack                     |
-   |        <-------------------             |
-   V                                         V
-verify ack                            wait open protocols
-   |        open other protocols             |
-   |        ------------------->             |
-   V                                         V
-open protocols                          protocols opened
-   |                                         |
-   |                                         |
-   V                                         V
- done                                       done
-```
-
-基本流程由发起连接的节点（Client）发送自己的“身份”信息之后，对端节点（server）验证后发回确认
-后，再由 Client 节点开启其他的协议。默认的超时时间是 8 秒，任意一步出错或超时，都会导致连接
-被断开。
+Muta 目前使用的识别协议同样基于 [tentacle-identify](https://github.com/nervosnetwork/tentacle/tree/master/protocols/identify) 。
 
 #### 消息
 
 ```
-#[derive(Message)]
-pub struct AddressInfo {
-    #[prost(bytes, repeated, tag = "1")]
-    pub listen_addrs:  Vec<Vec<u8>>,
-    #[prost(bytes, tag = "2")]
-    pub observed_addr: Vec<u8>,
+table Address {
+    bytes: Bytes,
 }
 
-#[derive(Message)]
-pub struct Identity {
-    #[prost(string, tag = "1")]
-    pub chain_id:  String,
-    #[prost(message, tag = "2")]
-    pub addr_info: Option<AddressInfo>,
-}
-
-#[derive(Message)]
-pub struct Acknowledge {
-    #[prost(message, tag = "1")]
-    pub addr_info: Option<AddressInfo>,
+table IdentifyMessage {
+    // These are the addresses on which the peer is listening as multi-addresses.
+    listen_addrs: AddressVec,
+    // Observed each other's ip
+    observed_addr: Address,
+    // Custom message to indicate self ability, such as list protocols supported
+    identify: Bytes,
 }
 ```
 
-上面是 identify 协议会用到的三类消息的定义，```AddressInfo``` 为监听以及观测地址，```Identity```
-为 Client 节点需要发送的身份信息，```Acknowledge``` 为 Server 节点回复的确认信息。
+该协议的主要作用是帮助节点判断自己是否监听在公开的外部可直接访问的地址上，目前 Muta 要求节点必须
+监听在公开可访问的地址上，暂时并无多大用处。
 
-监听地址列表最多只容许 10 个，且整个消息序列化后的大小不能超过 5KB 。
+但错误返回信息依然会导致节点直接断开，比如
+- 发送重复的监听地址
+- 发送重复的观测地址
+- 一次发送超过 10 个地址
+- 无效信息
+- 超时
+
 
 ### 传输协议
 
@@ -365,7 +324,7 @@ pub struct NetworkMessage {
 网络模块定义了如下的注册接口
 
 ```rust
-    pub fn register_endpoint_handler<M>(&mut self, end: &str, handler: impl MessageHandler<Message = M>) -> ProtocolResult<()>
+    pub fn register_endpoint_handler<M>(&mut self, end: &str, handler: Box<dyn MessageHandler<Message = M>>) -> ProtocolResult<()>
     where
         M: MessageCodec;
 ```

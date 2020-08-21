@@ -42,7 +42,7 @@ Developers can simply customize the functional parts of the chain by developing 
 
 * **Developing a Service is quite easy**. When we originally designed Service, we wanted to lower the development barrier for developers so that more developers who are not as familiar with blockchain can get up to speed quickly and develop their own blockchain. As a result, [developing services][service-dev] is now very similar to develop contracts in terms of experience, so if you're already familiar with how to develop contracts, congratulations, you've also learned how to develop Service.
 
-* **Existing Services can be reused directly**. Muta already provides a number of [services][service-list] with common functionality that can be used directly by developers. For example, the [Asset Service][asset-service] allows developers to create native assets that are safer and more flexible and easier to issue than contract tokens such as ERC20, and the [Risc-V Service][service-list] allows developers to add Risc-V virtual machines directly to the chain. More services can be found in the list of services, and the Muta framework will provide many more services with common features in the future.
+* **Existing Services can be reused directly**. Muta already provides a number of [services][service-list] with common functionality that can be used directly by developers. For example, the [Asset Service][service-list] allows developers to create native assets that are safer and more flexible and easier to issue than contract tokens such as ERC20, and the [Risc-V Service][service-list] allows developers to add Risc-V virtual machines directly to the chain. More services can be found in the list of services, and the Muta framework will provide many more services with common features in the future.
 
 
 ### Interoperability
@@ -137,7 +137,6 @@ As an entrepreneurial team, we are still recruiting excellent developers :heart:
 [poe-chain]: ../dev/poe-chain.md
 [dex]: ../dev/dex.md
 [service-list]: ../dev/service-list/service-list.md
-[asset-service]: ../dev/service-list/asset-service
 
 [arch]: ../advanced/arch.md
 [overlord]: ../advanced/core/overlord.md
