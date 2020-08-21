@@ -447,7 +447,7 @@ CONFIG=./devtools/chain/config-bill.toml GENESIS=./devtools/chain/genesis.toml c
 
 You should see the console outputs something as follows:
 
-![](../../../../static/docs-img/private-network.png)
+![](/docs-img/private-network.png)
 
 Congratulations! You've started your own blockchain!
 
