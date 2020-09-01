@@ -88,6 +88,13 @@ Let’s go line-by-line and understand what each parameter means.
 | `tls.private_key_file_path` | TLS private key                |          ||
 | `tls.certificate_chain_file_path` | TLS    certificate                                                                                                  |          ||
 
+## Executor parameters
+
+| Parameter     | Description                                                                                                   |Default   ||
+|:--------------|:--------------------------------------------------------------------------------------------------------------|:---      |:--   |
+| `overlord_gap`| overlord 允许的共识高度和执行高度的最大差值                                                         |    5     ||
+| ` sync_txs_chunk_size` |  同步交易时一批拉取的交易数量 |     5000       ||
+
 ## Network parameters
 
 | Parameter     | Description                                                                                                   |Default   ||
