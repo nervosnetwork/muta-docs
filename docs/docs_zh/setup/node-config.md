@@ -50,6 +50,7 @@ log_to_console = true
 console_show_file_and_line = false
 log_path = "logs/"
 log_to_file = true
+file_size_limit = 1073741824
 metrics = true
 # you can specify log level for modules with config below
 # modules_level = { "overlord::state::process" = "debug", core_consensus = "error" }
@@ -126,6 +127,7 @@ Let’s go line-by-line and understand what each parameter means.
 | `log_to_console`        | 是否输出日志到 console，生产环境建议设为 false                                                                       |        ||
 | `console_show_file_and_line`      | 当 `log_to_console` 和本配置都置为 true 时，console 输出的日志里会包含日志打印处的文件和行数。本地通过日志调试时有用，一般可以设为 false。                                                                  |          ||
 | `log_to_file`      | 是否输出日志到文件                                                              |          ||
+| `file_size_limit`  | 单一日志文件的大小，达到预设值时，旧的日志文件会被打上日志并重命名为 `[date].muta.[timestamp].log` 格式的文件
 | `metrics`      | 是否输出 metrics。logger 模块中有专门的 metrics 输出函数，如有需要，可以用来输出 metrics 日志，不受全局日志级别的影响，且对应的日志会输出到专门的文件。      |          ||
 | `log_path`| 会在该路径生成两个日志文件：muta.log 和 metrics.log。metrics.log中包含了专门的 metrics 日志，muta.log 中包含了其它所有 log 输出。      |         ||
 
