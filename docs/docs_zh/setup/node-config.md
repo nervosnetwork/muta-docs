@@ -23,6 +23,7 @@ graphiql_uri = "/graphiql"
 workers = 0 # if 0, uses number of available logical cpu as threads count.
 maxconn = 25000
 max_payload_size = 1048576
+enable_dump_profile = false
 
 [network]
 listening_address = "0.0.0.0:1337"
@@ -85,6 +86,7 @@ Let’s go line-by-line and understand what each parameter means.
 | `workers` | 处理 http 的线程数量，填 0 的话，会默认按 CPU 的核数                                                               |     0     ||
 | `maxconn` | 最大连接数                                                                                                       |    25000      ||
 | `max_payload_size`      |      每个请求允许的最大 bytes 数                                |   1048576      ||
+| `enable_dump_profile`   | 是否开启 /dump_profile 路径，可通过 `/dump_profile\?duration=30\&\&report=flamegraph` 获取 profile 数据 | false ||
 | `tls` | 是否开启 tls                                                                                                       |      none    ||
 | `tls.private_key_file_path` | TLS 证书对应的私钥                |          ||
 | `tls.certificate_chain_file_path` | TLS    证书                                                                                                  |          ||
