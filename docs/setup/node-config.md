@@ -23,6 +23,7 @@ graphiql_uri = "/graphiql"
 workers = 0 # if 0, uses number of available logical cpu as threads count.
 maxconn = 25000
 max_payload_size = 1048576
+enable_dump_profile = false
 
 [network]
 listening_address = "0.0.0.0:1337"
@@ -84,6 +85,7 @@ Let’s go line-by-line and understand what each parameter means.
 | `workers`      | number of thread to handle http request. If 0 is entered, will default use number of CPU core                 |     0     ||
 | `maxconn`      | max number of connection                                                                              |   25000       ||
 | `max_payload_size`      |     Size of request after serialization, maximum limit in bytes                                  |   1048576      ||
+| `enable_dump_profile`   | whether enable path /dump_profile or not，get profile data via `/dump_profile\?duration=30\&\&report=flamegraph`  | false ||
 | `tls` | enable tls                                                                                                       |      none    ||
 | `tls.private_key_file_path` | TLS private key                |          ||
 | `tls.certificate_chain_file_path` | TLS    certificate                                                                                                  |          ||
