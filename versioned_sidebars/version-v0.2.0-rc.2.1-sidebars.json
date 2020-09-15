@@ -1,0 +1,354 @@
+{
+  "version-v0.2.0-rc.2.1/docs": [
+    {
+      "type": "category",
+      "label": "About",
+      "items": [
+        {
+          "type": "doc",
+          "id": "version-v0.2.0-rc.2.1/about/what-is-muta"
+        },
+        {
+          "type": "doc",
+          "id": "version-v0.2.0-rc.2.1/about/concepts"
+        }
+      ]
+    },
+    {
+      "type": "category",
+      "label": "Setup",
+      "items": [
+        {
+          "type": "doc",
+          "id": "version-v0.2.0-rc.2.1/setup/getting-started"
+        },
+        {
+          "type": "category",
+          "label": "Configuration",
+          "items": [
+            {
+              "type": "doc",
+              "id": "version-v0.2.0-rc.2.1/setup/config"
+            },
+            {
+              "type": "doc",
+              "id": "version-v0.2.0-rc.2.1/setup/genesis-config"
+            },
+            {
+              "type": "doc",
+              "id": "version-v0.2.0-rc.2.1/setup/node-config"
+            },
+            {
+              "type": "doc",
+              "id": "version-v0.2.0-rc.2.1/setup/cargo-config"
+            }
+          ]
+        },
+        {
+          "type": "doc",
+          "id": "version-v0.2.0-rc.2.1/setup/deploy"
+        }
+      ]
+    },
+    {
+      "type": "category",
+      "label": "Development",
+      "items": [
+        {
+          "type": "doc",
+          "id": "version-v0.2.0-rc.2.1/dev/dev-overview"
+        },
+        {
+          "type": "doc",
+          "id": "version-v0.2.0-rc.2.1/dev/service-dev"
+        },
+        {
+          "type": "category",
+          "label": "Service List",
+          "items": [
+            {
+              "type": "doc",
+              "id": "version-v0.2.0-rc.2.1/dev/service-list/service-list"
+            },
+            {
+              "type": "doc",
+              "id": "version-v0.2.0-rc.2.1/dev/service-list/metadata-service"
+            },
+            {
+              "type": "doc",
+              "id": "version-v0.2.0-rc.2.1/dev/service-list/asset-service"
+            },
+            {
+              "type": "doc",
+              "id": "version-v0.2.0-rc.2.1/dev/service-list/auth-service"
+            },
+            {
+              "type": "doc",
+              "id": "version-v0.2.0-rc.2.1/dev/service-list/multi-sig-service"
+            }
+          ]
+        },
+        {
+          "type": "doc",
+          "id": "version-v0.2.0-rc.2.1/dev/poe-chain"
+        },
+        {
+          "type": "doc",
+          "id": "version-v0.2.0-rc.2.1/dev/dex"
+        }
+      ]
+    },
+    {
+      "type": "category",
+      "label": "Advanced",
+      "items": [
+        {
+          "type": "doc",
+          "id": "version-v0.2.0-rc.2.1/advanced/arch"
+        },
+        {
+          "type": "doc",
+          "id": "version-v0.2.0-rc.2.1/advanced/transaction-block"
+        },
+        {
+          "type": "category",
+          "label": "Core Design",
+          "items": [
+            {
+              "type": "doc",
+              "id": "version-v0.2.0-rc.2.1/advanced/core/overlord"
+            },
+            {
+              "type": "doc",
+              "id": "version-v0.2.0-rc.2.1/advanced/core/network"
+            },
+            {
+              "type": "doc",
+              "id": "version-v0.2.0-rc.2.1/advanced/core/mempool"
+            },
+            {
+              "type": "doc",
+              "id": "version-v0.2.0-rc.2.1/advanced/core/storage"
+            }
+          ]
+        },
+        {
+          "type": "doc",
+          "id": "version-v0.2.0-rc.2.1/advanced/crypto"
+        }
+      ]
+    },
+    {
+      "type": "category",
+      "label": "Toolchain",
+      "items": [
+        {
+          "type": "doc",
+          "id": "version-v0.2.0-rc.2.1/toolchain/sdk-js"
+        },
+        {
+          "type": "doc",
+          "id": "version-v0.2.0-rc.2.1/toolchain/sdk-java"
+        },
+        {
+          "type": "doc",
+          "id": "version-v0.2.0-rc.2.1/toolchain/muta-cli"
+        },
+        {
+          "type": "doc",
+          "id": "version-v0.2.0-rc.2.1/toolchain/benchmark-tool"
+        },
+        {
+          "type": "doc",
+          "id": "version-v0.2.0-rc.2.1/toolchain/keypair"
+        }
+      ]
+    },
+    {
+      "type": "category",
+      "label": "Reference",
+      "items": [
+        {
+          "type": "doc",
+          "id": "version-v0.2.0-rc.2.1/ref/faq"
+        },
+        {
+          "type": "link",
+          "label": "Contributing",
+          "href": "https://github.com/nervosnetwork/muta/blob/master/CONTRIBUTING.md"
+        }
+      ]
+    }
+  ],
+  "version-v0.2.0-rc.2.1/docs_zh": [
+    {
+      "type": "category",
+      "label": "介绍",
+      "items": [
+        {
+          "type": "doc",
+          "id": "version-v0.2.0-rc.2.1/docs_zh/about/what-is-muta"
+        },
+        {
+          "type": "doc",
+          "id": "version-v0.2.0-rc.2.1/docs_zh/about/concepts"
+        }
+      ]
+    },
+    {
+      "type": "category",
+      "label": "开始",
+      "items": [
+        {
+          "type": "doc",
+          "id": "version-v0.2.0-rc.2.1/docs_zh/setup/getting-started"
+        },
+        {
+          "type": "category",
+          "label": "配置",
+          "items": [
+            {
+              "type": "doc",
+              "id": "version-v0.2.0-rc.2.1/docs_zh/setup/config"
+            },
+            {
+              "type": "doc",
+              "id": "version-v0.2.0-rc.2.1/docs_zh/setup/genesis-config"
+            },
+            {
+              "type": "doc",
+              "id": "version-v0.2.0-rc.2.1/docs_zh/setup/node-config"
+            },
+            {
+              "type": "doc",
+              "id": "version-v0.2.0-rc.2.1/docs_zh/setup/cargo-config"
+            }
+          ]
+        },
+        {
+          "type": "doc",
+          "id": "version-v0.2.0-rc.2.1/docs_zh/setup/deploy"
+        }
+      ]
+    },
+    {
+      "type": "category",
+      "label": "开发",
+      "items": [
+        {
+          "type": "doc",
+          "id": "version-v0.2.0-rc.2.1/docs_zh/dev/dev-overview"
+        },
+        {
+          "type": "doc",
+          "id": "version-v0.2.0-rc.2.1/docs_zh/dev/service-dev"
+        },
+        {
+          "type": "category",
+          "label": "Service 列表",
+          "items": [
+            {
+              "type": "doc",
+              "id": "version-v0.2.0-rc.2.1/docs_zh/dev/service-list/service-list"
+            },
+            {
+              "type": "doc",
+              "id": "version-v0.2.0-rc.2.1/docs_zh/dev/service-list/metadata-service"
+            },
+            {
+              "type": "doc",
+              "id": "version-v0.2.0-rc.2.1/docs_zh/dev/service-list/asset-service"
+            },
+            {
+              "type": "doc",
+              "id": "version-v0.2.0-rc.2.1/docs_zh/dev/service-list/auth-service"
+            },
+            {
+              "type": "doc",
+              "id": "version-v0.2.0-rc.2.1/docs_zh/dev/service-list/multi-sig-service"
+            }
+          ]
+        },
+        {
+          "type": "doc",
+          "id": "version-v0.2.0-rc.2.1/docs_zh/dev/poe-chain"
+        },
+        {
+          "type": "doc",
+          "id": "version-v0.2.0-rc.2.1/docs_zh/dev/dex"
+        }
+      ]
+    },
+    {
+      "type": "category",
+      "label": "深入 Muta",
+      "items": [
+        {
+          "type": "doc",
+          "id": "version-v0.2.0-rc.2.1/docs_zh/advanced/arch"
+        },
+        {
+          "type": "doc",
+          "id": "version-v0.2.0-rc.2.1/docs_zh/advanced/core/overlord"
+        },
+        {
+          "type": "doc",
+          "id": "version-v0.2.0-rc.2.1/docs_zh/advanced/core/network"
+        },
+        {
+          "type": "doc",
+          "id": "version-v0.2.0-rc.2.1/docs_zh/advanced/core/mempool"
+        },
+        {
+          "type": "doc",
+          "id": "version-v0.2.0-rc.2.1/docs_zh/advanced/core/storage"
+        },
+        {
+          "type": "doc",
+          "id": "version-v0.2.0-rc.2.1/docs_zh/advanced/crypto"
+        }
+      ]
+    },
+    {
+      "type": "category",
+      "label": "工具链",
+      "items": [
+        {
+          "type": "doc",
+          "id": "version-v0.2.0-rc.2.1/docs_zh/toolchain/sdk-js"
+        },
+        {
+          "type": "doc",
+          "id": "version-v0.2.0-rc.2.1/docs_zh/toolchain/sdk-java"
+        },
+        {
+          "type": "doc",
+          "id": "version-v0.2.0-rc.2.1/docs_zh/toolchain/muta-cli"
+        },
+        {
+          "type": "doc",
+          "id": "version-v0.2.0-rc.2.1/docs_zh/toolchain/benchmark-tool"
+        },
+        {
+          "type": "doc",
+          "id": "version-v0.2.0-rc.2.1/docs_zh/toolchain/keypair"
+        }
+      ]
+    },
+    {
+      "type": "category",
+      "label": "参考",
+      "items": [
+        {
+          "type": "doc",
+          "id": "version-v0.2.0-rc.2.1/docs_zh/ref/faq"
+        },
+        {
+          "type": "link",
+          "label": "Contributing",
+          "href": "https://github.com/nervosnetwork/muta/blob/master/CONTRIBUTING.md"
+        }
+      ]
+    }
+  ]
+}
